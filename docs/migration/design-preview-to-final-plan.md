@@ -367,3 +367,43 @@ Checks run:
 Remaining next step:
 
 - In the next phase, migrate only the login and register pages from Figure 07 after confirming the My Orders account flow remains visually aligned with the migrated storefront pages.
+
+## Phase 7 Implementation Note
+
+Files modified or created:
+
+- `public/login.html`
+- `public/register.html`
+- `public/js/pages/loginPage.js`
+- `public/js/pages/registerPage.js`
+- `public/css/layout.css`
+- `public/css/components.css`
+- `docs/migration/design-preview-to-final-plan.md`
+
+What was migrated:
+
+- Split the approved Figure 07 combined auth prototype into official `public/login.html` and `public/register.html` pages.
+- Reused the official storefront CSS files from earlier phases and added only the auth shell, auth intro, auth card, and auth switch-link styles needed to preserve the Figure 07 visual direction.
+- Added local static login behavior for empty-field validation and prototype success feedback.
+- Added local static register behavior for empty-field validation, password confirmation validation, and prototype success feedback.
+- Preserved P3 hooks for login form, register form, auth message targets, auth actions, auth fields, and stable form name attributes.
+
+What was intentionally not migrated:
+
+- Figures 08 through 10 were not migrated.
+- Backend code, Express routes, server files, API calls, JSON data files, password storage, and real authentication were not created or changed.
+- Shared layout rendering modules were not extracted yet; the login and register pages still use static ShopLite auth header and footer markup for this phase.
+
+Checks run:
+
+- JavaScript syntax checks for `public/js/main.js`, existing migrated page scripts, `public/js/pages/loginPage.js`, `public/js/pages/registerPage.js`, and `public/js/templates/productCardTemplate.js`.
+- `git diff --check`.
+- Static scan for Chinese characters in code and comments.
+- Static scan for React, Vue, TypeScript, Tailwind, backend code, Express route patterns, API calls, password storage patterns, and `fetch`.
+- Browser smoke check for `public/login.html` confirming the page loads, login form exists, username and password fields exist, invalid submit shows validation, valid submit shows prototype success feedback, the register link works, and no page console errors occur.
+- Browser smoke check for `public/register.html` confirming the page loads, register form exists, username, password, confirm password, and role fields exist, mismatched password validation appears, valid submit shows prototype success feedback, the login link works, and no page console errors occur.
+- Browser smoke checks for `public/index.html`, `public/product-detail.html`, `public/cart.html`, `public/checkout.html`, `public/order-success.html`, and `public/orders.html` confirming the previous migrated pages still pass their Phase 1 through Phase 6 checks.
+
+Remaining next step:
+
+- In the next phase, migrate only the admin product management page from Figure 08 after confirming the customer auth flow remains visually aligned with the migrated storefront pages.

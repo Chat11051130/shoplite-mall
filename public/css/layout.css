@@ -380,6 +380,25 @@
   padding: 18px;
 }
 
+.auth-shell {
+  min-height: calc(100vh - 72px);
+  padding: 54px 0;
+  background-image: linear-gradient(90deg, rgba(15, 23, 42, 0.97), rgba(15, 23, 42, 0.82), rgba(15, 23, 42, 0.42)), url("https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1800&q=80");
+  background-position: center;
+  background-size: cover;
+}
+
+.auth-intro {
+  max-width: 720px;
+  margin: 0 auto 26px;
+  color: #fff;
+  text-align: center;
+}
+
+.auth-intro .eyebrow {
+  color: #fbbf24;
+}
+
 .footer-grid {
   display: flex;
   align-items: center;
