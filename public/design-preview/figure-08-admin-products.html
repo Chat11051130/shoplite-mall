@@ -8,10 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link href="css/design-preview.css" rel="stylesheet">
   </head>
-  <body class="admin-layout">
+  <body class="admin-layout" data-page="admin-products">
     <div class="row g-0">
       <aside class="col-xl-2 col-lg-3">
-        <nav class="admin-sidebar">
+        <nav class="admin-sidebar" data-component="admin-sidebar">
           <a class="shoplite-brand mb-4" href="figure-10-admin-dashboard.html"><span class="brand-tile">SL</span><span>Admin</span></a>
           <a class="nav-link" href="figure-10-admin-dashboard.html"><i class="bi bi-speedometer2"></i> Dashboard</a>
           <a class="nav-link active" href="figure-08-admin-products.html"><i class="bi bi-box-seam"></i> Products</a>
@@ -21,24 +21,24 @@
       </aside>
 
       <main class="col-xl-10 col-lg-9 admin-content">
-        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4" data-component="product-toolbar">
           <div><p class="eyebrow">Admin workspace</p><h1 class="section-heading">Product Management</h1></div>
-          <button class="btn btn-accent" type="button" data-bs-toggle="modal" data-bs-target="#productFormModal"><i class="bi bi-plus-lg"></i> Add Product</button>
+          <button class="btn btn-accent" type="button" data-action="open-add-product-modal" data-bs-toggle="modal" data-bs-target="#productFormModal"><i class="bi bi-plus-lg"></i> Add Product</button>
         </div>
 
         <section class="surface-card p-4 mb-4">
           <div class="row g-3 align-items-end">
-            <div class="col-lg-5"><label class="form-label">Search products</label><input class="form-control" type="search" placeholder="Search by product name or SKU"></div>
-            <div class="col-lg-3"><label class="form-label">Category</label><select class="form-select"><option>All categories</option><option>Electronics</option><option>Fashion</option><option>Home</option></select></div>
-            <div class="col-lg-2"><label class="form-label">Status</label><select class="form-select"><option>All status</option><option>Active</option><option>Draft</option><option>Low stock</option></select></div>
-            <div class="col-lg-2"><button class="btn btn-outline-accent w-100" type="button">Apply Filters</button></div>
+            <div class="col-lg-5"><label class="form-label" for="adminProductSearch">Search products</label><input class="form-control" id="adminProductSearch" name="adminProductSearch" data-action="search-admin-products" type="search" placeholder="Search by product name or SKU"></div>
+            <div class="col-lg-3"><label class="form-label" for="adminProductCategoryFilter">Category</label><select class="form-select" id="adminProductCategoryFilter" name="adminProductCategoryFilter" data-action="filter-admin-products"><option>All categories</option><option>Electronics</option><option>Fashion</option><option>Home</option></select></div>
+            <div class="col-lg-2"><label class="form-label" for="adminProductStatusFilter">Status</label><select class="form-select" id="adminProductStatusFilter" name="adminProductStatusFilter" data-action="filter-admin-products"><option>All status</option><option>Active</option><option>Draft</option><option>Low stock</option></select></div>
+            <div class="col-lg-2"><button class="btn btn-outline-accent w-100" type="button" data-action="filter-admin-products">Apply Filters</button></div>
           </div>
         </section>
 
-        <section class="admin-panel table-responsive">
+        <section class="admin-panel table-responsive" data-component="admin-product-table">
           <table class="table align-middle mb-0">
             <thead class="table-light">
-              <tr>
+              <tr data-product-id="1">
                 <th>Product</th>
                 <th>Category</th>
                 <th>Price</th>
@@ -53,32 +53,32 @@
                 <td>Electronics</td>
                 <td class="fw-bold">$679.99</td>
                 <td>42</td>
-                <td><span class="status-badge status-active">Active</span></td>
-                <td class="text-end"><button class="btn btn-sm btn-outline-primary" type="button"><i class="bi bi-pencil"></i> Edit</button> <button class="btn btn-sm btn-outline-danger" type="button"><i class="bi bi-trash"></i> Delete</button></td>
+                <td><span class="status-badge status-active" data-role="product-status">Active</span></td>
+                <td class="text-end"><button class="btn btn-sm btn-outline-primary" type="button" data-action="edit-product"><i class="bi bi-pencil"></i> Edit</button> <button class="btn btn-sm btn-outline-danger" type="button" data-action="delete-product"><i class="bi bi-trash"></i> Delete</button></td>
               </tr>
-              <tr>
+              <tr data-product-id="2">
                 <td><div class="d-flex align-items-center gap-3"><img class="table-thumb" src="assets/images/placeholder-product.svg" alt="Headphones"><div><strong>PulseWave headphones</strong><p class="muted-note mb-0">SKU SL-EL-2044</p></div></div></td>
                 <td>Electronics</td>
                 <td class="fw-bold">$129.95</td>
                 <td>86</td>
-                <td><span class="status-badge status-active">Active</span></td>
-                <td class="text-end"><button class="btn btn-sm btn-outline-primary" type="button"><i class="bi bi-pencil"></i> Edit</button> <button class="btn btn-sm btn-outline-danger" type="button"><i class="bi bi-trash"></i> Delete</button></td>
+                <td><span class="status-badge status-active" data-role="product-status">Active</span></td>
+                <td class="text-end"><button class="btn btn-sm btn-outline-primary" type="button" data-action="edit-product"><i class="bi bi-pencil"></i> Edit</button> <button class="btn btn-sm btn-outline-danger" type="button" data-action="delete-product"><i class="bi bi-trash"></i> Delete</button></td>
               </tr>
-              <tr>
+              <tr data-product-id="3">
                 <td><div class="d-flex align-items-center gap-3"><img class="table-thumb" src="assets/images/placeholder-product.svg" alt="Sneakers"><div><strong>StrideFlex sneakers</strong><p class="muted-note mb-0">SKU SL-FA-3220</p></div></div></td>
                 <td>Fashion</td>
                 <td class="fw-bold">$74.50</td>
                 <td>18</td>
-                <td><span class="status-badge status-low">Low stock</span></td>
-                <td class="text-end"><button class="btn btn-sm btn-outline-primary" type="button"><i class="bi bi-pencil"></i> Edit</button> <button class="btn btn-sm btn-outline-danger" type="button"><i class="bi bi-trash"></i> Delete</button></td>
+                <td><span class="status-badge status-low" data-role="product-status">Low stock</span></td>
+                <td class="text-end"><button class="btn btn-sm btn-outline-primary" type="button" data-action="edit-product"><i class="bi bi-pencil"></i> Edit</button> <button class="btn btn-sm btn-outline-danger" type="button" data-action="delete-product"><i class="bi bi-trash"></i> Delete</button></td>
               </tr>
-              <tr>
+              <tr data-product-id="5">
                 <td><div class="d-flex align-items-center gap-3"><img class="table-thumb" src="assets/images/placeholder-product.svg" alt="Chair"><div><strong>Nordic task chair</strong><p class="muted-note mb-0">SKU SL-HO-1188</p></div></div></td>
                 <td>Home</td>
                 <td class="fw-bold">$149.99</td>
                 <td>0</td>
-                <td><span class="status-badge status-draft">Draft</span></td>
-                <td class="text-end"><button class="btn btn-sm btn-outline-primary" type="button"><i class="bi bi-pencil"></i> Edit</button> <button class="btn btn-sm btn-outline-danger" type="button"><i class="bi bi-trash"></i> Delete</button></td>
+                <td><span class="status-badge status-draft" data-role="product-status">Draft</span></td>
+                <td class="text-end"><button class="btn btn-sm btn-outline-primary" type="button" data-action="edit-product"><i class="bi bi-pencil"></i> Edit</button> <button class="btn btn-sm btn-outline-danger" type="button" data-action="delete-product"><i class="bi bi-trash"></i> Delete</button></td>
               </tr>
             </tbody>
           </table>
@@ -86,21 +86,21 @@
       </main>
     </div>
 
-    <div class="modal fade" id="productFormModal" tabindex="-1" aria-labelledby="productFormTitle" aria-hidden="true">
+    <div class="modal fade" id="productFormModal" tabindex="-1" aria-labelledby="productFormTitle" aria-hidden="true" data-component="product-form-modal">
       <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header"><h2 class="modal-title fs-5" id="productFormTitle">Product form mockup</h2><button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button></div>
           <div class="modal-body">
             <form class="row g-3" data-prototype-form>
-              <div class="col-md-8"><label class="form-label">Product name</label><input class="form-control" type="text" value="New ShopLite product"></div>
-              <div class="col-md-4"><label class="form-label">Category</label><select class="form-select"><option>Electronics</option><option>Fashion</option><option>Home</option></select></div>
-              <div class="col-md-4"><label class="form-label">Price</label><input class="form-control" type="number" value="99.99"></div>
-              <div class="col-md-4"><label class="form-label">Stock</label><input class="form-control" type="number" value="50"></div>
-              <div class="col-md-4"><label class="form-label">Status</label><select class="form-select"><option>Active</option><option>Draft</option></select></div>
+              <div class="col-md-8"><label class="form-label" for="productName">Product name</label><input class="form-control" id="productName" name="productName" data-field="product-name" type="text" value="New ShopLite product"></div>
+              <div class="col-md-4"><label class="form-label" for="productCategory">Category</label><select class="form-select" id="productCategory" name="productCategory" data-field="product-category"><option>Electronics</option><option>Fashion</option><option>Home</option></select></div>
+              <div class="col-md-4"><label class="form-label" for="productPrice">Price</label><input class="form-control" id="productPrice" name="productPrice" data-field="product-price" type="number" value="99.99"></div>
+              <div class="col-md-4"><label class="form-label" for="productStock">Stock</label><input class="form-control" id="productStock" name="productStock" data-field="product-stock" type="number" value="50"></div>
+              <div class="col-md-4"><label class="form-label" for="productStatus">Status</label><select class="form-select" id="productStatus" name="productStatus" data-field="product-status"><option>Active</option><option>Draft</option></select></div>
               <div class="col-12"><label class="form-label">Description</label><textarea class="form-control" rows="3">Static product description for the visual prototype.</textarea></div>
             </form>
           </div>
-          <div class="modal-footer"><button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancel</button><button class="btn btn-accent" type="button" data-bs-dismiss="modal">Save Mock Product</button></div>
+          <div class="modal-footer"><button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancel</button><button class="btn btn-accent" type="button" data-action="save-product" data-bs-dismiss="modal">Save Mock Product</button></div>
         </div>
       </div>
     </div>

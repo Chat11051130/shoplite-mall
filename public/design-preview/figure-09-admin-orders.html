@@ -8,10 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link href="css/design-preview.css" rel="stylesheet">
   </head>
-  <body class="admin-layout">
+  <body class="admin-layout" data-page="admin-orders">
     <div class="row g-0">
       <aside class="col-xl-2 col-lg-3">
-        <nav class="admin-sidebar">
+        <nav class="admin-sidebar" data-component="admin-sidebar">
           <a class="shoplite-brand mb-4" href="figure-10-admin-dashboard.html"><span class="brand-tile">SL</span><span>Admin</span></a>
           <a class="nav-link" href="figure-10-admin-dashboard.html"><i class="bi bi-speedometer2"></i> Dashboard</a>
           <a class="nav-link" href="figure-08-admin-products.html"><i class="bi bi-box-seam"></i> Products</a>
@@ -26,16 +26,16 @@
           <button class="btn btn-outline-accent" type="button" data-bs-toggle="offcanvas" data-bs-target="#orderDetailPanel"><i class="bi bi-layout-sidebar-inset-reverse"></i> Open Detail Panel</button>
         </div>
 
-        <section class="surface-card p-4 mb-4">
+        <section class="surface-card p-4 mb-4" data-component="admin-order-toolbar">
           <div class="row g-3 align-items-end">
             <div class="col-lg-4"><label class="form-label">Search order</label><input class="form-control" type="search" placeholder="Order ID or customer name"></div>
-            <div class="col-lg-3"><label class="form-label">Status filter</label><select class="form-select"><option>All status</option><option>Processing</option><option>Shipped</option><option>Delivered</option><option>Cancelled</option></select></div>
-            <div class="col-lg-3"><label class="form-label">Date filter</label><input class="form-control" type="date" value="2026-05-23"></div>
-            <div class="col-lg-2"><button class="btn btn-accent w-100" type="button">Filter</button></div>
+            <div class="col-lg-3"><label class="form-label" for="adminOrderStatusFilter">Status filter</label><select class="form-select" id="adminOrderStatusFilter" name="adminOrderStatusFilter" data-field="admin-order-status-filter"><option>All status</option><option>Processing</option><option>Shipped</option><option>Delivered</option><option>Cancelled</option></select></div>
+            <div class="col-lg-3"><label class="form-label" for="adminOrderDateFilter">Date filter</label><input class="form-control" id="adminOrderDateFilter" name="adminOrderDateFilter" data-field="admin-order-date-filter" type="date" value="2026-05-23"></div>
+            <div class="col-lg-2"><button class="btn btn-accent w-100" type="button" data-action="filter-admin-orders">Filter</button></div>
           </div>
         </section>
 
-        <section class="admin-panel table-responsive">
+        <section class="admin-panel table-responsive" data-component="admin-order-table">
           <table class="table align-middle mb-0">
             <thead class="table-light">
               <tr>
@@ -49,41 +49,41 @@
               </tr>
             </thead>
             <tbody>
-              <tr data-status-row>
+              <tr data-status-row data-order-id="SL-2026-0523-1048" data-order-status="processing">
                 <td class="fw-bold">SL-2026-0523-1048</td>
                 <td>Alex Morgan</td>
                 <td>2</td>
-                <td class="fw-bold">$822.54</td>
-                <td><span data-status-badge class="status-badge status-processing">Processing</span></td>
-                <td><select class="form-select form-select-sm" data-status-select><option>Processing</option><option>Shipped</option><option>Delivered</option><option>Cancelled</option></select></td>
-                <td class="text-end"><button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#orderDetailPanel">View Details</button></td>
+                <td class="fw-bold" data-role="admin-order-total">$822.54</td>
+                <td><span data-status-badge data-role="admin-order-status" class="status-badge status-processing">Processing</span></td>
+                <td><select class="form-select form-select-sm" data-status-select data-action="update-order-status"><option>Processing</option><option>Shipped</option><option>Delivered</option><option>Cancelled</option></select></td>
+                <td class="text-end"><button class="btn btn-sm btn-outline-primary" type="button" data-action="view-admin-order-detail" data-bs-toggle="offcanvas" data-bs-target="#orderDetailPanel">View Details</button></td>
               </tr>
-              <tr data-status-row>
+              <tr data-status-row data-order-id="SL-2026-0518-0921" data-order-status="shipped">
                 <td class="fw-bold">SL-2026-0518-0921</td>
                 <td>Jordan Lee</td>
                 <td>1</td>
-                <td class="fw-bold">$74.50</td>
-                <td><span data-status-badge class="status-badge status-shipped">Shipped</span></td>
-                <td><select class="form-select form-select-sm" data-status-select><option>Shipped</option><option>Processing</option><option>Delivered</option><option>Cancelled</option></select></td>
-                <td class="text-end"><button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#orderDetailPanel">View Details</button></td>
+                <td class="fw-bold" data-role="admin-order-total">$74.50</td>
+                <td><span data-status-badge data-role="admin-order-status" class="status-badge status-shipped">Shipped</span></td>
+                <td><select class="form-select form-select-sm" data-status-select data-action="update-order-status"><option>Shipped</option><option>Processing</option><option>Delivered</option><option>Cancelled</option></select></td>
+                <td class="text-end"><button class="btn btn-sm btn-outline-primary" type="button" data-action="view-admin-order-detail" data-bs-toggle="offcanvas" data-bs-target="#orderDetailPanel">View Details</button></td>
               </tr>
-              <tr data-status-row>
+              <tr data-status-row data-order-id="SL-2026-0506-2188" data-order-status="delivered">
                 <td class="fw-bold">SL-2026-0506-2188</td>
                 <td>Maya Chen</td>
                 <td>1</td>
-                <td class="fw-bold">$36.50</td>
-                <td><span data-status-badge class="status-badge status-delivered">Delivered</span></td>
-                <td><select class="form-select form-select-sm" data-status-select><option>Delivered</option><option>Processing</option><option>Shipped</option><option>Cancelled</option></select></td>
-                <td class="text-end"><button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#orderDetailPanel">View Details</button></td>
+                <td class="fw-bold" data-role="admin-order-total">$36.50</td>
+                <td><span data-status-badge data-role="admin-order-status" class="status-badge status-delivered">Delivered</span></td>
+                <td><select class="form-select form-select-sm" data-status-select data-action="update-order-status"><option>Delivered</option><option>Processing</option><option>Shipped</option><option>Cancelled</option></select></td>
+                <td class="text-end"><button class="btn btn-sm btn-outline-primary" type="button" data-action="view-admin-order-detail" data-bs-toggle="offcanvas" data-bs-target="#orderDetailPanel">View Details</button></td>
               </tr>
-              <tr data-status-row>
+              <tr data-status-row data-order-id="SL-2026-0502-6410" data-order-status="cancelled">
                 <td class="fw-bold">SL-2026-0502-6410</td>
                 <td>Taylor Smith</td>
                 <td>3</td>
-                <td class="fw-bold">$214.88</td>
-                <td><span data-status-badge class="status-badge status-cancelled">Cancelled</span></td>
-                <td><select class="form-select form-select-sm" data-status-select><option>Cancelled</option><option>Processing</option><option>Shipped</option><option>Delivered</option></select></td>
-                <td class="text-end"><button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#orderDetailPanel">View Details</button></td>
+                <td class="fw-bold" data-role="admin-order-total">$214.88</td>
+                <td><span data-status-badge data-role="admin-order-status" class="status-badge status-cancelled">Cancelled</span></td>
+                <td><select class="form-select form-select-sm" data-status-select data-action="update-order-status"><option>Cancelled</option><option>Processing</option><option>Shipped</option><option>Delivered</option></select></td>
+                <td class="text-end"><button class="btn btn-sm btn-outline-primary" type="button" data-action="view-admin-order-detail" data-bs-toggle="offcanvas" data-bs-target="#orderDetailPanel">View Details</button></td>
               </tr>
             </tbody>
           </table>
@@ -91,7 +91,7 @@
       </main>
     </div>
 
-    <aside class="offcanvas offcanvas-end" tabindex="-1" id="orderDetailPanel" aria-labelledby="orderDetailTitle">
+    <aside class="offcanvas offcanvas-end" tabindex="-1" id="orderDetailPanel" aria-labelledby="orderDetailTitle" data-component="order-detail-panel">
       <div class="offcanvas-header">
         <h2 class="offcanvas-title fs-5 fw-bold" id="orderDetailTitle">Order detail mockup</h2>
         <button class="btn-close" type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>

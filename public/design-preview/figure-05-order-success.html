@@ -8,27 +8,27 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link href="css/design-preview.css" rel="stylesheet">
   </head>
-  <body class="preview-page">
-    <header class="site-header sticky-top">
+  <body class="preview-page" data-page="order-success">
+    <header class="site-header sticky-top" data-component="customer-header">
       <nav class="navbar navbar-expand-xl shoplite-topbar">
         <div class="container-fluid px-4">
           <a class="shoplite-brand" href="figure-01-home.html" aria-label="ShopLite home"><span class="brand-tile">SL</span><span>ShopLite</span></a>
           <button class="navbar-toggler header-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
           <div class="collapse navbar-collapse gap-3" id="mainNavbar">
             <a class="location-chip" href="#"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i><span><small>Deliver to</small><strong>Campus District</strong></span></a>
-            <form class="search-shell flex-grow-1" role="search">
-              <select class="form-select category-select" aria-label="Search category"><option>All</option><option>Electronics</option><option>Fashion</option><option>Home</option><option>Beauty</option><option>Grocery</option><option>Sports</option></select>
-              <input class="form-control search-input" type="search" placeholder="Search ShopLite" aria-label="Search ShopLite">
-              <button class="btn search-button" type="submit" aria-label="Search"><i class="bi bi-search" aria-hidden="true"></i></button>
+            <form class="search-shell flex-grow-1" role="search" data-action="search-products">
+              <select class="form-select category-select" name="searchCategory" data-field="search-category" aria-label="Search category"><option>All</option><option>Electronics</option><option>Fashion</option><option>Home</option><option>Beauty</option><option>Grocery</option><option>Sports</option></select>
+              <input class="form-control search-input" name="searchQuery" data-field="search-query" type="search" placeholder="Search ShopLite" aria-label="Search ShopLite">
+              <button class="btn search-button" type="submit" data-action="search-products" aria-label="Search"><i class="bi bi-search" aria-hidden="true"></i></button>
             </form>
             <div class="header-actions">
               <a class="header-action" href="figure-06-my-orders.html"><small>Returns</small><strong>Orders</strong></a>
-              <a class="cart-link" href="figure-03-cart.html"><span class="cart-count">0</span><i class="bi bi-cart3" aria-hidden="true"></i><strong>Cart</strong></a>
+              <a class="cart-link" href="figure-03-cart.html" data-action="open-cart"><span class="cart-count" data-role="cart-count">0</span><i class="bi bi-cart3" aria-hidden="true"></i><strong>Cart</strong></a>
             </div>
           </div>
         </div>
       </nav>
-      <nav class="category-nav" aria-label="Shop categories">
+      <nav class="category-nav" data-component="category-nav" aria-label="Shop categories">
         <div class="container-fluid px-4 category-nav-inner">
           <a href="figure-01-home.html"><i class="bi bi-laptop" aria-hidden="true"></i>Electronics</a>
           <a href="figure-01-home.html"><i class="bi bi-bag" aria-hidden="true"></i>Fashion</a>
@@ -45,45 +45,45 @@
 
     <main class="section-space">
       <div class="container">
-        <section class="surface-card success-card mb-4">
+        <section class="surface-card success-card mb-4" data-component="success-card">
           <span class="icon-tile success-icon"><i class="bi bi-check2-circle"></i></span>
           <p class="eyebrow">Order placed</p>
           <h1 class="section-heading display-6 mb-3">Thank you for shopping with ShopLite</h1>
           <p class="lead text-secondary mb-4">Your prototype order has been confirmed and is ready to appear in the My Orders page.</p>
           <div class="row g-3 justify-content-center text-start mb-4">
-            <div class="col-md-4"><div class="metric-card"><span class="muted-note">Order number</span><strong class="d-block fs-5">SL-2026-0523-1048</strong></div></div>
-            <div class="col-md-4"><div class="metric-card"><span class="muted-note">Delivery estimate</span><strong class="d-block fs-5">May 25 to May 26</strong></div></div>
+            <div class="col-md-4"><div class="metric-card"><span class="muted-note">Order number</span><strong class="d-block fs-5" data-role="order-id">SL-2026-0523-1048</strong></div></div>
+            <div class="col-md-4"><div class="metric-card"><span class="muted-note">Delivery estimate</span><strong class="d-block fs-5" data-role="delivery-estimate">May 25 to May 26</strong></div></div>
             <div class="col-md-4"><div class="metric-card"><span class="muted-note">Payment status</span><strong class="d-block fs-5 text-success">Paid</strong></div></div>
           </div>
           <div class="d-flex flex-wrap justify-content-center gap-3">
-            <a class="btn btn-accent btn-lg" href="figure-06-my-orders.html">View My Orders</a>
-            <a class="btn btn-outline-accent btn-lg" href="figure-01-home.html">Continue Shopping</a>
+            <a class="btn btn-accent btn-lg" href="figure-06-my-orders.html" data-action="view-my-orders">View My Orders</a>
+            <a class="btn btn-outline-accent btn-lg" href="figure-01-home.html" data-action="continue-shopping">Continue Shopping</a>
           </div>
         </section>
 
-        <section class="summary-card mb-4">
+        <section class="summary-card mb-4" data-component="order-summary">
           <h2 class="card-heading fs-4 mb-3">Order summary</h2>
           <div class="d-flex gap-3 align-items-center mb-3"><img class="order-thumb" src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=160&q=80" alt="Laptop"><div><strong>AeroBook laptop</strong><p class="muted-note mb-0">Quantity 1</p></div><span class="ms-auto fw-bold">$679.99</span></div>
           <div class="d-flex gap-3 align-items-center"><img class="order-thumb" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=160&q=80" alt="Headphones"><div><strong>PulseWave headphones</strong><p class="muted-note mb-0">Quantity 1</p></div><span class="ms-auto fw-bold">$129.95</span></div>
           <hr>
-          <div class="summary-total"><span class="fw-bold">Total paid</span><span class="current-price">$822.54</span></div>
+          <div class="summary-total"><span class="fw-bold">Total paid</span><span class="current-price" data-role="order-total">$822.54</span></div>
         </section>
 
-        <section class="recommendation-section">
+        <section class="recommendation-section" data-component="recommended-products">
           <div class="section-toolbar compact">
             <div><p>You may also like</p><h2>Recommended products</h2></div>
             <a href="figure-01-home.html">Shop more</a>
           </div>
-          <div class="recommendation-rail">
-            <article class="mini-card"><img src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=240&q=80" alt="Recommended keyboard"><div><strong>CreatorPro keyboard</strong><span class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i></span><span>$88.75</span></div></article>
-            <article class="mini-card"><img src="https://images.unsplash.com/photo-1616628182506-0d95f127e8de?auto=format&fit=crop&w=240&q=80" alt="Recommended stand"><div><strong>Adjustable laptop stand</strong><span class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i></span><span>$34.99</span></div></article>
-            <article class="mini-card"><img src="https://images.unsplash.com/photo-1625842268584-8f3296236761?auto=format&fit=crop&w=240&q=80" alt="Recommended desk hub"><div><strong>USB desk hub</strong><span class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i></span><span>$29.99</span></div></article>
+          <div class="recommendation-rail" data-component="recommendation-rail">
+            <article class="mini-card" data-product-id="10" data-category="electronics" data-price="88.75" data-rating="4.7"><img src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=240&q=80" alt="Recommended keyboard"><div><strong>CreatorPro keyboard</strong><span class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i></span><span>$88.75</span></div></article>
+            <article class="mini-card" data-product-id="13" data-category="electronics" data-price="34.99" data-rating="4.1"><img src="https://images.unsplash.com/photo-1616628182506-0d95f127e8de?auto=format&fit=crop&w=240&q=80" alt="Recommended stand"><div><strong>Adjustable laptop stand</strong><span class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i></span><span>$34.99</span></div></article>
+            <article class="mini-card" data-product-id="14" data-category="electronics" data-price="29.99" data-rating="4.2"><img src="https://images.unsplash.com/photo-1625842268584-8f3296236761?auto=format&fit=crop&w=240&q=80" alt="Recommended desk hub"><div><strong>USB desk hub</strong><span class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i></span><span>$29.99</span></div></article>
           </div>
         </section>
       </div>
     </main>
 
-    <footer class="site-footer">
+    <footer class="site-footer" data-component="site-footer">
       <div class="container-fluid px-4">
         <div class="footer-grid">
           <div><a class="footer-brand" href="figure-01-home.html"><span class="brand-tile">SL</span><strong>ShopLite</strong></a><p>A fictional marketplace interface for a polished, practical e-commerce course project.</p></div>

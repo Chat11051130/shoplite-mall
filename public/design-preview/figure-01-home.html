@@ -9,8 +9,8 @@
     <link rel="preconnect" href="https://images.unsplash.com">
     <link href="css/design-preview.css" rel="stylesheet">
   </head>
-  <body class="preview-page">
-    <header class="site-header sticky-top">
+  <body class="preview-page" data-page="home">
+    <header class="site-header sticky-top" data-component="customer-header">
       <nav class="navbar navbar-expand-xl shoplite-topbar">
         <div class="container-fluid px-4">
           <a class="shoplite-brand" href="figure-01-home.html" aria-label="ShopLite home">
@@ -31,9 +31,9 @@
               </span>
             </a>
 
-            <form class="search-shell flex-grow-1" id="searchForm" role="search">
+            <form class="search-shell flex-grow-1" id="searchForm" role="search" data-action="search-products">
               <label class="visually-hidden" for="categorySelect">Search category</label>
-              <select class="form-select category-select" id="categorySelect" aria-label="Select category">
+              <select class="form-select category-select" id="categorySelect" name="searchCategory" data-field="search-category" aria-label="Select category">
                 <option value="all">All</option>
                 <option value="electronics">Electronics</option>
                 <option value="fashion">Fashion</option>
@@ -43,7 +43,7 @@
                 <option value="sports">Sports</option>
               </select>
               <label class="visually-hidden" for="searchInput">Search ShopLite</label>
-              <input class="form-control search-input" id="searchInput" type="search" placeholder="Search ShopLite for electronics, fashion, home goods" autocomplete="off">
+              <input class="form-control search-input" id="searchInput" name="searchQuery" data-field="search-query" type="search" placeholder="Search ShopLite for electronics, fashion, home goods" autocomplete="off">
               <button class="btn search-button" type="submit" aria-label="Search">
                 <i class="bi bi-search" aria-hidden="true"></i>
               </button>
@@ -58,8 +58,8 @@
                 <small>Returns</small>
                 <strong>Orders</strong>
               </a>
-              <button class="cart-link" id="cartButton" type="button" aria-label="Shopping cart with 3 items">
-                <span class="cart-count" id="cartCount">3</span>
+              <button class="cart-link" id="cartButton" type="button" data-action="open-cart" aria-label="Shopping cart with 3 items">
+                <span class="cart-count" id="cartCount" data-role="cart-count">3</span>
                 <i class="bi bi-cart3" aria-hidden="true"></i>
                 <strong>Cart</strong>
               </button>
@@ -68,7 +68,7 @@
         </div>
       </nav>
 
-      <nav class="category-nav" aria-label="Shop categories">
+      <nav class="category-nav" data-component="category-nav" aria-label="Shop categories">
         <div class="container-fluid px-4 category-nav-inner">
           <a href="#" data-category-link="electronics"><i class="bi bi-laptop" aria-hidden="true"></i>Electronics</a>
           <a href="#" data-category-link="fashion"><i class="bi bi-bag" aria-hidden="true"></i>Fashion</a>
@@ -85,7 +85,7 @@
 
     <main>
       <section class="hero-section" aria-label="Featured ShopLite offers">
-        <div id="homeHeroCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div id="homeHeroCarousel" class="carousel slide" data-component="hero-carousel" data-bs-ride="carousel">
           <div class="carousel-indicators">
             <button type="button" data-bs-target="#homeHeroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
             <button type="button" data-bs-target="#homeHeroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -178,20 +178,20 @@
         <div class="container-fluid px-4">
           <div class="row g-4 align-items-start">
             <aside class="col-xl-2 col-lg-3">
-              <div class="filter-panel">
+              <div class="filter-panel" data-component="filter-sidebar">
                 <div class="filter-heading">
                   <h2>Shop by</h2>
-                  <button class="btn btn-link p-0" id="clearFilters" type="button">Clear</button>
+                  <button class="btn btn-link p-0" id="clearFilters" type="button" data-action="clear-filters">Clear</button>
                 </div>
 
                 <div class="filter-group">
                   <h3>Categories</h3>
-                  <label><input class="form-check-input category-filter" type="checkbox" value="electronics"> Electronics</label>
-                  <label><input class="form-check-input category-filter" type="checkbox" value="fashion"> Fashion</label>
-                  <label><input class="form-check-input category-filter" type="checkbox" value="home"> Home</label>
-                  <label><input class="form-check-input category-filter" type="checkbox" value="beauty"> Beauty</label>
-                  <label><input class="form-check-input category-filter" type="checkbox" value="grocery"> Grocery</label>
-                  <label><input class="form-check-input category-filter" type="checkbox" value="sports"> Sports</label>
+                  <label><input class="form-check-input category-filter" type="checkbox" value="electronics" data-action="filter-category"> Electronics</label>
+                  <label><input class="form-check-input category-filter" type="checkbox" value="fashion" data-action="filter-category"> Fashion</label>
+                  <label><input class="form-check-input category-filter" type="checkbox" value="home" data-action="filter-category"> Home</label>
+                  <label><input class="form-check-input category-filter" type="checkbox" value="beauty" data-action="filter-category"> Beauty</label>
+                  <label><input class="form-check-input category-filter" type="checkbox" value="grocery" data-action="filter-category"> Grocery</label>
+                  <label><input class="form-check-input category-filter" type="checkbox" value="sports" data-action="filter-category"> Sports</label>
                 </div>
 
                 <div class="filter-group">
@@ -200,14 +200,14 @@
                     <span>$0</span>
                     <strong id="priceValue">$800</strong>
                   </div>
-                  <input class="form-range" id="priceRange" type="range" min="25" max="800" step="25" value="800" aria-label="Maximum product price">
+                  <input class="form-range" id="priceRange" name="maxPrice" data-field="max-price" type="range" min="25" max="800" step="25" value="800" aria-label="Maximum product price">
                 </div>
 
                 <div class="filter-group">
                   <h3>Customer rating</h3>
-                  <label><input class="form-check-input rating-filter" name="rating" type="radio" value="4" checked> 4 stars and up</label>
-                  <label><input class="form-check-input rating-filter" name="rating" type="radio" value="3"> 3 stars and up</label>
-                  <label><input class="form-check-input rating-filter" name="rating" type="radio" value="0"> Any rating</label>
+                  <label><input class="form-check-input rating-filter" name="rating" type="radio" value="4" data-action="filter-rating" checked> 4 stars and up</label>
+                  <label><input class="form-check-input rating-filter" name="rating" type="radio" value="3" data-action="filter-rating"> 3 stars and up</label>
+                  <label><input class="form-check-input rating-filter" name="rating" type="radio" value="0" data-action="filter-rating"> Any rating</label>
                 </div>
 
                 <div class="filter-card">
@@ -224,8 +224,8 @@
                   <h2>Featured products</h2>
                 </div>
                 <div class="toolbar-controls">
-                  <span id="resultCount">12 items</span>
-                  <select class="form-select form-select-sm" id="sortSelect" aria-label="Sort products">
+                  <span id="resultCount" data-role="result-count">12 items</span>
+                  <select class="form-select form-select-sm" id="sortSelect" name="sortProducts" data-action="sort-products" aria-label="Sort products">
                     <option value="featured">Sort: Featured</option>
                     <option value="price-low">Price: Low to High</option>
                     <option value="price-high">Price: High to Low</option>
@@ -234,7 +234,7 @@
                 </div>
               </div>
 
-              <div class="product-grid row g-3" id="productGrid" aria-live="polite"></div>
+              <div class="product-grid row g-3" id="productGrid" data-component="product-grid" aria-live="polite"></div>
 
               <section class="recommendation-section" id="bestSellers">
                 <div class="section-toolbar compact">
@@ -244,7 +244,7 @@
                   </div>
                   <a href="#">View all</a>
                 </div>
-                <div class="recommendation-rail" id="bestSellerRail"></div>
+                <div class="recommendation-rail" id="bestSellerRail" data-component="recommendation-rail"></div>
               </section>
 
               <section class="recommendation-section" id="todayDeals">
@@ -255,7 +255,7 @@
                   </div>
                   <a href="#">See deals</a>
                 </div>
-                <div class="deal-band">
+                <div class="deal-band" data-component="deal-band">
                   <div>
                     <span>Deal dashboard</span>
                     <strong>Extra 10% off checkout-ready items</strong>
@@ -263,7 +263,7 @@
                   </div>
                   <button class="btn btn-accent" type="button">Explore deals</button>
                 </div>
-                <div class="recommendation-rail" id="dealRail"></div>
+                <div class="recommendation-rail" id="dealRail" data-component="recommendation-rail"></div>
               </section>
 
               <section class="recommendation-section" id="recommended">
@@ -274,7 +274,7 @@
                   </div>
                   <a href="#">Refresh</a>
                 </div>
-                <div class="recommendation-rail" id="recommendedRail"></div>
+                <div class="recommendation-rail" id="recommendedRail" data-component="recommendation-rail"></div>
               </section>
             </section>
           </div>
@@ -282,7 +282,7 @@
       </section>
     </main>
 
-    <footer class="site-footer">
+    <footer class="site-footer" data-component="site-footer">
       <div class="container-fluid px-4">
         <div class="footer-grid">
           <div>

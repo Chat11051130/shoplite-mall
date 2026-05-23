@@ -330,3 +330,59 @@ Remaining P3 issues:
 Figures 02 to 07 visual inheritance:
 
 - Yes. Figures 02 through 07 now visually inherit the restored Figure 01 marketplace system while keeping page-appropriate layouts, including the checkout-safe variant for Figure 04 and the marketplace-branded auth treatment for Figure 07.
+
+## P3 Fix Summary
+
+Files modified:
+
+- `public/design-preview/figure-01-home.html`
+- `public/design-preview/figure-02-product-detail.html`
+- `public/design-preview/figure-03-cart.html`
+- `public/design-preview/figure-04-checkout.html`
+- `public/design-preview/figure-05-order-success.html`
+- `public/design-preview/figure-06-my-orders.html`
+- `public/design-preview/figure-07-auth.html`
+- `public/design-preview/figure-08-admin-products.html`
+- `public/design-preview/figure-09-admin-orders.html`
+- `public/design-preview/figure-10-admin-dashboard.html`
+- `public/design-preview/js/design-preview.js`
+- `public/design-preview/UI_AUDIT_REPORT.md`
+
+Hooks added by page:
+
+- Figure 01 now exposes `data-page="home"`, customer header/footer hooks, hero carousel, filter sidebar, product grid, deal band, recommendation rail hooks, search/cart/filter/sort fields, and product-card data generated from shared JavaScript.
+- Figure 02 now exposes product-detail hooks for the main product ID, gallery, selected image, product info, purchase box, price, stock, quantity controls, specifications, review summary, related products, add-to-cart, and buy-now actions.
+- Figure 03 now exposes cart hooks for cart list, cart summary, empty-cart state, cart item IDs, product IDs, item selection, quantity controls, item removal, checkout navigation, line totals, subtotal, shipping, and total.
+- Figure 04 now exposes checkout hooks for the checkout form, shipping address, delivery options, payment method, validation message, summary totals, and stable form names: `receiverName`, `shippingAddress`, `phone`, `deliveryOption`, and `paymentMethod`.
+- Figure 05 now exposes order-success hooks for the success card, order summary, recommended products, order ID, delivery estimate, order total, View My Orders, and Continue Shopping actions.
+- Figure 06 now exposes my-orders hooks for tabs, order search, orders list, order IDs, order statuses, filter/search/detail/reorder actions, order status roles, and order total roles.
+- Figure 07 now exposes auth hooks for login/register forms, auth messages, login/register actions, role hints, and stable auth field names including `loginUsername`, `loginPassword`, `registerUsername`, `registerPassword`, `registerConfirmPassword`, and `userRole`.
+- Figure 08 now exposes admin product hooks for sidebar, product toolbar, product table, product modal, product row IDs, admin search/filter/add/edit/delete/save actions, modal field hooks, and product status roles.
+- Figure 09 now exposes admin order hooks for sidebar, order toolbar, order table, order detail panel, order IDs, order statuses, status/date filters, detail/update actions, admin order status roles, and admin order total roles.
+- Figure 10 now exposes dashboard hooks for sidebar, stat-card grid, stat roles, sales and category chart components, Chart.js canvas data hooks, best-selling products, and recent orders.
+
+Shared JavaScript compatibility changes:
+
+- Product cards rendered by `design-preview.js` now include `data-product-id`, `data-category`, `data-price`, `data-rating`, and `data-action="add-to-cart"` hooks.
+- Recommendation mini-cards rendered by shared JavaScript now include product/category/price/rating hooks.
+- The home Add to Cart listener now targets the action hook instead of any product ID container, avoiding accidental cart increments when future product cards become more data-rich.
+- The shared Add to Cart initializer now also supports `data-action="reorder"` while skipping the home product grid so toasts are not duplicated.
+- Admin status updates now also normalize the row `data-order-status` value when a status dropdown changes.
+
+Checks run:
+
+- JavaScript syntax check: `Get-Content -Raw -LiteralPath 'public\design-preview\js\design-preview.js' | node --check -` passed.
+- Whitespace check: `git diff --check -- public/design-preview` passed.
+- Static hook presence check for all ten figures passed.
+- Static scans confirmed no Chinese characters, inline `style` attributes, React, Vue, TypeScript, Tailwind, backend route patterns, Express code, fetch/API calls, or final `public/` migration were introduced in the prototype code.
+- Browser smoke check ran through a temporary local static server. All ten design-preview pages loaded, matched their `data-page` values, exposed expected component hooks, showed no framework overlay, and reported no browser console errors. The check also exercised Add to Cart count updates, cart quantity increment, checkout validation messaging, admin order status updates, and dashboard canvas rendering.
+
+Remaining issues before final project migration:
+
+- The prototype still uses static HTML data and CDN assets; final integration should replace static content with module-rendered data and backend-connected routes later.
+- Some hooks intentionally mark visual prototype actions only; final implementation should map them to real controllers, validators, and API calls after the project structure is approved.
+- Admin product and order tables are hook-ready, but final CRUD, pagination, persistence, authentication, and authorization remain outside this design-preview scope.
+
+Migration readiness:
+
+- Yes. The design-preview prototype is now ready to be migrated into the official project structure later, after the final architecture is chosen. It should remain static until the backend and route integration phase begins.

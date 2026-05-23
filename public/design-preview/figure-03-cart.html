@@ -8,28 +8,28 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link href="css/design-preview.css" rel="stylesheet">
   </head>
-  <body class="preview-page">
-    <header class="site-header sticky-top">
+  <body class="preview-page" data-page="cart">
+    <header class="site-header sticky-top" data-component="customer-header">
       <nav class="navbar navbar-expand-xl shoplite-topbar">
         <div class="container-fluid px-4">
           <a class="shoplite-brand" href="figure-01-home.html" aria-label="ShopLite home"><span class="brand-tile">SL</span><span>ShopLite</span></a>
           <button class="navbar-toggler header-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
           <div class="collapse navbar-collapse gap-3" id="mainNavbar">
             <a class="location-chip" href="#"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i><span><small>Deliver to</small><strong>Campus District</strong></span></a>
-            <form class="search-shell flex-grow-1" role="search">
-              <select class="form-select category-select" aria-label="Search category"><option>All</option><option>Electronics</option><option>Fashion</option><option>Home</option><option>Beauty</option><option>Grocery</option><option>Sports</option></select>
-              <input class="form-control search-input" type="search" placeholder="Search ShopLite products" aria-label="Search ShopLite">
-              <button class="btn search-button" type="submit" aria-label="Search"><i class="bi bi-search" aria-hidden="true"></i></button>
+            <form class="search-shell flex-grow-1" role="search" data-action="search-products">
+              <select class="form-select category-select" name="searchCategory" data-field="search-category" aria-label="Search category"><option>All</option><option>Electronics</option><option>Fashion</option><option>Home</option><option>Beauty</option><option>Grocery</option><option>Sports</option></select>
+              <input class="form-control search-input" name="searchQuery" data-field="search-query" type="search" placeholder="Search ShopLite products" aria-label="Search ShopLite">
+              <button class="btn search-button" type="submit" data-action="search-products" aria-label="Search"><i class="bi bi-search" aria-hidden="true"></i></button>
             </form>
             <div class="header-actions">
               <a class="header-action" href="figure-07-auth.html"><small>Hello, sign in</small><strong>Account & Lists</strong></a>
               <a class="header-action" href="figure-06-my-orders.html"><small>Returns</small><strong>Orders</strong></a>
-              <a class="cart-link" href="figure-03-cart.html"><span class="cart-count">3</span><i class="bi bi-cart3" aria-hidden="true"></i><strong>Cart</strong></a>
+              <a class="cart-link" href="figure-03-cart.html" data-action="open-cart"><span class="cart-count" data-role="cart-count">3</span><i class="bi bi-cart3" aria-hidden="true"></i><strong>Cart</strong></a>
             </div>
           </div>
         </div>
       </nav>
-      <nav class="category-nav" aria-label="Shop categories">
+      <nav class="category-nav" data-component="category-nav" aria-label="Shop categories">
         <div class="container-fluid px-4 category-nav-inner">
           <a href="figure-01-home.html"><i class="bi bi-laptop" aria-hidden="true"></i>Electronics</a>
           <a href="figure-01-home.html"><i class="bi bi-bag" aria-hidden="true"></i>Fashion</a>
@@ -53,63 +53,63 @@
 
         <div class="row g-4 align-items-start">
           <section class="col-lg-8">
-            <div class="surface-card p-4 mb-4">
+            <div class="surface-card p-4 mb-4" data-component="cart-list">
               <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
                 <h2 class="card-heading fs-4">Cart items</h2>
-                <label class="fw-bold"><input class="form-check-input me-2" type="checkbox" checked> Select all</label>
+                <label class="fw-bold"><input class="form-check-input me-2" type="checkbox" data-action="select-cart-item" checked> Select all</label>
               </div>
 
-              <div class="cart-item">
+              <div class="cart-item" data-cart-item-id="cart-item-1" data-product-id="1">
                 <div class="row g-3 align-items-center">
-                  <div class="col-auto"><input class="form-check-input" type="checkbox" checked aria-label="Select AeroBook"></div>
+                  <div class="col-auto"><input class="form-check-input" type="checkbox" data-action="select-cart-item" checked aria-label="Select AeroBook"></div>
                   <div class="col-auto"><img class="cart-thumb" src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=240&q=80" alt="AeroBook laptop"></div>
                   <div class="col-md"><h3 class="cart-item-title">AeroBook 14-inch lightweight laptop</h3><p class="muted-note mb-0">In stock. Free delivery tomorrow with ShopLite Fast.</p></div>
-                  <div class="col-sm-auto"><span class="current-price fs-5">$679.99</span></div>
-                  <div class="col-sm-auto"><div class="quantity-control" data-quantity-control><button type="button" data-quantity-change="-1">-</button><input type="text" value="1" aria-label="Laptop quantity"><button type="button" data-quantity-change="1">+</button></div></div>
-                  <div class="col-sm-auto"><button class="btn btn-sm delete-button" type="button"><i class="bi bi-trash"></i> Delete</button></div>
+                  <div class="col-sm-auto"><span class="current-price fs-5" data-role="line-total">$679.99</span></div>
+                  <div class="col-sm-auto"><div class="quantity-control" data-quantity-control><button type="button" data-action="decrease-quantity" data-quantity-change="-1">-</button><input type="text" value="1" data-field="cart-quantity" aria-label="Laptop quantity"><button type="button" data-action="increase-quantity" data-quantity-change="1">+</button></div></div>
+                  <div class="col-sm-auto"><button class="btn btn-sm delete-button" type="button" data-action="remove-cart-item"><i class="bi bi-trash"></i> Delete</button></div>
                 </div>
               </div>
 
-              <div class="cart-item">
+              <div class="cart-item" data-cart-item-id="cart-item-2" data-product-id="2">
                 <div class="row g-3 align-items-center">
-                  <div class="col-auto"><input class="form-check-input" type="checkbox" checked aria-label="Select headphones"></div>
+                  <div class="col-auto"><input class="form-check-input" type="checkbox" data-action="select-cart-item" checked aria-label="Select headphones"></div>
                   <div class="col-auto"><img class="cart-thumb" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=240&q=80" alt="Headphones"></div>
                   <div class="col-md"><h3 class="cart-item-title">PulseWave wireless headphones</h3><p class="muted-note mb-0">Ships free and arrives in two days.</p></div>
-                  <div class="col-sm-auto"><span class="current-price fs-5">$129.95</span></div>
-                  <div class="col-sm-auto"><div class="quantity-control" data-quantity-control><button type="button" data-quantity-change="-1">-</button><input type="text" value="1" aria-label="Headphones quantity"><button type="button" data-quantity-change="1">+</button></div></div>
-                  <div class="col-sm-auto"><button class="btn btn-sm delete-button" type="button"><i class="bi bi-trash"></i> Delete</button></div>
+                  <div class="col-sm-auto"><span class="current-price fs-5" data-role="line-total">$129.95</span></div>
+                  <div class="col-sm-auto"><div class="quantity-control" data-quantity-control><button type="button" data-action="decrease-quantity" data-quantity-change="-1">-</button><input type="text" value="1" data-field="cart-quantity" aria-label="Headphones quantity"><button type="button" data-action="increase-quantity" data-quantity-change="1">+</button></div></div>
+                  <div class="col-sm-auto"><button class="btn btn-sm delete-button" type="button" data-action="remove-cart-item"><i class="bi bi-trash"></i> Delete</button></div>
                 </div>
               </div>
 
-              <div class="cart-item">
+              <div class="cart-item" data-cart-item-id="cart-item-3" data-product-id="5">
                 <div class="row g-3 align-items-center">
-                  <div class="col-auto"><input class="form-check-input" type="checkbox" aria-label="Select chair"></div>
+                  <div class="col-auto"><input class="form-check-input" type="checkbox" data-action="select-cart-item" aria-label="Select chair"></div>
                   <div class="col-auto"><img class="cart-thumb" src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=240&q=80" alt="Chair"></div>
                   <div class="col-md"><h3 class="cart-item-title">Nordic task chair with woven seat</h3><p class="muted-note mb-0">Oversize item with doorstep delivery.</p></div>
-                  <div class="col-sm-auto"><span class="current-price fs-5">$149.99</span></div>
-                  <div class="col-sm-auto"><div class="quantity-control" data-quantity-control><button type="button" data-quantity-change="-1">-</button><input type="text" value="1" aria-label="Chair quantity"><button type="button" data-quantity-change="1">+</button></div></div>
-                  <div class="col-sm-auto"><button class="btn btn-sm delete-button" type="button"><i class="bi bi-trash"></i> Delete</button></div>
+                  <div class="col-sm-auto"><span class="current-price fs-5" data-role="line-total">$149.99</span></div>
+                  <div class="col-sm-auto"><div class="quantity-control" data-quantity-control><button type="button" data-action="decrease-quantity" data-quantity-change="-1">-</button><input type="text" value="1" data-field="cart-quantity" aria-label="Chair quantity"><button type="button" data-action="increase-quantity" data-quantity-change="1">+</button></div></div>
+                  <div class="col-sm-auto"><button class="btn btn-sm delete-button" type="button" data-action="remove-cart-item"><i class="bi bi-trash"></i> Delete</button></div>
                 </div>
               </div>
             </div>
 
-            <div class="empty-state">
+            <div class="empty-state" data-component="empty-cart-state">
               <i class="bi bi-cart-x fs-1 text-secondary"></i>
               <strong>Empty cart state</strong>
               <span>This section shows how the cart page should look after all items are removed.</span>
-              <div class="mt-3"><a class="btn btn-outline-accent" href="figure-01-home.html">Continue Shopping</a></div>
+              <div class="mt-3"><a class="btn btn-outline-accent" href="figure-01-home.html" data-action="clear-cart">Continue Shopping</a></div>
             </div>
           </section>
 
           <aside class="col-lg-4">
-            <div class="summary-card">
+            <div class="summary-card" data-component="cart-summary">
               <h2 class="card-heading fs-4 mb-3">Cart summary</h2>
-              <div class="summary-line"><span>Subtotal</span><strong>$809.94</strong></div>
-              <div class="summary-line"><span>Shipping estimate</span><strong>$0.00</strong></div>
+              <div class="summary-line"><span>Subtotal</span><strong data-role="cart-subtotal">$809.94</strong></div>
+              <div class="summary-line"><span>Shipping estimate</span><strong data-role="cart-shipping">$0.00</strong></div>
               <div class="summary-line"><span>Student deal savings</span><strong class="text-success">-$48.50</strong></div>
               <hr>
-              <div class="summary-total mb-3"><span class="fw-bold">Estimated total</span><strong class="current-price">$761.44</strong></div>
-              <a class="btn btn-accent w-100 btn-lg" href="figure-04-checkout.html">Proceed to Checkout</a>
+              <div class="summary-total mb-3"><span class="fw-bold">Estimated total</span><strong class="current-price" data-role="cart-total">$761.44</strong></div>
+              <a class="btn btn-accent w-100 btn-lg" href="figure-04-checkout.html" data-action="go-to-checkout">Proceed to Checkout</a>
               <p class="muted-note mt-3 mb-0">Taxes and final delivery choices are calculated on the checkout prototype page.</p>
             </div>
           </aside>
@@ -117,7 +117,7 @@
       </div>
     </main>
 
-    <footer class="site-footer">
+    <footer class="site-footer" data-component="site-footer">
       <div class="container-fluid px-4">
         <div class="footer-grid">
           <div><a class="footer-brand" href="figure-01-home.html"><span class="brand-tile">SL</span><strong>ShopLite</strong></a><p>A fictional marketplace interface for a polished, practical e-commerce course project.</p></div>

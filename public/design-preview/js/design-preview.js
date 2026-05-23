@@ -241,7 +241,7 @@
 
   function productCard(product) {
     return [
-      '<article class="col-xl-3 col-lg-4 col-md-6">',
+      '<article class="col-xl-3 col-lg-4 col-md-6" data-product-id="' + product.id + '" data-category="' + product.category + '" data-price="' + product.price + '" data-rating="' + product.rating + '">',
       '  <div class="product-card">',
       '    <div class="product-media">',
       '      <img src="' + product.image + '" alt="' + product.alt + '" loading="lazy">',
@@ -259,7 +259,7 @@
       '        <span class="old-price">' + formatPrice(product.oldPrice) + "</span>",
       "      </div>",
       '      <p class="shipping-info">' + product.shipping + "</p>",
-      '      <button class="btn add-cart-btn" type="button" data-product-id="' + product.id + '">',
+      '      <button class="btn add-cart-btn" type="button" data-action="add-to-cart" data-product-id="' + product.id + '">',
       '        <i class="bi bi-cart-plus" aria-hidden="true"></i>',
       "        Add to Cart",
       "      </button>",
@@ -271,7 +271,7 @@
 
   function miniCard(product) {
     return [
-      '<article class="mini-card">',
+      '<article class="mini-card" data-product-id="' + product.id + '" data-category="' + product.category + '" data-price="' + product.price + '" data-rating="' + product.rating + '">',
       '  <img src="' + product.image + '" alt="' + product.alt + '" loading="lazy">',
       "  <div>",
       "    <strong>" + product.title + "</strong>",
@@ -380,7 +380,7 @@
     }
 
     document.addEventListener("click", function (event) {
-      var productButton = event.target.closest("[data-product-id]");
+      var productButton = event.target.closest("[data-action='add-to-cart']");
       if (productButton) {
         updateCart();
       }
@@ -470,9 +470,14 @@
   }
 
   function initAddToCartButtons() {
-    document.querySelectorAll("[data-action='add-to-cart']").forEach(function (button) {
+    document.querySelectorAll("[data-action='add-to-cart'], [data-action='reorder']").forEach(function (button) {
+      if (button.closest("#productGrid")) {
+        return;
+      }
+
       button.addEventListener("click", function () {
-        showToast("Item added to your ShopLite cart.");
+        var message = button.getAttribute("data-action") === "reorder" ? "Order items added to your ShopLite cart." : "Item added to your ShopLite cart.";
+        showToast(message);
       });
     });
   }
@@ -531,6 +536,9 @@
         if (badge) {
           badge.textContent = select.value;
           badge.className = statusClass(select.value);
+          if (row) {
+            row.dataset.orderStatus = String(select.value || "").toLowerCase();
+          }
           showToast("Order status updated in the prototype.");
         }
       });
