@@ -3,6 +3,10 @@
   box-shadow: 0 8px 20px rgba(15, 23, 42, 0.22);
 }
 
+.checkout-header {
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.18);
+}
+
 .shoplite-topbar {
   min-height: 72px;
   color: #fff;
@@ -156,6 +160,20 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+}
+
+.checkout-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #dbeafe;
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.checkout-progress span {
+  color: var(--sl-orange);
 }
 
 .cart-link {

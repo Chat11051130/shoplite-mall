@@ -256,3 +256,41 @@ Checks run:
 Remaining next step:
 
 - In the next phase, migrate only the checkout page after confirming the shared customer chrome remains visually aligned across the migrated home, product detail, and cart pages.
+
+## Phase 4 Implementation Note
+
+Files modified or created:
+
+- `public/checkout.html`
+- `public/js/pages/checkoutPage.js`
+- `public/css/layout.css`
+- `public/css/components.css`
+- `docs/migration/design-preview-to-final-plan.md`
+
+What was migrated:
+
+- Migrated the approved Figure 04 checkout page into the official `public/checkout.html` page.
+- Reused the official storefront CSS files from earlier phases and added only the checkout-page styles needed for the secure checkout header, checkout progress, delivery option cards, payment mock section, and order thumbnails.
+- Added local static checkout behavior for required field validation, validation message display, delivery option shipping and total updates, payment method selection, and prototype Place Order success feedback.
+- Preserved P3 hooks for checkout page identity, checkout form, shipping address, delivery options, payment method, checkout summary, validation message, field extraction, place order action, and summary totals.
+
+What was intentionally not migrated:
+
+- Figures 05 through 10 were not migrated.
+- Backend code, Express routes, server files, API calls, and JSON data files were not created or changed.
+- Shared layout rendering modules were not extracted yet; the checkout page still uses static checkout-safe header and footer markup for this phase.
+
+Checks run:
+
+- JavaScript syntax checks for `public/js/main.js`, `public/js/pages/homePage.js`, `public/js/pages/productDetailPage.js`, `public/js/pages/cartPage.js`, `public/js/pages/checkoutPage.js`, and `public/js/templates/productCardTemplate.js`.
+- `git diff --check`.
+- Static scan for Chinese characters in code and comments.
+- Static scan for React, Vue, TypeScript, Tailwind, backend code, Express route patterns, API calls, and `fetch`.
+- Browser smoke check for `public/checkout.html` confirming the page loads, checkout form exists, shipping address exists, two delivery options exist, two payment methods exist, order summary exists, invalid submit displays validation, valid submit shows prototype success behavior, delivery option selection updates shipping and total, and no page console errors occur.
+- Browser smoke check for `public/index.html` confirming Phase 1 still renders 12 product cards and three recommendation rails.
+- Browser smoke check for `public/product-detail.html` confirming Phase 2 still supports quantity changes, Add to Cart toast, Buy Now toast, related products, and no page console errors occur.
+- Browser smoke check for `public/cart.html` confirming Phase 3 still supports quantity updates, item removal, subtotal and total updates, checkout prototype behavior, and no page console errors occur.
+
+Remaining next step:
+
+- In the next phase, migrate only the order success page after confirming the checkout-safe flow remains visually aligned with the migrated customer pages.

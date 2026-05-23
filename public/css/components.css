@@ -386,6 +386,34 @@
   margin-bottom: 9px;
 }
 
+.checkout-option {
+  display: block;
+  height: 100%;
+  padding: 16px;
+  border: 1px solid var(--sl-gray-200);
+  border-radius: var(--sl-radius);
+  background: var(--sl-surface);
+  box-shadow: var(--sl-shadow);
+  cursor: pointer;
+}
+
+.checkout-option:has(.form-check-input:checked) {
+  border-color: var(--sl-orange);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.16);
+}
+
+.payment-mock {
+  border-top: 4px solid var(--sl-orange);
+}
+
+.order-thumb {
+  width: 58px;
+  height: 58px;
+  object-fit: cover;
+  border-radius: var(--sl-radius);
+  background: #eef2f7;
+}
+
 .section-toolbar {
   display: flex;
   align-items: end;
