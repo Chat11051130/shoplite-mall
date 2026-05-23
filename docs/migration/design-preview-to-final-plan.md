@@ -294,3 +294,41 @@ Checks run:
 Remaining next step:
 
 - In the next phase, migrate only the order success page after confirming the checkout-safe flow remains visually aligned with the migrated customer pages.
+
+## Phase 5 Implementation Note
+
+Files modified or created:
+
+- `public/order-success.html`
+- `public/js/pages/orderSuccessPage.js`
+- `public/css/components.css`
+- `docs/migration/design-preview-to-final-plan.md`
+
+What was migrated:
+
+- Migrated the approved Figure 05 order success page into the official `public/order-success.html` page.
+- Reused the official storefront CSS files from earlier phases and added only the success-page component styles needed for the confirmation card, success icon, and metric cards.
+- Added local static order success behavior for View My Orders prototype feedback, recommended product Add to Cart feedback, cart count updates, and search form prototype feedback.
+- Preserved P3 hooks for order success page identity, success card, order summary, recommended products, order ID, delivery estimate, order total, View My Orders action, Continue Shopping action, and recommended product metadata.
+
+What was intentionally not migrated:
+
+- Figures 06 through 10 were not migrated.
+- Backend code, Express routes, server files, API calls, and JSON data files were not created or changed.
+- The My Orders page was not migrated yet; the View My Orders button shows prototype feedback instead of navigating to an unfinished page.
+
+Checks run:
+
+- JavaScript syntax checks for `public/js/main.js`, `public/js/pages/homePage.js`, `public/js/pages/productDetailPage.js`, `public/js/pages/cartPage.js`, `public/js/pages/checkoutPage.js`, `public/js/pages/orderSuccessPage.js`, and `public/js/templates/productCardTemplate.js`.
+- `git diff --check`.
+- Static scan for Chinese characters in code and comments.
+- Static scan for React, Vue, TypeScript, Tailwind, backend code, Express route patterns, API calls, and `fetch`.
+- Browser smoke check for `public/order-success.html` confirming the page loads, success card exists, order ID exists, delivery estimate exists, order summary exists, order total exists, View My Orders prototype action works, Continue Shopping links to `index.html`, three recommended product cards exist, recommended Add to Cart updates the cart count, and no page console errors occur.
+- Browser smoke check for `public/index.html` confirming Phase 1 still renders 12 product cards and three recommendation rails.
+- Browser smoke check for `public/product-detail.html` confirming Phase 2 still supports quantity changes, Add to Cart toast, Buy Now toast, related products, and no page console errors occur.
+- Browser smoke check for `public/cart.html` confirming Phase 3 still supports quantity updates, item removal, subtotal and total updates, checkout prototype behavior, and no page console errors occur.
+- Browser smoke check for `public/checkout.html` confirming Phase 4 still supports validation, delivery option updates, payment selection, valid submit prototype behavior, and no page console errors occur.
+
+Remaining next step:
+
+- In the next phase, migrate only the My Orders page after confirming the completed order success flow remains visually aligned with the migrated customer pages.
