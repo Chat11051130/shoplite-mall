@@ -350,6 +350,12 @@
   padding: 26px 0 48px;
 }
 
+.breadcrumb-area {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--sl-gray-200);
+  background: #fff;
+}
+
 .filter-panel {
   position: sticky;
   top: 132px;

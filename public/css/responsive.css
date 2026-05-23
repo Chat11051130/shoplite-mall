@@ -28,6 +28,10 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .gallery-main {
+    min-height: 340px;
+  }
+
   .filter-panel {
     position: static;
     min-height: auto;
@@ -107,6 +111,14 @@
   .quick-strip-grid,
   .recommendation-rail {
     grid-template-columns: 1fr;
+  }
+
+  .gallery-main {
+    min-height: 280px;
+  }
+
+  .gallery-thumbs {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .section-toolbar,

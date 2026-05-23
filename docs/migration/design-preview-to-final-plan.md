@@ -182,3 +182,40 @@ Phase 1 rendering follow-up:
 Remaining next step:
 
 - In the next phase, extract shared customer layout rendering for the navbar and footer only after `public/index.html` remains visually matched to the approved Figure 01 prototype.
+
+## Phase 2 Implementation Note
+
+Files modified or created:
+
+- `public/product-detail.html`
+- `public/js/pages/productDetailPage.js`
+- `public/css/layout.css`
+- `public/css/components.css`
+- `public/css/responsive.css`
+- `docs/migration/design-preview-to-final-plan.md`
+
+What was migrated:
+
+- Migrated the approved Figure 02 product detail page into the official `public/product-detail.html` page.
+- Reused the official storefront CSS files from Phase 1 and added only the detail-page component styles needed for the gallery, purchase box, quantity control, specifications table, review summary, and related product rail.
+- Added local static product detail behavior for thumbnail selection, quantity increment and decrement, Add to Cart toast, Buy Now toast, and cart count updates.
+- Preserved P3 hooks for product detail page identity, page components, actions, fields, roles, and product metadata.
+
+What was intentionally not migrated:
+
+- Figures 03 through 10 were not migrated.
+- Backend code, Express routes, server files, API calls, and JSON data files were not created or changed.
+- Shared layout rendering modules were not extracted yet; the product detail page still uses static header and footer markup for this phase.
+
+Checks run:
+
+- JavaScript syntax checks for `public/js/main.js`, `public/js/pages/homePage.js`, `public/js/pages/productDetailPage.js`, and `public/js/templates/productCardTemplate.js`.
+- `git diff --check`.
+- Static scan for Chinese characters in code and comments.
+- Static scan for React, Vue, TypeScript, Tailwind, backend code, Express route patterns, API calls, and `fetch`.
+- Browser smoke check for `public/product-detail.html` confirming the page loads, main product section exists, product gallery exists, quantity control works, Add to Cart toast works, Buy Now toast works, related products exist, and no page console errors occur.
+- Browser smoke check for `public/index.html` confirming Phase 1 still renders 12 product cards, four Best Sellers cards, four Today's Deals cards, four Recommended for You cards, and home-page search, sort, toast, and cart count behavior still work.
+
+Remaining next step:
+
+- In the next phase, migrate only the cart page after confirming the shared customer chrome remains visually aligned across `public/index.html` and `public/product-detail.html`.
