@@ -1,0 +1,128 @@
+@media (max-width: 1199px) {
+  .shoplite-topbar .navbar-collapse {
+    padding: 16px 0 8px;
+  }
+
+  .search-shell {
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: 120px minmax(0, 1fr) 52px;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .hero-offer-panel {
+    width: 230px;
+  }
+
+  .hero-copy h1,
+  .hero-copy h2 {
+    font-size: 48px;
+  }
+
+  .quick-strip-grid,
+  .recommendation-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .filter-panel {
+    position: static;
+    min-height: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .shoplite-topbar .container-fluid,
+  .category-nav .container-fluid,
+  .container-fluid.px-4 {
+    padding-right: 16px !important;
+    padding-left: 16px !important;
+  }
+
+  .shoplite-brand {
+    font-size: 22px;
+  }
+
+  .header-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 38px;
+    margin-left: auto;
+  }
+
+  .search-shell {
+    grid-template-columns: 112px minmax(0, 1fr) 48px;
+  }
+
+  .hero-copy {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .hero-copy h1,
+  .hero-copy h2,
+  .hero-copy span {
+    max-width: 100%;
+  }
+
+  .hero-slide {
+    min-height: 500px;
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 34px 22px 64px;
+  }
+
+  .hero-slide::after {
+    background: rgba(15, 23, 42, 0.82);
+  }
+
+  .hero-copy h1,
+  .hero-copy h2 {
+    max-width: 320px;
+    font-size: 30px;
+    line-height: 1.08;
+  }
+
+  .hero-copy span {
+    font-size: 16px;
+  }
+
+  .hero-offer-panel {
+    width: 100%;
+    min-height: 130px;
+    margin-top: 20px;
+  }
+
+  .quick-strip {
+    margin-top: 0;
+    padding-top: 16px;
+  }
+
+  .quick-strip-grid,
+  .recommendation-rail {
+    grid-template-columns: 1fr;
+  }
+
+  .section-toolbar,
+  .deal-band,
+  .footer-grid {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .toolbar-controls {
+    align-items: stretch;
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .toolbar-controls .form-select {
+    width: 100%;
+  }
+}

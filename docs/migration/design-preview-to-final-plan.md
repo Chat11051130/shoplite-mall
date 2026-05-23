@@ -135,3 +135,50 @@ Success criteria for that phase:
 - Product grid renders from a JavaScript data source or existing backend-compatible module.
 - Search, filter, sort, Add to Cart toast, cart count, recommendation rails, and responsive layout still work.
 - No backend changes are made in the first migration phase.
+
+## Phase 1 Implementation Note
+
+Files modified or created:
+
+- `public/index.html`
+- `public/css/styles.css`
+- `public/css/layout.css`
+- `public/css/components.css`
+- `public/css/responsive.css`
+- `public/js/main.js`
+- `public/js/pages/homePage.js`
+- `public/js/templates/productCardTemplate.js`
+- `docs/migration/design-preview-to-final-plan.md`
+
+What was migrated:
+
+- Migrated the approved Figure 01 homepage into the official `public/index.html` entry page.
+- Split the Figure 01 storefront CSS into global, layout, component, and responsive styles.
+- Split the home-page JavaScript into a page initializer and product-card template module.
+- Preserved the P3 integration hooks for page identity, components, actions, fields, roles, and product metadata.
+- Preserved the home page interactions for product rendering, search, category dropdown, category navigation, price filtering, rating filtering, sorting, filter clearing, cart count updates, Add to Cart toast, and recommendation rails.
+
+What was intentionally not migrated:
+
+- Figures 02 through 10 were not migrated.
+- Admin pages and admin CSS were not migrated.
+- Backend code, Express routes, server data files, and JSON data files were not created or changed.
+- Shared navbar/footer rendering modules were not extracted yet; this phase keeps the approved static home layout stable first.
+
+Checks run:
+
+- JavaScript syntax checks for `public/js/main.js`, `public/js/pages/homePage.js`, and `public/js/templates/productCardTemplate.js`.
+- `git diff --check`.
+- Static scan for Chinese characters in code and comments.
+- Static scan for React, Vue, TypeScript, Tailwind, backend code, Express route patterns, API calls, and `fetch`.
+- Browser smoke check for `public/index.html`.
+
+Phase 1 rendering follow-up:
+
+- Issue found: the migrated home page initially used ES module imports, which could leave the dynamic product grid and recommendation rails empty when `public/index.html` was opened as a direct static file.
+- Fix applied: kept the split JavaScript structure but changed `productCardTemplate.js`, `homePage.js`, and `main.js` to ordered browser scripts with shared `window.ShopLiteTemplates` and `window.ShopLitePages` namespaces.
+- Checks run: JavaScript syntax checks, `git diff --check`, static scans, and browser smoke checks confirming 12 product cards, four Best Sellers cards, four Today's Deals cards, four Recommended for You cards, and no page console errors.
+
+Remaining next step:
+
+- In the next phase, extract shared customer layout rendering for the navbar and footer only after `public/index.html` remains visually matched to the approved Figure 01 prototype.
