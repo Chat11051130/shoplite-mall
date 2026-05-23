@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ShopLite Admin - Product Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="css/layout.css" rel="stylesheet">
+    <link href="css/components.css" rel="stylesheet">
+    <link href="css/responsive.css" rel="stylesheet">
+    <link href="css/admin.css" rel="stylesheet">
+  </head>
+  <body class="admin-layout" data-page="admin-product-form">
+    <div class="row g-0">
+      <aside class="col-xl-2 col-lg-3">
+        <nav class="admin-sidebar" data-component="admin-sidebar" aria-label="Admin navigation">
+          <a class="shoplite-brand mb-4" href="admin-dashboard.html" aria-label="ShopLite admin dashboard">
+            <span class="brand-tile">SL</span>
+            <span>Admin</span>
+          </a>
+          <a class="nav-link" href="admin-dashboard.html"><i class="bi bi-speedometer2" aria-hidden="true"></i> Dashboard</a>
+          <a class="nav-link active" href="admin-products.html" aria-current="page"><i class="bi bi-box-seam" aria-hidden="true"></i> Products</a>
+          <a class="nav-link" href="admin-orders.html"><i class="bi bi-receipt" aria-hidden="true"></i> Orders</a>
+          <a class="nav-link" href="index.html"><i class="bi bi-shop" aria-hidden="true"></i> Store Preview</a>
+        </nav>
+      </aside>
+
+      <main class="col-xl-10 col-lg-9 admin-content">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+          <div>
+            <p class="eyebrow">Admin workspace</p>
+            <h1 class="section-heading">Product Form</h1>
+          </div>
+          <a class="btn btn-outline-accent" href="admin-products.html"><i class="bi bi-arrow-left" aria-hidden="true"></i> Back to Products</a>
+        </div>
+
+        <section class="surface-card p-4 product-form-surface" data-component="product-form-modal">
+          <form id="adminProductForm" class="row g-3" data-prototype-form data-component="product-form" data-action="save-product" novalidate>
+            <div class="col-md-8">
+              <label class="form-label" for="productName">Product name</label>
+              <input class="form-control" id="productName" name="productName" data-field="product-name" type="text" placeholder="New ShopLite product" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="productCategory">Category</label>
+              <select class="form-select" id="productCategory" name="productCategory" data-field="product-category" required>
+                <option value="">Select category</option>
+                <option value="electronics">Electronics</option>
+                <option value="fashion">Fashion</option>
+                <option value="home">Home</option>
+                <option value="beauty">Beauty</option>
+                <option value="grocery">Grocery</option>
+                <option value="sports">Sports</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="productPrice">Price</label>
+              <input class="form-control" id="productPrice" name="productPrice" data-field="product-price" type="number" min="0" step="0.01" placeholder="99.99" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="productStock">Stock</label>
+              <input class="form-control" id="productStock" name="productStock" data-field="product-stock" type="number" min="0" step="1" placeholder="50" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="productStatus">Status</label>
+              <select class="form-select" id="productStatus" name="productStatus" data-field="product-status" required>
+                <option value="">Select status</option>
+                <option value="active">Active</option>
+                <option value="draft">Draft</option>
+                <option value="low-stock">Low stock</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="productImageUrl">Product image URL</label>
+              <input class="form-control" id="productImageUrl" name="productImageUrl" data-field="product-image-url" type="url" placeholder="https://example.com/product.jpg">
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="productDescription">Product description</label>
+              <textarea class="form-control" id="productDescription" name="productDescription" data-field="product-description" rows="4" placeholder="Static product description for the visual prototype." required></textarea>
+            </div>
+            <div class="col-12">
+              <div class="d-flex flex-wrap align-items-center gap-3 admin-form-preview">
+                <span class="muted-note">Status preview</span>
+                <span class="status-badge status-draft" id="productStatusPreview" data-role="product-status">Draft</span>
+              </div>
+              <div id="adminProductFormMessage" class="validation-message mt-3" data-component="validation-message" aria-live="polite"></div>
+            </div>
+            <div class="col-12 d-flex flex-wrap gap-2 justify-content-end">
+              <a class="btn btn-outline-secondary" href="admin-products.html">Cancel</a>
+              <button class="btn btn-accent" type="submit" data-action="save-product">Save Mock Product</button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/pages/adminProductFormPage.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

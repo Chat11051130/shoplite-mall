@@ -1,0 +1,83 @@
+.admin-layout {
+  min-height: 100vh;
+  background: var(--sl-gray-100);
+}
+
+.admin-sidebar {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  padding: 18px;
+  color: #fff;
+  background: var(--sl-navy-950);
+}
+
+.admin-sidebar .shoplite-brand {
+  color: #fff;
+}
+
+.admin-sidebar .nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 0;
+  border-radius: var(--sl-radius);
+  color: #dbeafe;
+  font-weight: 800;
+}
+
+.admin-sidebar .nav-link:hover,
+.admin-sidebar .nav-link.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.admin-content {
+  padding: 24px;
+}
+
+.admin-panel {
+  overflow: hidden;
+}
+
+.admin-panel .table {
+  min-width: 860px;
+}
+
+.admin-panel th {
+  color: var(--sl-gray-700);
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.table-thumb {
+  width: 52px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: var(--sl-radius);
+  background: #eef2f7;
+}
+
+.product-form-surface {
+  max-width: 980px;
+}
+
+.admin-form-preview {
+  padding: 12px;
+  border: 1px solid var(--sl-gray-200);
+  border-radius: var(--sl-radius);
+  background: var(--sl-gray-50);
+}
+
+@media (max-width: 1199px) {
+  .admin-sidebar {
+    position: static;
+    min-height: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .admin-content {
+    padding: 18px 14px 28px;
+  }
+}

@@ -407,3 +407,43 @@ Checks run:
 Remaining next step:
 
 - In the next phase, migrate only the admin product management page from Figure 08 after confirming the customer auth flow remains visually aligned with the migrated storefront pages.
+
+## Phase 8 Implementation Note
+
+Files modified or created:
+
+- `public/admin-products.html`
+- `public/admin-product-form.html`
+- `public/js/pages/adminProductsPage.js`
+- `public/js/pages/adminProductFormPage.js`
+- `public/css/admin.css`
+- `docs/migration/design-preview-to-final-plan.md`
+
+What was migrated:
+
+- Migrated the approved Figure 08 admin product management prototype into the official `public/admin-products.html` page.
+- Created `public/admin-product-form.html` as a dedicated add/edit product form page based on the Figure 08 product form mockup.
+- Added admin-only layout and table styles to `public/css/admin.css` while keeping customer pages unchanged.
+- Added local static admin product list behavior for product search, category filtering, status filtering, Add Product navigation, Edit navigation, Delete row removal, and prototype toast feedback.
+- Added local static product form behavior for required-field validation, status preview updates, and prototype save success feedback.
+- Preserved P3 hooks for admin sidebar, product toolbar, admin product table, product rows, product actions, product fields, and product status roles.
+
+What was intentionally not migrated:
+
+- Figures 09 and 10 were not migrated.
+- Backend code, Express routes, server files, API calls, JSON data files, and real product persistence were not created or changed.
+- Shared admin layout rendering modules were not extracted yet; the admin product pages still use static admin sidebar markup for this phase.
+
+Checks run:
+
+- JavaScript syntax checks for `public/js/main.js`, existing migrated page scripts, `public/js/pages/adminProductsPage.js`, `public/js/pages/adminProductFormPage.js`, and `public/js/templates/productCardTemplate.js`.
+- `git diff --check`.
+- Static scan for Chinese characters in code and comments.
+- Static scan for React, Vue, TypeScript, Tailwind, backend code, Express route patterns, API calls, and `fetch`.
+- Browser smoke check for `public/admin-products.html` confirming the page loads, admin sidebar exists, product toolbar exists, product table exists, four product rows exist, search and filter behavior works, Add Product navigation works, Edit navigation works, Delete removes a static row, and no page console errors occur.
+- Browser smoke check for `public/admin-product-form.html` confirming the page loads, form exists, required fields exist, invalid submit displays validation, valid submit shows prototype success feedback, status preview updates, and no page console errors occur.
+- Browser smoke checks for all previously migrated customer pages confirming Phase 1 through Phase 7 behavior still works.
+
+Remaining next step:
+
+- In the next phase, migrate only the admin order management page from Figure 09 after confirming the admin product management flow remains visually aligned with the approved admin system.
