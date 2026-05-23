@@ -436,6 +436,57 @@
   background: var(--sl-gray-50);
 }
 
+.order-card {
+  padding: 22px;
+}
+
+.order-card + .order-card {
+  margin-top: 16px;
+}
+
+.order-card-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.order-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.order-search-form {
+  min-width: min(100%, 460px);
+}
+
+.status-paid,
+.status-active,
+.status-delivered,
+.status-completed {
+  background: var(--sl-green);
+}
+
+.status-processing,
+.status-pending {
+  background: var(--sl-orange-dark);
+}
+
+.status-shipped {
+  background: var(--sl-blue);
+}
+
+.status-cancelled,
+.status-low {
+  background: var(--sl-red);
+}
+
+.status-draft {
+  background: var(--sl-gray-500);
+}
+
 .section-toolbar {
   display: flex;
   align-items: end;

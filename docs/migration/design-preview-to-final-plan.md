@@ -332,3 +332,38 @@ Checks run:
 Remaining next step:
 
 - In the next phase, migrate only the My Orders page after confirming the completed order success flow remains visually aligned with the migrated customer pages.
+
+## Phase 6 Implementation Note
+
+Files modified or created:
+
+- `public/orders.html`
+- `public/js/pages/ordersPage.js`
+- `public/css/components.css`
+- `docs/migration/design-preview-to-final-plan.md`
+
+What was migrated:
+
+- Migrated the approved Figure 06 My Orders page into the official `public/orders.html` page.
+- Reused the official storefront CSS files from earlier phases and added only the order-card layout and status badge variants needed for the My Orders view.
+- Added local static orders behavior for status tab filtering, order search filtering, View Details prototype feedback, Reorder prototype feedback, and cart count updates.
+- Preserved P3 hooks for My Orders page identity, order tabs, order search, orders list, order IDs, order statuses, order totals, action buttons, and order search field extraction.
+
+What was intentionally not migrated:
+
+- Figures 07 through 10 were not migrated.
+- Backend code, Express routes, server files, API calls, and JSON data files were not created or changed.
+- Shared layout rendering modules were not extracted yet; the My Orders page still uses static customer header and footer markup for this phase.
+
+Checks run:
+
+- JavaScript syntax checks for `public/js/main.js`, existing migrated page scripts, `public/js/pages/ordersPage.js`, and `public/js/templates/productCardTemplate.js`.
+- `git diff --check`.
+- Static scan for Chinese characters in code and comments.
+- Static scan for React, Vue, TypeScript, Tailwind, backend code, Express route patterns, API calls, and `fetch`.
+- Browser smoke check for `public/orders.html` confirming the page loads, order tabs exist, order search exists, orders list exists, three order cards exist, three status badges exist, status tab filtering changes visible orders, search filtering changes visible orders, View Details prototype feedback works, Reorder prototype feedback updates the cart count, and no page console errors occur.
+- Browser smoke checks for `public/index.html`, `public/product-detail.html`, `public/cart.html`, `public/checkout.html`, and `public/order-success.html` confirming the previous migrated pages still pass their Phase 1 through Phase 5 checks.
+
+Remaining next step:
+
+- In the next phase, migrate only the login and register pages from Figure 07 after confirming the My Orders account flow remains visually aligned with the migrated storefront pages.
