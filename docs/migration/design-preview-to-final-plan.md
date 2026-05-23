@@ -219,3 +219,40 @@ Checks run:
 Remaining next step:
 
 - In the next phase, migrate only the cart page after confirming the shared customer chrome remains visually aligned across `public/index.html` and `public/product-detail.html`.
+
+## Phase 3 Implementation Note
+
+Files modified or created:
+
+- `public/cart.html`
+- `public/js/pages/cartPage.js`
+- `public/css/components.css`
+- `public/css/responsive.css`
+- `docs/migration/design-preview-to-final-plan.md`
+
+What was migrated:
+
+- Migrated the approved Figure 03 cart page into the official `public/cart.html` page.
+- Reused the official storefront CSS files from earlier phases and added only the cart-page component styles needed for cart items, thumbnails, delete buttons, page title layout, and summary totals.
+- Added local static cart behavior for quantity increment and decrement, line total updates, selected item subtotal updates, shipping estimate updates, estimated total updates, item removal, clear cart preview, checkout prototype toast, and cart count updates.
+- Preserved P3 hooks for cart page identity, cart list, cart summary, empty cart state, cart item IDs, product IDs, cart actions, quantity fields, and summary roles.
+
+What was intentionally not migrated:
+
+- Figures 04 through 10 were not migrated.
+- Backend code, Express routes, server files, API calls, and JSON data files were not created or changed.
+- Shared layout rendering modules were not extracted yet; the cart page still uses static header and footer markup for this phase.
+
+Checks run:
+
+- JavaScript syntax checks for `public/js/main.js`, `public/js/pages/homePage.js`, `public/js/pages/productDetailPage.js`, `public/js/pages/cartPage.js`, and `public/js/templates/productCardTemplate.js`.
+- `git diff --check`.
+- Static scan for Chinese characters in code and comments.
+- Static scan for React, Vue, TypeScript, Tailwind, backend code, Express route patterns, API calls, and `fetch`.
+- Browser smoke check for `public/cart.html` confirming the page loads, cart list exists, cart summary exists, at least two cart items exist, quantity increment and decrement update quantities and totals, selected item checkbox behavior updates totals, item removal works, checkout prototype toast works, and no page console errors occur.
+- Browser smoke check for `public/index.html` confirming Phase 1 still renders 12 product cards, four Best Sellers cards, four Today's Deals cards, four Recommended for You cards, search behavior, Add to Cart toast, and cart count behavior.
+- Browser smoke check for `public/product-detail.html` confirming Phase 2 still supports quantity changes, Add to Cart toast, Buy Now toast, related products, and no page console errors occur.
+
+Remaining next step:
+
+- In the next phase, migrate only the checkout page after confirming the shared customer chrome remains visually aligned across the migrated home, product detail, and cart pages.

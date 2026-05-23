@@ -53,6 +53,18 @@
   box-shadow: var(--sl-shadow);
 }
 
+.summary-card {
+  padding: 18px;
+}
+
+.customer-page-title {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
 .quick-strip-grid > div,
 .benefit-card {
   display: grid;
@@ -323,6 +335,55 @@
   border: 0;
   text-align: center;
   font-weight: 800;
+}
+
+.cart-item {
+  padding: 18px 0;
+  border-top: 1px solid var(--sl-gray-200);
+}
+
+.cart-item:first-child {
+  border-top: 0;
+}
+
+.cart-item-title {
+  margin: 0 0 4px;
+  color: var(--sl-navy-950);
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.cart-thumb {
+  width: 94px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: var(--sl-radius);
+  background: #eef2f7;
+}
+
+.delete-button {
+  border-color: #fecaca;
+  color: var(--sl-red);
+  background: #fff5f5;
+  font-weight: 800;
+}
+
+.delete-button:hover {
+  border-color: var(--sl-red);
+  color: #fff;
+  background: var(--sl-red);
+}
+
+.summary-line,
+.summary-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.summary-line {
+  margin-bottom: 9px;
 }
 
 .section-toolbar {
