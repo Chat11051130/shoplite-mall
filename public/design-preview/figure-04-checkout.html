@@ -9,16 +9,16 @@
     <link href="css/design-preview.css" rel="stylesheet">
   </head>
   <body class="preview-page">
-    <header>
+    <header class="site-header sticky-top checkout-header">
       <nav class="navbar navbar-expand-xl shoplite-topbar">
         <div class="container-fluid px-4">
-          <a class="shoplite-brand" href="figure-01-home.html"><span class="brand-tile">SL</span><span>ShopLite</span></a>
-          <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+          <a class="shoplite-brand" href="figure-01-home.html" aria-label="ShopLite home"><span class="brand-tile">SL</span><span>ShopLite</span></a>
+          <button class="navbar-toggler header-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
           <div class="collapse navbar-collapse gap-3" id="mainNavbar">
-            <a class="location-chip" href="#"><i class="bi bi-geo-alt-fill"></i><span><small>Deliver to</small><strong>Campus District</strong></span></a>
-            <form class="search-shell flex-grow-1"><select class="form-select"><option>All</option></select><input class="form-control" type="search" placeholder="Search ShopLite"><button class="btn search-button" type="submit"><i class="bi bi-search"></i></button></form>
+            <a class="location-chip" href="#"><i class="bi bi-lock-fill" aria-hidden="true"></i><span><small>Secure</small><strong>Checkout</strong></span></a>
+            <div class="checkout-progress ms-xl-auto"><span>1</span> Cart <i class="bi bi-chevron-right"></i><span>2</span> Checkout <i class="bi bi-chevron-right"></i><span>3</span> Confirmation</div>
             <a class="header-action" href="figure-06-my-orders.html"><small>Returns</small><strong>Orders</strong></a>
-            <a class="cart-link" href="figure-03-cart.html"><span class="cart-count">3</span><i class="bi bi-cart3"></i><strong>Cart</strong></a>
+            <a class="cart-link" href="figure-03-cart.html"><span class="cart-count">3</span><i class="bi bi-cart3" aria-hidden="true"></i><strong>Cart</strong></a>
           </div>
         </div>
       </nav>
@@ -47,12 +47,12 @@
               <div class="surface-card p-4 mb-4">
                 <h2 class="card-heading fs-5 mb-3">Delivery option</h2>
                 <div class="row g-3">
-                  <div class="col-md-6"><label class="surface-card d-block p-3 h-100"><input class="form-check-input me-2" name="delivery" type="radio" checked><strong>Standard delivery</strong><p class="muted-note mb-0 mt-2">Arrives in 2 to 3 business days. Free for this order.</p></label></div>
-                  <div class="col-md-6"><label class="surface-card d-block p-3 h-100"><input class="form-check-input me-2" name="delivery" type="radio"><strong>Priority delivery</strong><p class="muted-note mb-0 mt-2">Arrives tomorrow. Prototype fee: $8.99.</p></label></div>
+                  <div class="col-md-6"><label class="checkout-option"><input class="form-check-input me-2" name="delivery" type="radio" checked><strong>Standard delivery</strong><p class="muted-note mb-0 mt-2">Arrives in 2 to 3 business days. Free for this order.</p></label></div>
+                  <div class="col-md-6"><label class="checkout-option"><input class="form-check-input me-2" name="delivery" type="radio"><strong>Priority delivery</strong><p class="muted-note mb-0 mt-2">Arrives tomorrow. Prototype fee: $8.99.</p></label></div>
                 </div>
               </div>
 
-              <div class="surface-card p-4">
+              <div class="surface-card payment-mock p-4">
                 <h2 class="card-heading fs-5 mb-3">Payment method</h2>
                 <div class="row g-3">
                   <div class="col-md-6"><label class="form-label">Card number</label><input class="form-control" type="text" value="4242 4242 4242 4242"></div>
@@ -66,23 +66,32 @@
             <aside class="col-lg-4">
               <div class="summary-card">
                 <h2 class="card-heading fs-4 mb-3">Order summary</h2>
-                <div class="d-flex gap-3 mb-3"><img class="order-thumb" src="assets/images/placeholder-product.svg" alt="Laptop"><div><strong>AeroBook laptop</strong><p class="muted-note mb-0">Qty 1</p></div><strong class="ms-auto">$679.99</strong></div>
-                <div class="d-flex gap-3 mb-3"><img class="order-thumb" src="assets/images/placeholder-product.svg" alt="Headphones"><div><strong>PulseWave headphones</strong><p class="muted-note mb-0">Qty 1</p></div><strong class="ms-auto">$129.95</strong></div>
+                <div class="d-flex gap-3 mb-3"><img class="order-thumb" src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=160&q=80" alt="Laptop"><div><strong>AeroBook laptop</strong><p class="muted-note mb-0">Qty 1</p></div><strong class="ms-auto">$679.99</strong></div>
+                <div class="d-flex gap-3 mb-3"><img class="order-thumb" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=160&q=80" alt="Headphones"><div><strong>PulseWave headphones</strong><p class="muted-note mb-0">Qty 1</p></div><strong class="ms-auto">$129.95</strong></div>
                 <hr>
-                <div class="d-flex justify-content-between mb-2"><span>Items</span><strong>$809.94</strong></div>
-                <div class="d-flex justify-content-between mb-2"><span>Shipping</span><strong>$0.00</strong></div>
-                <div class="d-flex justify-content-between mb-2"><span>Estimated tax</span><strong>$61.10</strong></div>
-                <div class="d-flex justify-content-between mb-3"><span>Savings</span><strong class="text-success">-$48.50</strong></div>
+                <div class="summary-line"><span>Items</span><strong>$809.94</strong></div>
+                <div class="summary-line"><span>Shipping</span><strong>$0.00</strong></div>
+                <div class="summary-line"><span>Estimated tax</span><strong>$61.10</strong></div>
+                <div class="summary-line"><span>Savings</span><strong class="text-success">-$48.50</strong></div>
                 <hr>
-                <div class="d-flex justify-content-between align-items-center mb-3"><span class="fw-bold">Total amount</span><strong class="price">$822.54</strong></div>
+                <div class="summary-total mb-3"><span class="fw-bold">Total amount</span><strong class="current-price">$822.54</strong></div>
                 <button class="btn btn-accent w-100 btn-lg" type="submit">Place Order</button>
-                <a class="btn btn-outline-secondary w-100 mt-2" href="figure-05-order-success.html">Preview Success Page</a>
+                <a class="btn btn-outline-accent w-100 mt-2" href="figure-05-order-success.html">Preview Success Page</a>
               </div>
             </aside>
           </div>
         </form>
       </div>
     </main>
+
+    <footer class="site-footer">
+      <div class="container-fluid px-4">
+        <div class="footer-grid">
+          <div><a class="footer-brand" href="figure-01-home.html"><span class="brand-tile">SL</span><strong>ShopLite</strong></a><p>A fictional marketplace interface for a polished, practical e-commerce course project.</p></div>
+          <nav aria-label="Footer links"><a href="#">About</a><a href="#">Help</a><a href="#">Contact</a><a href="#">Terms</a><a href="#">Privacy</a></nav>
+        </div>
+      </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/design-preview.js"></script>

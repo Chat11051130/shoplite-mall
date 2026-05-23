@@ -284,3 +284,49 @@ Remaining P2/P3 issues:
 Figure 01 visual source of truth:
 
 - Yes. After the P1 restoration, `figure-01-home.html` should now be treated as the visual source of truth for Figures 02 to 10. Later work should inherit its restored header, color tokens, product-card language, recommendation rail style, footer system, shadows, radius, spacing, and marketplace tone while preserving each page's own layout.
+
+## P2 Fix Summary
+
+Files modified:
+
+- `public/design-preview/figure-02-product-detail.html`
+- `public/design-preview/figure-03-cart.html`
+- `public/design-preview/figure-04-checkout.html`
+- `public/design-preview/figure-05-order-success.html`
+- `public/design-preview/figure-06-my-orders.html`
+- `public/design-preview/figure-07-auth.html`
+- `public/design-preview/css/design-preview.css`
+- `public/design-preview/UI_AUDIT_REPORT.md`
+
+Customer pages updated:
+
+- Figure 02 now uses the restored ShopLite marketplace header, full category navigation, product detail card system, gallery imagery, price/rating/stock styling, service panel, specification table, review meters, related product rail, and footer.
+- Figure 03 now uses the restored marketplace header, category navigation, cart item cards, richer thumbnails, shared quantity controls, delete buttons, summary totals, checkout CTA, empty-cart state, and footer.
+- Figure 04 now uses a checkout-safe ShopLite header, shared form cards, delivery option cards, payment mock styling, order summary card, validation target, and footer.
+- Figure 05 now uses the restored marketplace header, category navigation, reusable success icon/card styling, metric cards, order summary, recommendation rail, and footer.
+- Figure 06 now uses the restored marketplace header, category navigation, order tabs/search, shared order cards, status badges, real thumbnails, order totals, action buttons, and footer.
+- Figure 07 now uses the ShopLite brand header, marketplace-style auth background, shared auth cards, aligned buttons/form controls, role hint and validation target, and footer.
+
+Shared components/styles reused:
+
+- Reused the restored `site-header`, `shoplite-topbar`, `header-actions`, `category-nav`, `site-footer`, `footer-grid`, `surface-card`, `summary-card`, `current-price`, `status-badge`, `recommendation-section`, `recommendation-rail`, `mini-card`, and accent button system.
+- Added customer-flow support classes for `customer-page-title`, `detail-gallery-card`, `product-info-panel`, `stock-badge`, `service-stack`, `spec-table`, `review-meter`, `cart-item`, `summary-line`, `summary-total`, `checkout-option`, `payment-mock`, `success-card`, `success-icon`, `metric-card`, `order-card`, and `auth-intro`.
+- Kept shared JavaScript unchanged for P2 because the existing prototype interactions already cover cart toasts, quantity controls, form validation, admin status updates, and dashboard charts.
+
+Checks run:
+
+- Inspected `git status`, `git diff --stat`, and diffs for the shared CSS plus Figures 02 through 07 before making any further changes.
+- Verified the modified working tree remains scoped to `public/design-preview/`.
+- Confirmed no inline `style` attributes, Chinese characters, React, Vue, TypeScript, Tailwind, build-tool patterns, backend route patterns, or final `public/` migration were introduced in the P2 target files.
+- Ran JavaScript syntax validation with `Get-Content -Raw -LiteralPath 'public\design-preview\js\design-preview.js' | node --check -`; it passed.
+- Attempted an in-app browser smoke check for the local prototype pages, but the browser blocked direct `file:///` navigation by policy. No alternate browser workaround was used.
+
+Remaining P3 issues:
+
+- Add deeper stable IDs and `data-*` hooks across cart items, checkout sections, order cards, admin tables, and dashboard widgets for final dynamic rendering.
+- Standardize admin page table/card density and status badge usage against the restored storefront tokens.
+- Add a later dynamic data-binding pass when the final project integration begins; P2 intentionally did not create backend code or migrate files into the final `public/` structure.
+
+Figures 02 to 07 visual inheritance:
+
+- Yes. Figures 02 through 07 now visually inherit the restored Figure 01 marketplace system while keeping page-appropriate layouts, including the checkout-safe variant for Figure 04 and the marketplace-branded auth treatment for Figure 07.
