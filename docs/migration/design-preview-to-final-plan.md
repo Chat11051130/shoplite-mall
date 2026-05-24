@@ -447,3 +447,37 @@ Checks run:
 Remaining next step:
 
 - In the next phase, migrate only the admin order management page from Figure 09 after confirming the admin product management flow remains visually aligned with the approved admin system.
+
+## Phase 9 Implementation Note
+
+Files modified or created:
+
+- `public/admin-orders.html`
+- `public/js/pages/adminOrdersPage.js`
+- `docs/migration/design-preview-to-final-plan.md`
+
+What was migrated:
+
+- Migrated the approved Figure 09 admin order management prototype into the official `public/admin-orders.html` page.
+- Reused the official admin sidebar, panel, table, and status badge styles from the earlier admin product phase.
+- Added local static admin order behavior for order search, status filtering, date filtering, row status updates, prototype toast feedback, and order detail panel updates.
+- Preserved P3 hooks for admin sidebar, admin order toolbar, admin order table, order detail panel, order IDs, order statuses, order actions, order fields, status roles, and total roles.
+
+What was intentionally not migrated:
+
+- Figure 10 was not migrated.
+- Backend code, Express routes, server files, API calls, JSON data files, and real order persistence were not created or changed.
+- Shared admin layout rendering modules were not extracted yet; the admin orders page still uses static admin sidebar markup for this phase.
+
+Checks run:
+
+- JavaScript syntax checks for `public/js/main.js`, existing migrated page scripts, `public/js/pages/adminOrdersPage.js`, and `public/js/templates/productCardTemplate.js`.
+- `git diff --check`.
+- Static scan for Chinese characters in code and comments.
+- Static scan for React, Vue, TypeScript, Tailwind, backend code, Express route patterns, API calls, and `fetch`.
+- Browser smoke check for `public/admin-orders.html` confirming the page loads, admin sidebar exists, order toolbar exists, order table exists, four order rows exist, status filtering works, date filtering works, status dropdown updates badge text and class, View Details updates the detail panel, the detail panel exists, and no page console errors occur.
+- Browser smoke checks for all previously migrated customer, auth, and admin product pages confirming Phase 1 through Phase 8 behavior still works.
+
+Remaining next step:
+
+- In the next phase, migrate only the admin dashboard page from Figure 10 after confirming the admin order management flow remains visually aligned with the approved admin system.
