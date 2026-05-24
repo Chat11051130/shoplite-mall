@@ -128,13 +128,6 @@
       });
     }
 
-    var searchForm = document.getElementById("searchForm");
-    if (searchForm) {
-      searchForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-        showToast("Prototype search is available on the home page.");
-      });
-    }
   }
 
   window.ShopLitePages = window.ShopLitePages || {};

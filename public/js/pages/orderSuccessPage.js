@@ -53,7 +53,7 @@
 
       if (ordersButton) {
         event.preventDefault();
-        showToast("My Orders will be available after the orders page migration.");
+        window.location.assign("orders.html");
         return;
       }
 
@@ -63,13 +63,6 @@
       }
     });
 
-    var searchForm = document.getElementById("searchForm");
-    if (searchForm) {
-      searchForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-        showToast("Prototype search is available on the home page.");
-      });
-    }
   }
 
   window.ShopLitePages = window.ShopLitePages || {};

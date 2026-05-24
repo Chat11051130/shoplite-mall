@@ -142,14 +142,6 @@
       orderSearchInput.addEventListener("input", applyOrderFilters);
     }
 
-    var searchForm = document.getElementById("searchForm");
-    if (searchForm) {
-      searchForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-        showToast("Prototype product search is available on the home page.");
-      });
-    }
-
     applyOrderFilters();
   }
 

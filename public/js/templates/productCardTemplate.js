@@ -31,16 +31,20 @@
   }
 
   function productCardTemplate(product) {
+    var detailUrl = "product-detail.html?productId=" + encodeURIComponent(product.id);
+
     return [
       '<article class="col-xl-3 col-lg-4 col-md-6" data-product-id="' + product.id + '" data-category="' + product.category + '" data-price="' + product.price + '" data-rating="' + product.rating + '">',
       '  <div class="product-card">',
       '    <div class="product-media">',
-      '      <img src="' + product.image + '" alt="' + product.alt + '" loading="lazy">',
+      '      <a class="product-detail-link" href="' + detailUrl + '" aria-label="View details for ' + product.title + '">',
+      '        <img src="' + product.image + '" alt="' + product.alt + '" loading="lazy">',
+      "      </a>",
       '      <span class="discount-tag">' + product.discount + "</span>",
       "    </div>",
       '    <div class="product-body">',
       '      <div class="product-category">' + product.category + "</div>",
-      '      <h3 class="product-title">' + product.title + "</h3>",
+      '      <h3 class="product-title"><a class="product-detail-link" href="' + detailUrl + '">' + product.title + "</a></h3>",
       '      <div class="rating-row" aria-label="' + product.rating + ' out of 5 stars">',
       '        <span class="stars">' + buildStars(product.rating) + "</span>",
       '        <span class="review-count">' + formatReviews(product.reviews) + "</span>",
@@ -61,11 +65,15 @@
   }
 
   function miniCardTemplate(product) {
+    var detailUrl = "product-detail.html?productId=" + encodeURIComponent(product.id);
+
     return [
       '<article class="mini-card" data-product-id="' + product.id + '" data-category="' + product.category + '" data-price="' + product.price + '" data-rating="' + product.rating + '">',
-      '  <img src="' + product.image + '" alt="' + product.alt + '" loading="lazy">',
+      '  <a class="product-detail-link" href="' + detailUrl + '" aria-label="View details for ' + product.title + '">',
+      '    <img src="' + product.image + '" alt="' + product.alt + '" loading="lazy">',
+      "  </a>",
       "  <div>",
-      "    <strong>" + product.title + "</strong>",
+      '    <strong><a class="product-detail-link" href="' + detailUrl + '">' + product.title + "</a></strong>",
       '    <span class="stars" aria-label="' + product.rating + ' out of 5 stars">' + buildStars(product.rating) + "</span>",
       "    <span>" + formatPrice(product.price) + "</span>",
       "  </div>",

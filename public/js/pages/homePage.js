@@ -226,6 +226,10 @@ function getSelectedRating() {
   return selected ? Number(selected.value) : 0;
 }
 
+function isValidCategory(category) {
+  return ["electronics", "fashion", "home", "beauty", "grocery", "sports"].includes(category);
+}
+
 function initHomePage() {
   var productGrid = document.getElementById("productGrid");
   if (!productGrid) {
@@ -244,6 +248,62 @@ function initHomePage() {
   var clearFilters = document.getElementById("clearFilters");
   var marketplaceShell = document.querySelector(".marketplace-shell");
   var cartCount = cartCountEl ? Number(cartCountEl.textContent || "3") : 3;
+
+  function setActiveCategoryLink(category) {
+    document.querySelectorAll("[data-category-link]").forEach(function (link) {
+      link.classList.toggle("active", Boolean(category) && link.dataset.categoryLink === category);
+    });
+  }
+
+  function getInitialRouteState() {
+    var params = new URLSearchParams(window.location.search);
+    var category = (params.get("category") || "").toLowerCase();
+    var query = params.get("query") || "";
+    var section = (params.get("section") || "").toLowerCase();
+    var hash = window.location.hash.replace("#", "");
+
+    return {
+      category: isValidCategory(category) ? category : "",
+      query: query,
+      section: section,
+      hash: hash
+    };
+  }
+
+  function applyInitialRouteState() {
+    var routeState = getInitialRouteState();
+
+    if (routeState.category && categorySelect) {
+      categorySelect.value = routeState.category;
+      setActiveCategoryLink(routeState.category);
+    }
+
+    if (routeState.query && searchInput) {
+      searchInput.value = routeState.query;
+    }
+
+    return routeState;
+  }
+
+  function scrollForRouteState(routeState) {
+    var target = null;
+
+    if (routeState.section === "deals" || routeState.hash === "todayDeals") {
+      target = document.getElementById("todayDeals");
+    } else if (routeState.hash === "fastShipping") {
+      target = document.getElementById("fastShipping");
+    } else if (routeState.hash === "giftCards") {
+      target = document.getElementById("giftCards");
+    } else if (routeState.category || routeState.query) {
+      target = marketplaceShell;
+    }
+
+    if (target) {
+      window.requestAnimationFrame(function () {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+  }
 
   function applyFilters() {
     var maxPrice = priceRange ? Number(priceRange.value) : 800;
@@ -324,10 +384,7 @@ function initHomePage() {
     if (categoryLink) {
       event.preventDefault();
       var category = categoryLink.dataset.categoryLink;
-      document.querySelectorAll("[data-category-link]").forEach(function (link) {
-        link.classList.remove("active");
-      });
-      categoryLink.classList.add("active");
+      setActiveCategoryLink(category);
 
       if (categorySelect) {
         categorySelect.value = category === "deals" ? "all" : category;
@@ -342,6 +399,9 @@ function initHomePage() {
         applyFilters();
         if (marketplaceShell) {
           marketplaceShell.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        if (window.history && categoryLink.href) {
+          window.history.pushState(null, "", "index.html?category=" + encodeURIComponent(category));
         }
       }
     }
@@ -358,7 +418,10 @@ function initHomePage() {
     sortSelect.addEventListener("change", applyFilters);
   }
   if (categorySelect) {
-    categorySelect.addEventListener("change", applyFilters);
+    categorySelect.addEventListener("change", function () {
+      setActiveCategoryLink(categorySelect.value === "all" ? "" : categorySelect.value);
+      applyFilters();
+    });
   }
   if (searchInput) {
     searchInput.addEventListener("input", applyFilters);
@@ -393,15 +456,15 @@ function initHomePage() {
       if (searchInput) {
         searchInput.value = "";
       }
-      document.querySelectorAll("[data-category-link]").forEach(function (link) {
-        link.classList.remove("active");
-      });
+      setActiveCategoryLink("");
       applyFilters();
     });
   }
 
+  var initialRouteState = applyInitialRouteState();
   renderRails();
   applyFilters();
+  scrollForRouteState(initialRouteState);
 }
 
 window.ShopLitePages = window.ShopLitePages || {};
