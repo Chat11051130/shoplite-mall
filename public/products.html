@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ShopLite Mall - Home</title>
+    <title>ShopLite Mall - Products</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="preconnect" href="https://images.unsplash.com">
@@ -12,7 +12,7 @@
     <link href="css/components.css" rel="stylesheet">
     <link href="css/responsive.css" rel="stylesheet">
   </head>
-  <body class="preview-page" data-page="home">
+  <body class="preview-page" data-page="products">
     <header class="site-header sticky-top" data-component="customer-header">
       <nav class="navbar navbar-expand-xl shoplite-topbar">
         <div class="container-fluid px-4">
@@ -26,7 +26,7 @@
           </button>
 
           <div class="collapse navbar-collapse gap-3" id="mainNavbar">
-            <a class="location-chip" href="#">
+            <a class="location-chip" href="products.html">
               <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
               <span>
                 <small>Deliver to</small>
@@ -46,7 +46,7 @@
                 <option value="sports">Sports</option>
               </select>
               <label class="visually-hidden" for="searchInput">Search ShopLite</label>
-              <input class="form-control search-input" id="searchInput" name="searchQuery" data-field="search-query" type="search" placeholder="Search ShopLite for electronics, fashion, home goods" autocomplete="off">
+              <input class="form-control search-input" id="searchInput" name="searchQuery" data-field="search-query" type="search" placeholder="Search ShopLite products" autocomplete="off">
               <button class="btn search-button" type="submit" aria-label="Search">
                 <i class="bi bi-search" aria-hidden="true"></i>
               </button>
@@ -86,93 +86,27 @@
       </nav>
     </header>
 
-    <main>
-      <section class="hero-section" aria-label="Featured ShopLite offers">
-        <div id="homeHeroCarousel" class="carousel slide" data-component="hero-carousel" data-bs-ride="carousel">
-          <div class="carousel-indicators">
-            <button type="button" data-bs-target="#homeHeroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#homeHeroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#homeHeroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-          </div>
-          <div class="carousel-inner">
-            <article class="carousel-item active">
-              <div class="hero-slide hero-slide-tech">
-                <div class="hero-copy">
-                  <p>Weekend marketplace event</p>
-                  <h1>Upgrade your everyday essentials for less</h1>
-                  <span>Fresh tech, home goods, and smart accessories with limited-time member pricing.</span>
-                  <a class="btn hero-cta" href="products.html?tag=deal">Shop featured deals</a>
-                </div>
-                <div class="hero-offer-panel">
-                  <span>Up to</span>
-                  <strong>35% off</strong>
-                  <small>Selected picks through Sunday</small>
-                </div>
-              </div>
-            </article>
-            <article class="carousel-item">
-              <div class="hero-slide hero-slide-home">
-                <div class="hero-copy">
-                  <p>Home refresh week</p>
-                  <h2>Kitchen, bedding, decor, and storage in one practical cart</h2>
-                  <span>Build a cleaner home setup with dependable finds and quick delivery options.</span>
-                  <a class="btn hero-cta" href="products.html?category=home&tag=deal">Browse home deals</a>
-                </div>
-                <div class="hero-offer-panel">
-                  <span>Bundle and save</span>
-                  <strong>$20 back</strong>
-                  <small>On qualifying home orders</small>
-                </div>
-              </div>
-            </article>
-            <article class="carousel-item">
-              <div class="hero-slide hero-slide-grocery">
-                <div class="hero-copy">
-                  <p>Daily essentials</p>
-                  <h2>Pantry staples, beauty refills, and wellness picks</h2>
-                  <span>Restock household basics without leaving your desk, with clear prices and easy returns.</span>
-                  <a class="btn hero-cta" href="#recommended" data-action="refresh-recommendations">See recommendations</a>
-                </div>
-                <div class="hero-offer-panel">
-                  <span>Save today</span>
-                  <strong>15%</strong>
-                  <small>On repeat essentials</small>
-                </div>
-              </div>
-            </article>
-          </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#homeHeroCarousel" data-bs-slide="prev" aria-label="Previous promotion">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#homeHeroCarousel" data-bs-slide="next" aria-label="Next promotion">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          </button>
+    <main data-component="product-listing">
+      <section class="breadcrumb-area">
+        <div class="container-fluid px-4">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+              <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+              <li class="breadcrumb-item active" aria-current="page" data-role="current-category-label">All categories</li>
+            </ol>
+          </nav>
         </div>
       </section>
 
-      <section class="quick-strip" aria-label="Shopping benefits">
+      <section class="listing-title-band">
         <div class="container-fluid px-4">
-          <div class="quick-strip-grid">
-            <div id="fastShipping">
-              <i class="bi bi-truck" aria-hidden="true"></i>
-              <strong>Fast local delivery</strong>
-              <span>Clear arrival windows at checkout</span>
-            </div>
+          <div class="customer-page-title mb-0">
             <div>
-              <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
-              <strong>Easy returns</strong>
-              <span>Simple labels for eligible items</span>
+              <p class="eyebrow">ShopLite catalog</p>
+              <h1 class="section-heading" id="listingTitle">All Products</h1>
+              <p class="muted-note mb-0" id="listingSubtitle">Browse the full ShopLite catalog across every marketplace category.</p>
             </div>
-            <div>
-              <i class="bi bi-shield-check" aria-hidden="true"></i>
-              <strong>Secure payments</strong>
-              <span>Protected checkout on every order</span>
-            </div>
-            <div>
-              <i class="bi bi-patch-check" aria-hidden="true"></i>
-              <strong>Verified reviews</strong>
-              <span>Ratings from real ShopLite buyers</span>
-            </div>
+            <a class="btn btn-outline-accent" href="index.html"><i class="bi bi-arrow-left" aria-hidden="true"></i> Back to Home</a>
           </div>
         </div>
       </section>
@@ -183,7 +117,7 @@
             <aside class="col-xl-2 col-lg-3">
               <div class="filter-panel" data-component="filter-sidebar">
                 <div class="filter-heading">
-                  <h2>Shop by</h2>
+                  <h2>Filters</h2>
                   <button class="btn btn-link p-0" id="clearFilters" type="button" data-action="clear-filters">Clear</button>
                 </div>
 
@@ -203,19 +137,19 @@
                     <span>$0</span>
                     <strong id="priceValue">$800</strong>
                   </div>
-                  <input class="form-range" id="priceRange" name="maxPrice" data-field="max-price" type="range" min="25" max="800" step="25" value="800" aria-label="Maximum product price">
+                  <input class="form-range" id="priceRange" name="maxPrice" data-field="max-price" type="range" min="15" max="800" step="25" value="800" aria-label="Maximum product price">
                 </div>
 
                 <div class="filter-group">
                   <h3>Customer rating</h3>
-                  <label><input class="form-check-input rating-filter" name="rating" type="radio" value="4" data-action="filter-rating" checked> 4 stars and up</label>
+                  <label><input class="form-check-input rating-filter" name="rating" type="radio" value="4" data-action="filter-rating"> 4 stars and up</label>
                   <label><input class="form-check-input rating-filter" name="rating" type="radio" value="3" data-action="filter-rating"> 3 stars and up</label>
-                  <label><input class="form-check-input rating-filter" name="rating" type="radio" value="0" data-action="filter-rating"> Any rating</label>
+                  <label><input class="form-check-input rating-filter" name="rating" type="radio" value="0" data-action="filter-rating" checked> Any rating</label>
                 </div>
 
                 <div class="filter-card">
-                  <strong>Student project note</strong>
-                  <span>Bootstrap grid, cards, forms, carousel, and buttons are ready to translate into coursework code.</span>
+                  <strong>Catalog mode</strong>
+                  <span>This listing page owns full browsing, search, sorting, filtering, and future data rendering.</span>
                 </div>
               </div>
             </aside>
@@ -223,11 +157,11 @@
             <section class="col-xl-10 col-lg-9">
               <div class="section-toolbar">
                 <div>
-                  <p>Marketplace picks</p>
-                  <h2>Featured products</h2>
+                  <p>Search results</p>
+                  <h2>Products</h2>
                 </div>
                 <div class="toolbar-controls">
-                  <span id="resultCount" data-role="result-count">12 items</span>
+                  <span id="resultCount" data-role="result-count">48 items</span>
                   <select class="form-select form-select-sm" id="sortSelect" name="sortProducts" data-action="sort-products" aria-label="Sort products">
                     <option value="featured">Sort: Featured</option>
                     <option value="price-low">Price: Low to High</option>
@@ -239,46 +173,9 @@
 
               <div class="product-grid row g-3" id="productGrid" data-component="product-grid" aria-live="polite"></div>
 
-              <section class="recommendation-section" id="bestSellers">
-                <div class="section-toolbar compact">
-                  <div>
-                    <p>Popular right now</p>
-                    <h2>Best Sellers</h2>
-                  </div>
-                  <a href="products.html?tag=best-seller">View all</a>
-                </div>
-                <div class="recommendation-rail" id="bestSellerRail" data-component="recommendation-rail"></div>
-              </section>
-
-              <section class="recommendation-section" id="todayDeals">
-                <div class="section-toolbar compact">
-                  <div>
-                    <p>Limited-time savings</p>
-                    <h2>Today's Deals</h2>
-                  </div>
-                  <a href="products.html?tag=deal">See deals</a>
-                </div>
-                <div class="deal-band" id="giftCards" data-component="deal-band">
-                  <div>
-                    <span>Deal dashboard</span>
-                    <strong>Extra 10% off checkout-ready items</strong>
-                    <p>Look for orange savings tags across electronics, home, and daily essentials.</p>
-                  </div>
-                  <a class="btn btn-accent" href="products.html?tag=deal">Explore deals</a>
-                </div>
-                <div class="recommendation-rail" id="dealRail" data-component="recommendation-rail"></div>
-              </section>
-
-              <section class="recommendation-section" id="recommended">
-                <div class="section-toolbar compact">
-                  <div>
-                    <p>Based on browsing</p>
-                    <h2>Recommended for You</h2>
-                  </div>
-                  <a href="#recommended" data-action="refresh-recommendations">Refresh</a>
-                </div>
-                <div class="recommendation-rail" id="recommendedRail" data-component="recommendation-rail"></div>
-              </section>
+              <div class="text-center mt-4">
+                <button class="btn btn-outline-accent" id="loadMoreProducts" type="button" data-action="load-more-products">Load More Products</button>
+              </div>
             </section>
           </div>
         </div>
@@ -318,7 +215,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/data/productCatalog.js"></script>
     <script src="js/templates/productCardTemplate.js"></script>
-    <script src="js/pages/homePage.js"></script>
+    <script src="js/pages/productsPage.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>

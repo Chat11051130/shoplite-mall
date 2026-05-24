@@ -12,6 +12,16 @@
     return new Intl.NumberFormat("en-US").format(value);
   }
 
+  function formatCategory(value) {
+    return String(value || "").replace("-", " ").replace(/\b\w/g, function (letter) {
+      return letter.toUpperCase();
+    });
+  }
+
+  function productDetailUrl(product) {
+    return "product-detail.html?productId=" + encodeURIComponent(product.id);
+  }
+
   function buildStars(rating) {
     var full = Math.floor(rating);
     var hasHalf = rating - full >= 0.5;
@@ -31,10 +41,11 @@
   }
 
   function productCardTemplate(product) {
-    var detailUrl = "product-detail.html?productId=" + encodeURIComponent(product.id);
+    var detailUrl = productDetailUrl(product);
+    var tags = Array.isArray(product.tags) ? product.tags.join(",") : "";
 
     return [
-      '<article class="col-xl-3 col-lg-4 col-md-6" data-product-id="' + product.id + '" data-category="' + product.category + '" data-price="' + product.price + '" data-rating="' + product.rating + '">',
+      '<article class="col-xl-3 col-lg-4 col-md-6" data-product-id="' + product.id + '" data-category="' + product.category + '" data-price="' + product.price + '" data-rating="' + product.rating + '" data-tags="' + tags + '">',
       '  <div class="product-card">',
       '    <div class="product-media">',
       '      <a class="product-detail-link" href="' + detailUrl + '" aria-label="View details for ' + product.title + '">',
@@ -43,7 +54,7 @@
       '      <span class="discount-tag">' + product.discount + "</span>",
       "    </div>",
       '    <div class="product-body">',
-      '      <div class="product-category">' + product.category + "</div>",
+      '      <div class="product-category">' + formatCategory(product.category) + "</div>",
       '      <h3 class="product-title"><a class="product-detail-link" href="' + detailUrl + '">' + product.title + "</a></h3>",
       '      <div class="rating-row" aria-label="' + product.rating + ' out of 5 stars">',
       '        <span class="stars">' + buildStars(product.rating) + "</span>",
@@ -65,10 +76,11 @@
   }
 
   function miniCardTemplate(product) {
-    var detailUrl = "product-detail.html?productId=" + encodeURIComponent(product.id);
+    var detailUrl = productDetailUrl(product);
+    var tags = Array.isArray(product.tags) ? product.tags.join(",") : "";
 
     return [
-      '<article class="mini-card" data-product-id="' + product.id + '" data-category="' + product.category + '" data-price="' + product.price + '" data-rating="' + product.rating + '">',
+      '<article class="mini-card" data-product-id="' + product.id + '" data-category="' + product.category + '" data-price="' + product.price + '" data-rating="' + product.rating + '" data-tags="' + tags + '">',
       '  <a class="product-detail-link" href="' + detailUrl + '" aria-label="View details for ' + product.title + '">',
       '    <img src="' + product.image + '" alt="' + product.alt + '" loading="lazy">',
       "  </a>",
@@ -83,9 +95,11 @@
 
   window.ShopLiteTemplates = {
     buildStars: buildStars,
+    formatCategory: formatCategory,
     formatPrice: formatPrice,
     formatReviews: formatReviews,
     miniCardTemplate: miniCardTemplate,
+    productDetailUrl: productDetailUrl,
     productCardTemplate: productCardTemplate
   };
 }());

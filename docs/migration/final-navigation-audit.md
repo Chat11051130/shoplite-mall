@@ -74,3 +74,15 @@ The Navigation Fix Phase updated official `public/` page navigation without rede
 - Navigation still targets static pages only. No backend routes, fetch calls, JSON data files, or server integrations were added.
 - Product detail URLs now carry `productId`, but the current product detail page remains a static prototype until the later data-rendering phase.
 - Checkout invalid-state behavior is present in the unchanged page script, but this audit could not re-exercise it through the in-app browser because prefilled inputs could not be cleared by the available browser fill/clipboard controls.
+
+## Catalog Experience Upgrade Summary
+
+- Added `public/products.html` as the official product listing and search results page.
+- Added `public/js/data/productCatalog.js` with 48 static products, 8 per category.
+- Added `public/js/pages/productsPage.js` for URL-driven catalog filtering, sorting, result counts, Load More, Add to Cart, and category state.
+- Updated homepage category nav, search, and promotional CTAs so full browsing routes to `products.html`.
+- Updated product cards so image and title links use `product-detail.html?productId=<id>`.
+- Updated `product-detail.html` and `productDetailPage.js` so title, category, price, image, highlights, specifications, stock, and related products render from `productId`.
+- Updated customer header search on migrated customer pages so searches route to `products.html`.
+- Browser smoke checks confirmed homepage curated mode, product listing routes, product detail by ID, cart/search/category navigation, and all existing official public pages.
+- Backend/server files, design-preview files, JSON data files, routes, and API calls were not changed.

@@ -73,13 +73,13 @@
 
       <nav class="category-nav" data-component="category-nav" aria-label="Shop categories">
         <div class="container-fluid px-4 category-nav-inner">
-          <a class="active" href="index.html?category=electronics" data-category-link="electronics"><i class="bi bi-laptop" aria-hidden="true"></i>Electronics</a>
-          <a href="index.html?category=fashion" data-category-link="fashion"><i class="bi bi-bag" aria-hidden="true"></i>Fashion</a>
-          <a href="index.html?category=home" data-category-link="home"><i class="bi bi-house-door" aria-hidden="true"></i>Home</a>
-          <a href="index.html?category=beauty" data-category-link="beauty"><i class="bi bi-stars" aria-hidden="true"></i>Beauty</a>
-          <a href="index.html?category=grocery" data-category-link="grocery"><i class="bi bi-basket" aria-hidden="true"></i>Grocery</a>
-          <a href="index.html?category=sports" data-category-link="sports"><i class="bi bi-bicycle" aria-hidden="true"></i>Sports</a>
-          <a href="index.html?section=deals" data-category-link="deals"><i class="bi bi-lightning-charge" aria-hidden="true"></i>Deals</a>
+          <a class="active" href="products.html?category=electronics" data-category-link="electronics"><i class="bi bi-laptop" aria-hidden="true"></i>Electronics</a>
+          <a href="products.html?category=fashion" data-category-link="fashion"><i class="bi bi-bag" aria-hidden="true"></i>Fashion</a>
+          <a href="products.html?category=home" data-category-link="home"><i class="bi bi-house-door" aria-hidden="true"></i>Home</a>
+          <a href="products.html?category=beauty" data-category-link="beauty"><i class="bi bi-stars" aria-hidden="true"></i>Beauty</a>
+          <a href="products.html?category=grocery" data-category-link="grocery"><i class="bi bi-basket" aria-hidden="true"></i>Grocery</a>
+          <a href="products.html?category=sports" data-category-link="sports"><i class="bi bi-bicycle" aria-hidden="true"></i>Sports</a>
+          <a href="products.html?tag=deal" data-category-link="deals"><i class="bi bi-lightning-charge" aria-hidden="true"></i>Deals</a>
           <a href="index.html#fastShipping"><i class="bi bi-truck" aria-hidden="true"></i>Fast Shipping</a>
           <a href="index.html#giftCards"><i class="bi bi-gift" aria-hidden="true"></i>Gift Cards</a>
         </div>
@@ -92,8 +92,8 @@
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
               <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-              <li class="breadcrumb-item"><a href="index.html">Electronics</a></li>
-              <li class="breadcrumb-item active" aria-current="page">AeroBook Laptop</li>
+              <li class="breadcrumb-item"><a href="products.html?category=electronics" data-role="product-category-link">Electronics</a></li>
+              <li class="breadcrumb-item active" aria-current="page" data-role="product-breadcrumb-title">AeroBook Laptop</li>
             </ol>
           </nav>
         </div>
@@ -126,23 +126,23 @@
 
             <div class="col-lg-4">
               <div class="surface-card product-info-panel p-4 h-100" data-component="product-info">
-                <p class="eyebrow">Electronics</p>
-                <h1 class="section-heading fs-2">AeroBook 14-inch lightweight laptop with long-life battery</h1>
+                <p class="eyebrow" data-role="product-category">Electronics</p>
+                <h1 class="section-heading fs-2" data-role="product-title">AeroBook 14-inch lightweight laptop with long-life battery</h1>
                 <div class="rating-row">
-                  <span class="stars" aria-label="4.7 out of 5 stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i></span>
-                  <a class="review-link" href="#reviews">1,248 reviews</a>
+                  <span class="stars" aria-label="4.7 out of 5 stars" data-role="product-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i></span>
+                  <a class="review-link" href="#reviews" data-role="product-review-count">1,248 reviews</a>
                 </div>
                 <div class="price-row-card">
                   <span class="current-price fs-1" data-role="product-price">$679.99</span>
-                  <span class="old-price">$799.99</span>
-                  <span class="discount-tag position-static">15% off</span>
+                  <span class="old-price" data-role="product-old-price">$799.99</span>
+                  <span class="discount-tag position-static" data-role="product-discount">15% off</span>
                 </div>
                 <span class="stock-badge" data-role="stock-status"><i class="bi bi-check-circle" aria-hidden="true"></i> In stock and ready to ship</span>
-                <p class="shipping-note mb-0">Free delivery tomorrow with ShopLite Fast. Secure checkout and simple returns on eligible orders.</p>
+                <p class="shipping-note mb-0" data-role="product-shipping">Free delivery tomorrow with ShopLite Fast. Secure checkout and simple returns on eligible orders.</p>
                 <hr class="my-1">
                 <div>
                   <h2 class="card-heading fs-5 mb-3">Product highlights</h2>
-                  <ul class="mb-0">
+                  <ul class="mb-0" data-role="product-highlights">
                     <li>Portable aluminum-style body for daily class and work use.</li>
                     <li>All-day battery estimate for study sessions.</li>
                     <li>Fast solid-state storage for multitasking.</li>
@@ -189,7 +189,7 @@
                 <h2 class="card-heading fs-4 mb-3">Specifications</h2>
                 <div class="spec-table" data-component="specifications-table">
                   <table class="table">
-                    <tbody>
+                    <tbody data-role="product-specifications">
                       <tr><th scope="row">Display</th><td>14-inch full HD panel</td></tr>
                       <tr><th scope="row">Memory</th><td>16 GB practical multitasking memory</td></tr>
                       <tr><th scope="row">Storage</th><td>512 GB solid-state drive</td></tr>
@@ -205,10 +205,10 @@
               <div class="surface-card p-4 h-100" data-component="review-summary">
                 <h2 class="card-heading fs-4 mb-3">Customer review summary</h2>
                 <div class="d-flex align-items-center gap-3 mb-3">
-                  <strong class="display-6">4.7</strong>
+                  <strong class="display-6" data-role="review-score">4.7</strong>
                   <div>
-                    <span class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i></span>
-                    <p class="muted-note mb-0">Strong ratings for portability, battery, and value.</p>
+                    <span class="stars" data-role="review-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i></span>
+                    <p class="muted-note mb-0" data-role="review-summary-text">Strong ratings for portability, battery, and value.</p>
                   </div>
                 </div>
                 <div class="progress review-meter mb-2" role="progressbar" aria-label="Five star reviews"><div class="progress-bar bg-warning meter-78">5 star</div></div>
@@ -224,7 +224,7 @@
                 <p>Related picks</p>
                 <h2>Related products</h2>
               </div>
-              <a href="index.html">Back to listing</a>
+              <a href="products.html">Back to listing</a>
             </div>
             <div class="recommendation-rail" data-component="recommendation-rail">
               <article class="mini-card" data-product-id="2" data-category="electronics" data-price="129.95" data-rating="4.6">
@@ -280,6 +280,8 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/data/productCatalog.js"></script>
+    <script src="js/templates/productCardTemplate.js"></script>
     <script src="js/pages/productDetailPage.js"></script>
     <script src="js/main.js"></script>
   </body>
