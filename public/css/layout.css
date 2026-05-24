@@ -176,6 +176,16 @@
   color: var(--sl-orange);
 }
 
+.checkout-progress a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.checkout-progress a:hover,
+.checkout-progress a:focus {
+  color: var(--sl-orange);
+}
+
 .cart-link {
   position: relative;
   gap: 6px;

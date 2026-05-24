@@ -86,3 +86,30 @@ The Navigation Fix Phase updated official `public/` page navigation without rede
 - Updated customer header search on migrated customer pages so searches route to `products.html`.
 - Browser smoke checks confirmed homepage curated mode, product listing routes, product detail by ID, cart/search/category navigation, and all existing official public pages.
 - Backend/server files, design-preview files, JSON data files, routes, and API calls were not changed.
+
+## Cart Checkout Navigation Fix
+
+- Issue found: `public/cart.html` displayed a real `href="checkout.html"` checkout link, but clicking Proceed to Checkout showed only prototype toast feedback.
+- Root cause: `public/js/pages/cartPage.js` handled `data-action="go-to-checkout"` with `event.preventDefault()`, which blocked the anchor's normal navigation.
+- Fix applied: the checkout handler now allows normal navigation for anchor links and keeps prototype toast feedback only for non-link checkout controls.
+- Smoke check result: `cart.html` loaded with 0 local console errors, quantity increase/decrease updated totals, remove item reduced cart rows from 3 to 2, Proceed to Checkout navigated to `checkout.html`, and the checkout page loaded with `data-page="checkout"` and one checkout form.
+- Regression result: `index.html`, `products.html`, `product-detail.html?productId=1`, and `checkout.html` each loaded with 0 local console errors.
+
+## Purchase Flow Navigation Fix
+
+- Issues found: checkout Place Order stopped at prototype toast feedback, product detail Buy Now stopped at prototype toast feedback, and order-success recommendation cards did not expose product-detail links.
+- Root causes: `checkoutPage.js` prevented form submission without redirecting after valid validation, `productDetailPage.js` only showed a Buy Now toast, and static recommendation markup lacked detail anchors.
+- Fixes applied: valid checkout submit now navigates to `order-success.html`, invalid checkout submit still stays on `checkout.html` with validation feedback, Buy Now now validates the local quantity and opens `checkout.html`, checkout progress Cart links to `cart.html`, and order-success recommendation images/titles link to `product-detail.html?productId=<id>`.
+- End-to-end smoke check path: `products.html` -> product card -> `product-detail.html?productId=25` -> Add to Cart -> `cart.html` -> Proceed to Checkout -> `checkout.html` -> Place Order -> `order-success.html` -> View My Orders -> `orders.html` -> Continue Shopping -> `index.html`.
+- Smoke check result: the full path completed with 0 local console errors; Buy Now from `product-detail.html?productId=7` opened `checkout.html`; invalid checkout validation stayed on checkout with the receiver-name warning; order-success recommended Add to Cart updated cart count and 6 recommendation detail links were present.
+- Regression result: product category/query routes, product detail IDs 1 and 7, cart quantity/remove/summary, orders filter/search/reorder, login/register, and admin pages loaded or behaved as expected.
+- Remaining prototype-only actions: no real payment processing, persistent cart storage, backend order creation, or account/session integration has been added.
+
+## My Orders Detail Interaction Fix
+
+- Issue found: `orders.html` View Details showed only the toast `Showing prototype details for order ...`.
+- Root cause: `ordersPage.js` did not have a real local order-detail surface and used the static order card only to produce toast text.
+- Fix applied: `orders.html` now includes a Bootstrap offcanvas with `data-component="order-detail-panel"`, stable detail roles, and static order metadata on each order card. `ordersPage.js` reads the clicked card, fills the panel, opens it, and keeps close behavior local.
+- Smoke check result: `orders.html` loaded with 0 local console errors, 3 order cards, 5 status tabs, working Delivered filter, working search filter, Reorder cart count update from 0 to 2, View Details opening order `SL-2026-0523-1048`, close action hiding the panel, and a second View Details opening order `SL-2026-0518-0921`.
+- Purchase-flow regression result: `product-detail.html?productId=1`, `cart.html`, `checkout.html`, and `order-success.html` loaded with 0 local console errors; cart checkout still opened checkout, and Place Order still opened order success.
+- Remaining limitations: order detail content is still static markup and is not connected to backend order records, tracking APIs, payment APIs, or persistent account sessions.

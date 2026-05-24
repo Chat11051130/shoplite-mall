@@ -165,8 +165,8 @@
         return;
       }
 
-      setValidationMessage("Prototype order is ready. No real payment was processed.", "success");
-      showToast("Prototype order placed successfully.");
+      setValidationMessage("Order details validated. Opening confirmation page.", "success");
+      window.location.href = "order-success.html";
     });
 
     updateSummary();

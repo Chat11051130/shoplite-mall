@@ -292,7 +292,8 @@
       }
 
       if (buyNowButton) {
-        showToast("Prototype checkout preview for this item.");
+        setQuantityValue(getQuantityValue());
+        window.location.href = "checkout.html";
       }
     });
 

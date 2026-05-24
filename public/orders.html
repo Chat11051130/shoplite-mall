@@ -105,7 +105,7 @@
         </ul>
 
         <div data-component="orders-list" id="ordersList" aria-live="polite">
-          <section class="surface-card order-card" data-order-id="SL-2026-0523-1048" data-order-status="processing" data-order-item-count="2">
+          <section class="surface-card order-card" data-order-id="SL-2026-0523-1048" data-order-status="processing" data-order-item-count="2" data-order-date="May 23, 2026" data-order-title="AeroBook laptop and PulseWave headphones" data-order-total="$822.54" data-delivery-note="Delivery estimate May 25 to May 26." data-payment-status="Mock card authorized" data-shipping-address="118 Student Avenue, Apt 402, Campus District">
             <div class="order-card-header">
               <div>
                 <strong>Order SL-2026-0523-1048</strong>
@@ -130,7 +130,7 @@
             </div>
           </section>
 
-          <section class="surface-card order-card" data-order-id="SL-2026-0518-0921" data-order-status="shipped" data-order-item-count="1">
+          <section class="surface-card order-card" data-order-id="SL-2026-0518-0921" data-order-status="shipped" data-order-item-count="1" data-order-date="May 18, 2026" data-order-title="StrideFlex everyday running sneakers" data-order-total="$74.50" data-delivery-note="Tracking updated this morning. Package is in regional transit." data-payment-status="Campus wallet payment captured" data-shipping-address="118 Student Avenue, Apt 402, Campus District">
             <div class="order-card-header">
               <div>
                 <strong>Order SL-2026-0518-0921</strong>
@@ -154,7 +154,7 @@
             </div>
           </section>
 
-          <section class="surface-card order-card" data-order-id="SL-2026-0506-2188" data-order-status="delivered" data-order-item-count="1">
+          <section class="surface-card order-card" data-order-id="SL-2026-0506-2188" data-order-status="delivered" data-order-item-count="1" data-order-date="May 6, 2026" data-order-title="Organic pantry starter snack box" data-order-total="$36.50" data-delivery-note="Delivered to campus mail room." data-payment-status="Mock card payment completed" data-shipping-address="Campus mail room pickup counter">
             <div class="order-card-header">
               <div>
                 <strong>Order SL-2026-0506-2188</strong>
@@ -206,6 +206,53 @@
         </div>
       </div>
     </footer>
+
+    <div class="offcanvas offcanvas-end order-detail-offcanvas" tabindex="-1" id="orderDetailPanel" aria-labelledby="orderDetailTitle" data-component="order-detail-panel">
+      <div class="offcanvas-header">
+        <div>
+          <p class="eyebrow mb-1">Order details</p>
+          <h2 class="offcanvas-title" id="orderDetailTitle" data-role="detail-order-id">Select an order</h2>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-action="close-order-detail" aria-label="Close order detail"></button>
+      </div>
+      <div class="offcanvas-body">
+        <div class="order-detail-panel">
+          <div class="order-detail-row">
+            <span>Status</span>
+            <strong class="status-badge status-processing" data-role="detail-order-status">Processing</strong>
+          </div>
+          <div class="order-detail-row">
+            <span>Placed date</span>
+            <strong data-role="detail-order-date">May 23, 2026</strong>
+          </div>
+          <div class="order-detail-row">
+            <span>Items</span>
+            <strong data-role="detail-order-items">AeroBook laptop and PulseWave headphones, 2 items</strong>
+          </div>
+          <div class="order-detail-row">
+            <span>Total</span>
+            <strong class="current-price" data-role="detail-order-total">$822.54</strong>
+          </div>
+          <div class="order-detail-note">
+            <h3>Delivery and tracking</h3>
+            <p data-role="detail-delivery-note">Delivery estimate May 25 to May 26.</p>
+          </div>
+          <div class="order-detail-note">
+            <h3>Shipping address</h3>
+            <p data-role="detail-shipping-address">118 Student Avenue, Apt 402, Campus District</p>
+          </div>
+          <div class="order-detail-note">
+            <h3>Payment status</h3>
+            <p data-role="detail-payment-status">Mock card authorized</p>
+          </div>
+          <div class="order-detail-support">
+            <i class="bi bi-headset" aria-hidden="true"></i>
+            <span>This static panel is ready to connect to a real order detail API later.</span>
+          </div>
+          <button class="btn btn-outline-accent w-100 mt-3" type="button" data-bs-dismiss="offcanvas" data-action="close-order-detail">Close Details</button>
+        </div>
+      </div>
+    </div>
 
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
       <div id="ordersToast" class="toast align-items-center" role="status" aria-live="polite" aria-atomic="true">

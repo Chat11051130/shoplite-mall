@@ -200,8 +200,7 @@
         return;
       }
 
-      if (checkoutButton) {
-        event.preventDefault();
+      if (checkoutButton && checkoutButton.tagName !== "A") {
         showToast("Prototype checkout action is ready.");
       }
     });
