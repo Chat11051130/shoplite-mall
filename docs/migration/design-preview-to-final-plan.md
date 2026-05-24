@@ -481,3 +481,39 @@ Checks run:
 Remaining next step:
 
 - In the next phase, migrate only the admin dashboard page from Figure 10 after confirming the admin order management flow remains visually aligned with the approved admin system.
+
+## Phase 10 Implementation Note
+
+Files modified or created:
+
+- `public/admin-dashboard.html`
+- `public/js/pages/adminDashboardPage.js`
+- `public/css/admin.css`
+- `docs/migration/design-preview-to-final-plan.md`
+
+What was migrated:
+
+- Migrated the approved Figure 10 admin dashboard prototype into the official `public/admin-dashboard.html` page.
+- Reused the official admin sidebar, panel, table, status badge, and button styles from the earlier admin phases.
+- Added dashboard-specific admin styles for statistic cards and Chart.js chart surfaces.
+- Added local static dashboard behavior for sales trend Chart.js initialization, category sales Chart.js initialization, Refresh prototype feedback, Export Mock Report prototype feedback, and statistic card updates.
+- Preserved P3 hooks for admin sidebar, stat card grid, sales trend chart, category sales chart, best-selling products, recent orders, statistic roles, and chart canvases.
+
+What was intentionally not migrated:
+
+- Backend code, Express routes, server files, API calls, JSON data files, real dashboard statistics, and report generation were not created or changed.
+- Shared admin layout rendering modules were not extracted yet; the admin dashboard page still uses static admin sidebar markup for this phase.
+- No additional pages were migrated in this phase.
+
+Checks run:
+
+- JavaScript syntax checks for `public/js/main.js`, existing migrated page scripts, `public/js/pages/adminDashboardPage.js`, and `public/js/templates/productCardTemplate.js`.
+- `git diff --check`.
+- Static scan for Chinese characters in code and comments.
+- Static scan for React, Vue, TypeScript, Tailwind, backend code, Express route patterns, API calls, and `fetch`.
+- Browser smoke check for `public/admin-dashboard.html` confirming the page loads, admin sidebar exists, four stat cards exist, total sales, total orders, active products, and registered users cards exist, both chart canvases exist, Chart.js initializes both charts, best-selling products table exists, recent orders list exists, Refresh prototype action works, Export Mock Report prototype action works, and no page console errors occur.
+- Browser smoke checks for all previously migrated customer, auth, admin product, and admin order pages confirming Phase 1 through Phase 9 behavior still works.
+
+Remaining next step:
+
+- Begin the final integration planning pass for shared layout extraction, data module boundaries, and backend connection sequencing without changing server code until the static page structure is accepted.

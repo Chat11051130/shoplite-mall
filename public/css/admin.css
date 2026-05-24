@@ -50,6 +50,43 @@
   text-transform: uppercase;
 }
 
+.stat-card {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--sl-gray-200);
+  border-radius: var(--sl-radius);
+  background: #fff;
+  box-shadow: var(--sl-shadow);
+}
+
+.stat-card span:not(.icon-tile) {
+  color: var(--sl-gray-500);
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.stat-card strong {
+  display: block;
+  color: var(--sl-navy-950);
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+.chart-box {
+  min-height: 320px;
+  padding: 18px;
+}
+
+.chart-box canvas {
+  width: 100% !important;
+  height: 250px !important;
+}
+
 .table-thumb {
   width: 52px;
   height: 52px;
