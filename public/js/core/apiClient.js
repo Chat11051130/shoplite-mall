@@ -18,11 +18,14 @@
     return queryString ? "?" + queryString : "";
   }
 
-  async function getJson(url) {
+  async function requestJson(url, options) {
     var response = await fetch(url, {
+      method: options && options.method ? options.method : "GET",
       headers: {
-        Accept: "application/json"
-      }
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: options && options.body !== undefined ? JSON.stringify(options.body) : undefined
     });
     var payload = null;
 
@@ -43,8 +46,35 @@
     return payload;
   }
 
+  function getJson(url) {
+    return requestJson(url);
+  }
+
+  function postJson(url, data) {
+    return requestJson(url, {
+      method: "POST",
+      body: data || {}
+    });
+  }
+
+  function patchJson(url, data) {
+    return requestJson(url, {
+      method: "PATCH",
+      body: data || {}
+    });
+  }
+
+  function deleteJson(url) {
+    return requestJson(url, {
+      method: "DELETE"
+    });
+  }
+
   window.ShopLiteApi = {
     buildQueryString: buildQueryString,
-    getJson: getJson
+    deleteJson: deleteJson,
+    getJson: getJson,
+    patchJson: patchJson,
+    postJson: postJson
   };
 }());

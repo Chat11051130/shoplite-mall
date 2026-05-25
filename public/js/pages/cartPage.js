@@ -1,13 +1,28 @@
 (function () {
   "use strict";
 
+  var apiClient = window.ShopLiteApi || {};
   var studentSavings = 48.5;
+  var apiCartActive = false;
+  var fallbackNoticeShown = false;
 
   function formatPrice(value) {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD"
     }).format(value);
+  }
+
+  function escapeHtml(value) {
+    return String(value || "").replace(/[&<>"']/g, function (character) {
+      return {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[character];
+    });
   }
 
   function getCartItems() {
@@ -80,6 +95,19 @@
     return subtotal > 0 ? Math.min(studentSavings, subtotal) : 0;
   }
 
+  function updateEmptyState(isEmpty) {
+    var emptyState = document.querySelector('[data-component="empty-cart-state"]');
+    var selectAll = document.getElementById("selectAllItems");
+
+    if (emptyState) {
+      emptyState.classList.toggle("d-none", !isEmpty);
+    }
+
+    if (selectAll) {
+      selectAll.disabled = isEmpty;
+    }
+  }
+
   function updateSelectAllState() {
     var selectAll = document.getElementById("selectAllItems");
     var itemCheckboxes = getCartItems().map(function (item) {
@@ -95,28 +123,18 @@
 
     selectAll.checked = itemCheckboxes.length > 0 && checkedCount === itemCheckboxes.length;
     selectAll.indeterminate = checkedCount > 0 && checkedCount < itemCheckboxes.length;
+    selectAll.disabled = itemCheckboxes.length === 0;
   }
 
-  function updateCartSummary() {
-    var subtotal = getSelectedSubtotal();
-    var shipping = getShipping(subtotal);
-    var savings = getSavings(subtotal);
-    var total = Math.max(0, subtotal + shipping - savings);
+  function setCartSummary(summary) {
     var cartCount = document.getElementById("cartCount") || document.querySelector('[data-role="cart-count"]');
     var cartButton = document.getElementById("cartButton") || document.querySelector('[data-action="open-cart"]');
-    var itemCount = getCartQuantityCount();
+    var itemCount = Number(summary.itemCount) || 0;
 
-    getCartItems().forEach(function (item) {
-      var lineTotal = item.querySelector('[data-role="line-total"]');
-      if (lineTotal) {
-        lineTotal.textContent = formatPrice(getUnitPrice(item) * getQuantityValue(item));
-      }
-    });
-
-    setText('[data-role="cart-subtotal"]', formatPrice(subtotal));
-    setText('[data-role="cart-shipping"]', formatPrice(shipping));
-    setText('[data-role="cart-savings"]', "-" + formatPrice(savings));
-    setText('[data-role="cart-total"]', formatPrice(total));
+    setText('[data-role="cart-subtotal"]', formatPrice(summary.subtotal || 0));
+    setText('[data-role="cart-shipping"]', formatPrice(summary.shipping || 0));
+    setText('[data-role="cart-savings"]', "-" + formatPrice(summary.savings || 0));
+    setText('[data-role="cart-total"]', formatPrice(summary.total || 0));
 
     if (cartCount) {
       cartCount.textContent = String(itemCount);
@@ -125,7 +143,29 @@
     if (cartButton) {
       cartButton.setAttribute("aria-label", "Shopping cart with " + itemCount + " items");
     }
+  }
 
+  function updateCartSummary() {
+    var subtotal = getSelectedSubtotal();
+    var shipping = getShipping(subtotal);
+    var savings = getSavings(subtotal);
+    var total = Math.max(0, subtotal + shipping - savings);
+
+    getCartItems().forEach(function (item) {
+      var lineTotal = item.querySelector('[data-role="line-total"]');
+      if (lineTotal) {
+        lineTotal.textContent = formatPrice(getUnitPrice(item) * getQuantityValue(item));
+      }
+    });
+
+    setCartSummary({
+      subtotal: subtotal,
+      shipping: shipping,
+      savings: savings,
+      total: total,
+      itemCount: getCartQuantityCount()
+    });
+    updateEmptyState(getCartItems().length === 0);
     updateSelectAllState();
   }
 
@@ -143,6 +183,142 @@
     if (window.bootstrap) {
       window.bootstrap.Toast.getOrCreateInstance(toast, { delay: 1600 }).show();
     }
+  }
+
+  function showApiFallbackNotice(error) {
+    apiCartActive = false;
+
+    if (window.console && typeof window.console.warn === "function") {
+      window.console.warn("ShopLite cart API unavailable. Using local cart fallback.", error);
+    }
+
+    if (!fallbackNoticeShown) {
+      showToast("Cart API unavailable. Showing local cart preview.");
+      fallbackNoticeShown = true;
+    }
+  }
+
+  function cartHeaderTemplate(isEmpty) {
+    return [
+      '<div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">',
+      '  <h2 class="card-heading fs-4">Cart items</h2>',
+      '  <div class="d-flex align-items-center gap-3">',
+      '    <label class="fw-bold" for="selectAllItems">',
+      '      <input class="form-check-input me-2" id="selectAllItems" type="checkbox" data-action="select-cart-item"' + (isEmpty ? " disabled" : " checked") + "> Select all",
+      "    </label>",
+      '    <button class="btn btn-sm btn-outline-accent" type="button" data-action="clear-cart"' + (isEmpty ? " disabled" : "") + ">Clear Cart</button>",
+      "  </div>",
+      "</div>"
+    ].join("");
+  }
+
+  function cartItemTemplate(item) {
+    var product = item.product || {};
+    var title = escapeHtml(product.title || "ShopLite product");
+    var image = escapeHtml(product.image || "assets/images/placeholder-product.svg");
+    var alt = escapeHtml(product.alt || title);
+    var shipping = escapeHtml(product.shipping || "Standard ShopLite shipping.");
+    var productId = Number(item.productId);
+    var quantity = Number(item.quantity) || 1;
+    var unitPrice = Number(item.unitPrice) || Number(product.price) || 0;
+    var lineTotal = Number(item.lineTotal) || unitPrice * quantity;
+
+    return [
+      '<div class="cart-item" data-cart-item-id="cart-item-' + productId + '" data-product-id="' + productId + '" data-unit-price="' + unitPrice + '">',
+      '  <div class="row g-3 align-items-center">',
+      '    <div class="col-auto"><input class="form-check-input" type="checkbox" data-action="select-cart-item" checked aria-label="Select ' + title + '"></div>',
+      '    <div class="col-auto"><a href="product-detail.html?productId=' + productId + '"><img class="cart-thumb" src="' + image + '" alt="' + alt + '"></a></div>',
+      '    <div class="col-md"><h3 class="cart-item-title"><a class="product-detail-link" href="product-detail.html?productId=' + productId + '">' + title + '</a></h3><p class="muted-note mb-0">' + shipping + '</p></div>',
+      '    <div class="col-sm-auto"><span class="current-price fs-5" data-role="line-total">' + formatPrice(lineTotal) + "</span></div>",
+      '    <div class="col-sm-auto"><div class="quantity-control" data-quantity-control><button type="button" data-action="decrease-quantity" data-quantity-change="-1" aria-label="Decrease quantity">-</button><input type="text" value="' + quantity + '" data-field="cart-quantity" aria-label="Cart item quantity"><button type="button" data-action="increase-quantity" data-quantity-change="1" aria-label="Increase quantity">+</button></div></div>',
+      '    <div class="col-sm-auto"><button class="btn btn-sm delete-button" type="button" data-action="remove-cart-item"><i class="bi bi-trash" aria-hidden="true"></i> Delete</button></div>',
+      "  </div>",
+      "</div>"
+    ].join("");
+  }
+
+  function renderCart(cart) {
+    var cartList = document.querySelector('[data-component="cart-list"]');
+    var items = cart && Array.isArray(cart.items) ? cart.items : [];
+
+    if (!cartList) {
+      return;
+    }
+
+    cartList.dataset.dataSource = "api";
+    cartList.innerHTML = cartHeaderTemplate(items.length === 0) + items.map(cartItemTemplate).join("");
+    setCartSummary(cart.summary || {
+      subtotal: 0,
+      shipping: 0,
+      savings: 0,
+      total: 0,
+      itemCount: 0
+    });
+    updateEmptyState(items.length === 0);
+    updateSelectAllState();
+  }
+
+  async function loadCart() {
+    if (typeof apiClient.getJson !== "function") {
+      throw new Error("Cart API client is unavailable.");
+    }
+
+    return apiClient.getJson("/api/cart");
+  }
+
+  async function loadAndRenderCart() {
+    try {
+      var cart = await loadCart();
+      apiCartActive = true;
+      renderCart(cart);
+    } catch (error) {
+      showApiFallbackNotice(error);
+      updateCartSummary();
+    }
+  }
+
+  async function patchCartItem(productId, quantity, fallbackAction) {
+    if (apiCartActive && typeof apiClient.patchJson === "function") {
+      try {
+        renderCart(await apiClient.patchJson("/api/cart/items/" + encodeURIComponent(productId), {
+          quantity: quantity
+        }));
+        showToast("Cart quantity updated.");
+        return;
+      } catch (error) {
+        showApiFallbackNotice(error);
+      }
+    }
+
+    fallbackAction();
+  }
+
+  async function removeCartItem(productId, fallbackAction) {
+    if (apiCartActive && typeof apiClient.deleteJson === "function") {
+      try {
+        renderCart(await apiClient.deleteJson("/api/cart/items/" + encodeURIComponent(productId)));
+        showToast("Cart item removed.");
+        return;
+      } catch (error) {
+        showApiFallbackNotice(error);
+      }
+    }
+
+    fallbackAction();
+  }
+
+  async function clearCart() {
+    if (apiCartActive && typeof apiClient.deleteJson === "function") {
+      try {
+        renderCart(await apiClient.deleteJson("/api/cart"));
+        showToast("Cart cleared.");
+        return;
+      } catch (error) {
+        showApiFallbackNotice(error);
+      }
+    }
+
+    clearCartItems();
   }
 
   function clearCartItems() {
@@ -170,8 +346,11 @@
       if (increaseButton) {
         var increaseItem = increaseButton.closest("[data-cart-item-id]");
         if (increaseItem) {
-          setQuantityValue(increaseItem, getQuantityValue(increaseItem) + 1);
-          updateCartSummary();
+          var increasedQuantity = getQuantityValue(increaseItem) + 1;
+          patchCartItem(increaseItem.dataset.productId, increasedQuantity, function () {
+            setQuantityValue(increaseItem, increasedQuantity);
+            updateCartSummary();
+          });
         }
         return;
       }
@@ -179,8 +358,11 @@
       if (decreaseButton) {
         var decreaseItem = decreaseButton.closest("[data-cart-item-id]");
         if (decreaseItem) {
-          setQuantityValue(decreaseItem, getQuantityValue(decreaseItem) - 1);
-          updateCartSummary();
+          var decreasedQuantity = Math.max(1, getQuantityValue(decreaseItem) - 1);
+          patchCartItem(decreaseItem.dataset.productId, decreasedQuantity, function () {
+            setQuantityValue(decreaseItem, decreasedQuantity);
+            updateCartSummary();
+          });
         }
         return;
       }
@@ -188,15 +370,17 @@
       if (removeButton) {
         var removableItem = removeButton.closest("[data-cart-item-id]");
         if (removableItem) {
-          removableItem.remove();
-          updateCartSummary();
-          showToast("Cart item removed.");
+          removeCartItem(removableItem.dataset.productId, function () {
+            removableItem.remove();
+            updateCartSummary();
+            showToast("Cart item removed.");
+          });
         }
         return;
       }
 
       if (clearButton) {
-        clearCartItems();
+        clearCart();
         return;
       }
 
@@ -226,13 +410,15 @@
       if (quantityInput) {
         var item = quantityInput.closest("[data-cart-item-id]");
         if (item) {
-          setQuantityValue(item, getQuantityValue(item));
-          updateCartSummary();
+          var normalizedQuantity = setQuantityValue(item, getQuantityValue(item));
+          patchCartItem(item.dataset.productId, normalizedQuantity, function () {
+            updateCartSummary();
+          });
         }
       }
     });
 
-    updateCartSummary();
+    loadAndRenderCart();
   }
 
   window.ShopLitePages = window.ShopLitePages || {};

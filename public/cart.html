@@ -101,9 +101,12 @@
             <div class="surface-card p-4 mb-4" data-component="cart-list">
               <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
                 <h2 class="card-heading fs-4">Cart items</h2>
-                <label class="fw-bold" for="selectAllItems">
-                  <input class="form-check-input me-2" id="selectAllItems" type="checkbox" data-action="select-cart-item" checked> Select all
-                </label>
+                <div class="d-flex align-items-center gap-3">
+                  <label class="fw-bold" for="selectAllItems">
+                    <input class="form-check-input me-2" id="selectAllItems" type="checkbox" data-action="select-cart-item" checked> Select all
+                  </label>
+                  <button class="btn btn-sm btn-outline-accent" type="button" data-action="clear-cart">Clear Cart</button>
+                </div>
               </div>
 
               <div class="cart-item" data-cart-item-id="cart-item-1" data-product-id="1" data-unit-price="679.99">
@@ -195,6 +198,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/core/apiClient.js"></script>
     <script src="js/pages/cartPage.js"></script>
     <script src="js/main.js"></script>
   </body>
