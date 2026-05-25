@@ -1,7 +1,6 @@
 const cartRepository = require("../repositories/cartRepository");
 const productRepository = require("../repositories/productRepository");
 
-const demoCartId = "demo-cart";
 const shippingFee = 6.99;
 const maxSavings = 48.5;
 
@@ -25,20 +24,12 @@ function roundMoney(value) {
   return Math.round((Number(value) + Number.EPSILON) * 100) / 100;
 }
 
-async function getOrCreateDemoCart() {
-  const existingCart = await cartRepository.findById(demoCartId);
-
-  if (existingCart) {
-    return {
-      id: demoCartId,
-      items: Array.isArray(existingCart.items) ? existingCart.items : []
-    };
+function requireUserId(userId) {
+  if (!userId) {
+    throw createHttpError("Authentication required.", 401);
   }
 
-  return cartRepository.save({
-    id: demoCartId,
-    items: []
-  });
+  return userId;
 }
 
 async function getProductOrThrow(productId) {
@@ -93,6 +84,7 @@ async function enrichCart(cart) {
 
   return {
     id: cart.id,
+    userId: cart.userId,
     items,
     summary: {
       subtotal: roundMoney(subtotal),
@@ -104,14 +96,15 @@ async function enrichCart(cart) {
   };
 }
 
-async function getCart() {
-  return enrichCart(await getOrCreateDemoCart());
+async function getCart(userId) {
+  return enrichCart(await cartRepository.getOrCreateCartForUser(requireUserId(userId)));
 }
 
-async function addItem(payload) {
+async function addItem(userId, payload) {
+  const normalizedUserId = requireUserId(userId);
   const product = await getProductOrThrow(payload && payload.productId);
   const quantity = normalizeQuantity(payload && payload.quantity) || 1;
-  const cart = await getOrCreateDemoCart();
+  const cart = await cartRepository.getOrCreateCartForUser(normalizedUserId);
   const existingItem = cart.items.find(function (item) {
     return Number(item.productId) === Number(product.id);
   });
@@ -125,11 +118,12 @@ async function addItem(payload) {
     });
   }
 
-  await cartRepository.save(cart);
+  await cartRepository.saveCart(cart);
   return enrichCart(cart);
 }
 
-async function updateItem(productId, payload) {
+async function updateItem(userId, productId, payload) {
+  const normalizedUserId = requireUserId(userId);
   const normalizedProductId = normalizeProductId(productId);
   const quantity = normalizeQuantity(payload && payload.quantity);
 
@@ -143,41 +137,29 @@ async function updateItem(productId, payload) {
 
   await getProductOrThrow(normalizedProductId);
 
-  const cart = await getOrCreateDemoCart();
-  const existingItem = cart.items.find(function (item) {
-    return Number(item.productId) === normalizedProductId;
-  });
+  const cart = await cartRepository.updateItemQuantityForUser(normalizedUserId, normalizedProductId, quantity);
 
-  if (!existingItem) {
+  if (!cart) {
     throw createHttpError("Cart item not found.", 404);
   }
 
-  existingItem.quantity = quantity;
-  await cartRepository.save(cart);
   return enrichCart(cart);
 }
 
-async function removeItem(productId) {
+async function removeItem(userId, productId) {
+  const normalizedUserId = requireUserId(userId);
   const normalizedProductId = normalizeProductId(productId);
 
   if (!normalizedProductId) {
     throw createHttpError("A valid productId is required.", 400);
   }
 
-  const cart = await getOrCreateDemoCart();
-  cart.items = cart.items.filter(function (item) {
-    return Number(item.productId) !== normalizedProductId;
-  });
-
-  await cartRepository.save(cart);
+  const cart = await cartRepository.removeItemForUser(normalizedUserId, normalizedProductId);
   return enrichCart(cart);
 }
 
-async function clearCart() {
-  const cart = await getOrCreateDemoCart();
-  cart.items = [];
-  await cartRepository.save(cart);
-  return enrichCart(cart);
+async function clearCart(userId) {
+  return enrichCart(await cartRepository.clearCartForUser(requireUserId(userId)));
 }
 
 module.exports = {

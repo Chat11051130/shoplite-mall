@@ -68,6 +68,19 @@
     setCartCount(currentCount + amount);
   }
 
+  function isAuthError(error) {
+    return window.ShopLiteCart && typeof window.ShopLiteCart.isAuthError === "function" ? window.ShopLiteCart.isAuthError(error) : Boolean(error && error.status === 401);
+  }
+
+  function redirectToLogin() {
+    if (window.ShopLiteCart && typeof window.ShopLiteCart.redirectToLogin === "function") {
+      window.ShopLiteCart.redirectToLogin();
+      return;
+    }
+
+    window.location.assign("login.html?returnTo=" + encodeURIComponent(window.location.pathname.replace(/^\//, "") + window.location.search));
+  }
+
   function showToast(message) {
     var toast = document.getElementById("ordersToast");
     if (!toast) {
@@ -402,6 +415,11 @@
           }
           showToast("Items from order " + (reorderCard ? reorderCard.dataset.orderId : "") + " were added to your cart.");
         }).catch(function (error) {
+          if (isAuthError(error)) {
+            redirectToLogin();
+            return;
+          }
+
           if (window.console && typeof window.console.warn === "function") {
             window.console.warn("ShopLite reorder API unavailable. Using local cart count fallback.", error);
           }

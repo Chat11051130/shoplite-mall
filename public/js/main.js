@@ -25,6 +25,32 @@
     });
   }
 
+  function currentReturnToPath() {
+    return window.location.pathname.replace(/^\//, "") + window.location.search + window.location.hash;
+  }
+
+  function safeReturnToPath(returnTo) {
+    var target = returnTo || currentReturnToPath();
+
+    if (!target || /^https?:\/\//i.test(target) || target.indexOf("//") === 0) {
+      return "index.html";
+    }
+
+    return target.replace(/^\//, "");
+  }
+
+  function buildLoginUrl(returnTo) {
+    return "login.html?returnTo=" + encodeURIComponent(safeReturnToPath(returnTo));
+  }
+
+  function redirectToLogin(returnTo) {
+    window.location.assign(buildLoginUrl(returnTo));
+  }
+
+  function isAuthError(error) {
+    return Boolean(error && error.status === 401);
+  }
+
   function findAccountLink() {
     var accountLink = document.querySelector('[data-role="account-link"]');
 
@@ -153,6 +179,11 @@
         setGlobalCartCount(itemCount);
       }
     } catch (error) {
+      if (isAuthError(error)) {
+        setGlobalCartCount(0);
+        return;
+      }
+
       if (window.console && typeof window.console.warn === "function") {
         window.console.warn("ShopLite cart count sync unavailable. Keeping static cart count fallback.", error);
       }
@@ -226,6 +257,7 @@
 
     if (typeof apiClient.postJson !== "function") {
       setSignedOutHeader();
+      setGlobalCartCount(0);
       return;
     }
 
@@ -238,9 +270,13 @@
     }
 
     setSignedOutHeader();
+    setGlobalCartCount(0);
   }
 
   window.ShopLiteCart = {
+    buildLoginUrl: buildLoginUrl,
+    isAuthError: isAuthError,
+    redirectToLogin: redirectToLogin,
     setCount: setGlobalCartCount,
     syncCount: syncGlobalCartCount
   };

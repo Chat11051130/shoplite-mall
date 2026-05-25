@@ -201,6 +201,58 @@
     }
   }
 
+  function isAuthError(error) {
+    return window.ShopLiteCart && typeof window.ShopLiteCart.isAuthError === "function" ? window.ShopLiteCart.isAuthError(error) : Boolean(error && error.status === 401);
+  }
+
+  function buildLoginUrl() {
+    if (window.ShopLiteCart && typeof window.ShopLiteCart.buildLoginUrl === "function") {
+      return window.ShopLiteCart.buildLoginUrl("cart.html");
+    }
+
+    return "login.html?returnTo=cart.html";
+  }
+
+  function redirectToLogin() {
+    if (window.ShopLiteCart && typeof window.ShopLiteCart.redirectToLogin === "function") {
+      window.ShopLiteCart.redirectToLogin("cart.html");
+      return;
+    }
+
+    window.location.assign(buildLoginUrl());
+  }
+
+  function showSignedOutCartMessage() {
+    var cartList = document.querySelector('[data-component="cart-list"]');
+    var emptyState = document.querySelector('[data-component="empty-cart-state"]');
+
+    apiCartActive = false;
+
+    if (cartList) {
+      cartList.dataset.dataSource = "auth-required";
+      cartList.innerHTML = [
+        '<div class="empty-state mb-0">',
+        '  <i class="bi bi-person-lock fs-1 text-secondary" aria-hidden="true"></i>',
+        '  <strong>Sign in to view your cart.</strong>',
+        '  <span>Your ShopLite cart is now saved to your account session.</span>',
+        '  <a class="btn btn-accent mt-3" href="' + buildLoginUrl() + '">Sign In to Continue</a>',
+        "</div>"
+      ].join("");
+    }
+
+    if (emptyState) {
+      emptyState.classList.add("d-none");
+    }
+
+    setCartSummary({
+      subtotal: 0,
+      shipping: 0,
+      savings: 0,
+      total: 0,
+      itemCount: 0
+    });
+  }
+
   function cartHeaderTemplate(isEmpty) {
     return [
       '<div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">',
@@ -275,6 +327,11 @@
       apiCartActive = true;
       renderCart(cart);
     } catch (error) {
+      if (isAuthError(error)) {
+        showSignedOutCartMessage();
+        return;
+      }
+
       showApiFallbackNotice(error);
       updateCartSummary();
     }
@@ -289,6 +346,11 @@
         showToast("Cart quantity updated.");
         return;
       } catch (error) {
+        if (isAuthError(error)) {
+          showSignedOutCartMessage();
+          return;
+        }
+
         showApiFallbackNotice(error);
       }
     }
@@ -303,6 +365,11 @@
         showToast("Cart item removed.");
         return;
       } catch (error) {
+        if (isAuthError(error)) {
+          showSignedOutCartMessage();
+          return;
+        }
+
         showApiFallbackNotice(error);
       }
     }
@@ -317,6 +384,11 @@
         showToast("Cart cleared.");
         return;
       } catch (error) {
+        if (isAuthError(error)) {
+          showSignedOutCartMessage();
+          return;
+        }
+
         showApiFallbackNotice(error);
       }
     }

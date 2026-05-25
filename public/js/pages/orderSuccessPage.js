@@ -99,6 +99,19 @@
     setCartCount(nextCount);
   }
 
+  function isAuthError(error) {
+    return window.ShopLiteCart && typeof window.ShopLiteCart.isAuthError === "function" ? window.ShopLiteCart.isAuthError(error) : Boolean(error && error.status === 401);
+  }
+
+  function redirectToLogin() {
+    if (window.ShopLiteCart && typeof window.ShopLiteCart.redirectToLogin === "function") {
+      window.ShopLiteCart.redirectToLogin();
+      return;
+    }
+
+    window.location.assign("login.html?returnTo=" + encodeURIComponent(window.location.pathname.replace(/^\//, "") + window.location.search));
+  }
+
   async function addProductToCart(button) {
     var productId = Number(button ? button.dataset.productId : 0);
 
@@ -113,6 +126,11 @@
         showToast("Recommended product added to your ShopLite cart.");
         return;
       } catch (error) {
+        if (isAuthError(error)) {
+          redirectToLogin();
+          return;
+        }
+
         if (window.console && typeof window.console.warn === "function") {
           window.console.warn("ShopLite cart API unavailable. Using local cart count fallback.", error);
         }
