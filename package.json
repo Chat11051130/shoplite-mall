@@ -1,0 +1,15 @@
+{
+  "name": "shoplite-mall",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ShopLite Mall storefront and backend skeleton",
+  "main": "server/app.js",
+  "scripts": {
+    "start": "node server/app.js",
+    "dev": "node server/app.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}
