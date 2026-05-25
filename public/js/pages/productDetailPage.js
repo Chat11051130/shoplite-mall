@@ -3,12 +3,14 @@
 
   var data = window.ShopLiteData || {};
   var templates = window.ShopLiteTemplates || {};
+  var apiClient = window.ShopLiteApi || {};
   var products = data.products || [];
   var miniCardTemplate = templates.miniCardTemplate;
   var formatCategory = templates.formatCategory;
   var formatPrice = templates.formatPrice;
   var formatReviews = templates.formatReviews;
   var buildStars = templates.buildStars;
+  var currentProductSource = "fallback";
 
   function getProductIdFromUrl() {
     var params = new URLSearchParams(window.location.search);
@@ -18,7 +20,54 @@
   function findProductById(productId) {
     return products.find(function (product) {
       return product.id === productId;
-    }) || products[0];
+    }) || null;
+  }
+
+  function getFallbackProduct(productId) {
+    return findProductById(productId);
+  }
+
+  async function loadProduct(productId) {
+    if (typeof apiClient.getJson === "function") {
+      try {
+        var payload = await apiClient.getJson("/api/products/" + encodeURIComponent(productId));
+        currentProductSource = "api";
+        return payload && payload.data ? payload.data : null;
+      } catch (error) {
+        if (window.console && typeof window.console.warn === "function") {
+          window.console.warn("ShopLite product detail API unavailable. Using local fallback.", error);
+        }
+      }
+    }
+
+    currentProductSource = "fallback";
+    return getFallbackProduct(productId);
+  }
+
+  function getFallbackRelatedProducts(product) {
+    return products.filter(function (candidate) {
+      return candidate.category === product.category && candidate.id !== product.id;
+    }).slice(0, 4);
+  }
+
+  async function loadRelatedProducts(product) {
+    if (typeof apiClient.getJson === "function" && typeof apiClient.buildQueryString === "function") {
+      try {
+        var queryString = apiClient.buildQueryString({ category: product.category });
+        var payload = await apiClient.getJson("/api/products" + queryString);
+        var related = payload && Array.isArray(payload.data) ? payload.data : [];
+
+        return related.filter(function (candidate) {
+          return candidate.id !== product.id;
+        }).slice(0, 4);
+      } catch (error) {
+        if (window.console && typeof window.console.warn === "function") {
+          window.console.warn("ShopLite related products API unavailable. Using local fallback.", error);
+        }
+      }
+    }
+
+    return getFallbackRelatedProducts(product);
   }
 
   function getQuantityInput() {
@@ -106,13 +155,11 @@
   }
 
   function relatedProductsFor(product) {
-    return products.filter(function (candidate) {
-      return candidate.category === product.category && candidate.id !== product.id;
-    }).slice(0, 4);
+    return getFallbackRelatedProducts(product);
   }
 
-  function galleryImagesFor(product) {
-    var related = relatedProductsFor(product).slice(0, 3);
+  function galleryImagesFor(product, relatedProducts) {
+    var related = (relatedProducts || relatedProductsFor(product)).slice(0, 3);
     return [product].concat(related).map(function (item) {
       return {
         src: item.image,
@@ -121,10 +168,10 @@
     });
   }
 
-  function renderGallery(product) {
+  function renderGallery(product, relatedProducts) {
     var mainImage = document.querySelector('[data-role="selected-product-image"]');
     var thumbs = document.querySelector(".gallery-thumbs");
-    var images = galleryImagesFor(product);
+    var images = galleryImagesFor(product, relatedProducts);
 
     if (mainImage) {
       mainImage.src = product.image;
@@ -172,16 +219,16 @@
     }).join("");
   }
 
-  function renderRelatedProducts(product) {
+  function renderRelatedProducts(product, relatedProducts) {
     var rail = document.querySelector('[data-component="related-products"] .recommendation-rail');
-    var related = relatedProductsFor(product);
+    var related = relatedProducts || relatedProductsFor(product);
 
     if (rail && typeof miniCardTemplate === "function") {
       rail.innerHTML = related.map(miniCardTemplate).join("");
     }
   }
 
-  function renderProduct(product) {
+  function renderProduct(product, relatedProducts, source) {
     var section = document.querySelector('[data-page="product-detail"] [data-product-id]');
     var categoryLabel = typeof formatCategory === "function" ? formatCategory(product.category) : product.category;
     var categoryLink = document.querySelector('[data-role="product-category-link"]');
@@ -191,6 +238,7 @@
 
     if (section) {
       section.dataset.productId = String(product.id);
+      section.dataset.dataSource = source || "local";
     }
 
     document.title = "ShopLite Mall - " + product.title;
@@ -239,10 +287,10 @@
       }
     }
 
-    renderGallery(product);
+    renderGallery(product, relatedProducts);
     renderHighlights(product);
     renderSpecifications(product);
-    renderRelatedProducts(product);
+    renderRelatedProducts(product, relatedProducts);
   }
 
   function renderInvalidProductState() {
@@ -252,16 +300,16 @@
     }
   }
 
-  function initProductDetailPage() {
+  async function initProductDetailPage() {
     var productId = getProductIdFromUrl();
-    var product = findProductById(productId);
+    var product = await loadProduct(productId);
 
     if (!product) {
       renderInvalidProductState();
       return;
     }
 
-    renderProduct(product);
+    renderProduct(product, await loadRelatedProducts(product), currentProductSource);
 
     document.addEventListener("click", function (event) {
       var imageButton = event.target.closest('[data-action="select-product-image"]');
