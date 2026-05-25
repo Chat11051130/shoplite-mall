@@ -129,6 +129,11 @@
     var cartButton = document.getElementById("cartButton") || document.querySelector('[data-action="open-cart"]');
     var nextCount = Number.isFinite(itemCount) ? itemCount : 0;
 
+    if (window.ShopLiteCart && typeof window.ShopLiteCart.setCount === "function") {
+      window.ShopLiteCart.setCount(nextCount);
+      return;
+    }
+
     if (cartCount) {
       cartCount.textContent = String(nextCount);
     }

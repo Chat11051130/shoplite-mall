@@ -130,17 +130,20 @@
     var cartCount = document.getElementById("cartCount") || document.querySelector('[data-role="cart-count"]');
     var cartButton = document.getElementById("cartButton") || document.querySelector('[data-action="open-cart"]');
     var itemCount = Number(summary.itemCount) || 0;
+    var hasGlobalCartCount = window.ShopLiteCart && typeof window.ShopLiteCart.setCount === "function";
 
     setText('[data-role="cart-subtotal"]', formatPrice(summary.subtotal || 0));
     setText('[data-role="cart-shipping"]', formatPrice(summary.shipping || 0));
     setText('[data-role="cart-savings"]', "-" + formatPrice(summary.savings || 0));
     setText('[data-role="cart-total"]', formatPrice(summary.total || 0));
 
-    if (cartCount) {
+    if (hasGlobalCartCount) {
+      window.ShopLiteCart.setCount(itemCount);
+    } else if (cartCount) {
       cartCount.textContent = String(itemCount);
     }
 
-    if (cartButton) {
+    if (!hasGlobalCartCount && cartButton) {
       cartButton.setAttribute("aria-label", "Shopping cart with " + itemCount + " items");
     }
   }

@@ -1,12 +1,63 @@
 (function () {
   "use strict";
 
+  function getCartCountElements() {
+    var elements = [];
+
+    document.querySelectorAll('[data-role="cart-count"], #cartCount, .cart-count').forEach(function (element) {
+      if (elements.indexOf(element) === -1) {
+        elements.push(element);
+      }
+    });
+
+    return elements;
+  }
+
+  function setGlobalCartCount(itemCount) {
+    var nextCount = Number.isFinite(itemCount) ? itemCount : 0;
+
+    getCartCountElements().forEach(function (element) {
+      element.textContent = String(nextCount);
+    });
+
+    document.querySelectorAll('[data-action="open-cart"], #cartButton, .cart-link').forEach(function (cartLink) {
+      cartLink.setAttribute("aria-label", "Shopping cart with " + nextCount + " items");
+    });
+  }
+
+  async function syncGlobalCartCount() {
+    var cartCountElements = getCartCountElements();
+    var apiClient = window.ShopLiteApi || {};
+
+    if (cartCountElements.length === 0) {
+      return;
+    }
+
+    if (typeof apiClient.getJson !== "function") {
+      return;
+    }
+
+    try {
+      var cart = await apiClient.getJson("/api/cart");
+      var itemCount = cart && cart.summary ? Number(cart.summary.itemCount) : NaN;
+
+      if (Number.isFinite(itemCount)) {
+        setGlobalCartCount(itemCount);
+      }
+    } catch (error) {
+      if (window.console && typeof window.console.warn === "function") {
+        window.console.warn("ShopLite cart count sync unavailable. Keeping static cart count fallback.", error);
+      }
+    }
+  }
+
   function initializeCurrentPage() {
     var page = document.body ? document.body.dataset.page : "";
     var pageInitializers = window.ShopLitePages || {};
     var initializer = pageInitializers[page];
 
     initializeGlobalNavigation(page);
+    syncGlobalCartCount();
 
     if (typeof initializer === "function") {
       initializer();
@@ -54,6 +105,11 @@
       window.location.assign(buildProductsUrlFromSearch(searchForm));
     }, true);
   }
+
+  window.ShopLiteCart = {
+    setCount: setGlobalCartCount,
+    syncCount: syncGlobalCartCount
+  };
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initializeCurrentPage);

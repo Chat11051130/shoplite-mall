@@ -163,3 +163,32 @@ Recommended next phases:
 - Add auth/session and replace the fixed `demo-cart` with user-scoped carts.
 - Add admin APIs after customer purchase flow contracts stabilize.
 - Replace JSON file storage with a database only after route and data contracts are stable.
+
+## Global Cart Count Sync Fix
+
+Issue found:
+
+- After checkout created an order, the backend cleared `demo-cart`, but customer page headers could still show the static HTML cart badge value.
+
+Root cause:
+
+- `public/index.html` did not load the shared API client, and `public/js/main.js` did not synchronize header cart badges from `GET /api/cart` on page load.
+- The home page Add to Cart path still incremented the badge locally instead of using the Cart API as the primary source.
+
+Fix applied:
+
+- Added a global cart count helper in `public/js/main.js` that reads `GET /api/cart`, updates `[data-role="cart-count"]`, `#cartCount`, and `.cart-count`, and refreshes cart link `aria-label` values.
+- Loaded `public/js/core/apiClient.js` on `public/index.html`.
+- Updated home page Add to Cart to call `POST /api/cart/items` first and keep local increment only as fallback.
+- Updated customer page cart count setters to delegate to the shared helper when available.
+
+Smoke check result:
+
+- Through `http://localhost:3000`, product Add to Cart updated the header count from the Cart API.
+- After placing an order, `order-success.html` showed header cart count `0`.
+- Returning to `index.html` still showed header cart count `0`.
+- `cart.html` showed the empty cart state with header cart count `0`.
+
+Remaining limitations:
+
+- Cart state still uses the fixed `demo-cart` JSON file until auth/session work assigns carts per user.

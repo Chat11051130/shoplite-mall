@@ -3,6 +3,7 @@
 
   var data = window.ShopLiteData || {};
   var templates = window.ShopLiteTemplates || {};
+  var apiClient = window.ShopLiteApi || {};
   var products = data.products || [];
   var productCardTemplate = templates.productCardTemplate;
   var miniCardTemplate = templates.miniCardTemplate;
@@ -162,11 +163,16 @@
     showToast("Recommended products refreshed.");
   }
 
-  function updateCart() {
+  function setCartCount(itemCount) {
+    var nextCount = Number.isFinite(itemCount) ? itemCount : 0;
+
+    if (window.ShopLiteCart && typeof window.ShopLiteCart.setCount === "function") {
+      window.ShopLiteCart.setCount(nextCount);
+      return;
+    }
+
     var cartCountEl = document.getElementById("cartCount");
     var cartButton = document.getElementById("cartButton");
-    var currentCount = cartCountEl ? Number.parseInt(cartCountEl.textContent || "0", 10) : 0;
-    var nextCount = currentCount + 1;
 
     if (cartCountEl) {
       cartCountEl.textContent = String(nextCount);
@@ -174,7 +180,38 @@
     if (cartButton) {
       cartButton.setAttribute("aria-label", "Shopping cart with " + nextCount + " items");
     }
+  }
+
+  function updateCartFallback() {
+    var cartCountEl = document.getElementById("cartCount");
+    var currentCount = cartCountEl ? Number.parseInt(cartCountEl.textContent || "0", 10) : 0;
+
+    setCartCount(currentCount + 1);
     showToast("Item added to your ShopLite cart.");
+  }
+
+  async function addProductToCart(button) {
+    var productId = Number(button ? button.dataset.productId : 0);
+
+    if (typeof apiClient.postJson === "function" && Number.isInteger(productId) && productId > 0) {
+      try {
+        var cart = await apiClient.postJson("/api/cart/items", {
+          productId: productId,
+          quantity: 1
+        });
+        var itemCount = cart && cart.summary ? Number(cart.summary.itemCount) : NaN;
+
+        setCartCount(itemCount);
+        showToast("Item added to your ShopLite cart.");
+        return;
+      } catch (error) {
+        if (window.console && typeof window.console.warn === "function") {
+          window.console.warn("ShopLite cart API unavailable. Using local cart count fallback.", error);
+        }
+      }
+    }
+
+    updateCartFallback();
   }
 
   function buildProductsSearchUrl() {
@@ -236,7 +273,7 @@
       var refreshButton = event.target.closest("[data-action='refresh-recommendations']");
 
       if (productButton) {
-        updateCart();
+        addProductToCart(productButton);
         return;
       }
 

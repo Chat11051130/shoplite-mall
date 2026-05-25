@@ -1,1 +1,142 @@
-[]
+[
+  {
+    "id": "SL-20260525-205726628",
+    "createdAt": "2026-05-25T12:57:26.760Z",
+    "status": "processing",
+    "customerName": "Alex Morgan",
+    "phone": "+1 555 0108",
+    "shippingAddress": "118 Student Avenue, Apt 402",
+    "city": "Lakeside",
+    "state": "CA",
+    "zip": "94016",
+    "deliveryOption": "standard",
+    "paymentMethod": "mock-card",
+    "items": [
+      {
+        "productId": 1,
+        "title": "AeroBook 14-inch lightweight laptop with long-life battery",
+        "price": 679.99,
+        "quantity": 1,
+        "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=700&q=80",
+        "category": "electronics"
+      },
+      {
+        "productId": 2,
+        "title": "PulseWave wireless noise-canceling headphones",
+        "price": 129.95,
+        "quantity": 1,
+        "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=80",
+        "category": "electronics"
+      },
+      {
+        "productId": 17,
+        "title": "Nordic task chair with breathable woven seat",
+        "price": 149.99,
+        "quantity": 1,
+        "image": "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=700&q=80",
+        "category": "home"
+      }
+    ],
+    "summary": {
+      "subtotal": 959.93,
+      "shipping": 0,
+      "tax": 71.99,
+      "savings": 48.5,
+      "total": 983.42,
+      "itemCount": 3
+    }
+  },
+  {
+    "id": "SL-20260525-212416550",
+    "createdAt": "2026-05-25T13:24:16.321Z",
+    "status": "processing",
+    "customerName": "Alex Morgan",
+    "phone": "+1 555 0108",
+    "shippingAddress": "118 Student Avenue, Apt 402",
+    "city": "Lakeside",
+    "state": "CA",
+    "zip": "94016",
+    "deliveryOption": "standard",
+    "paymentMethod": "mock-card",
+    "items": [
+      {
+        "productId": 2,
+        "title": "PulseWave wireless noise-canceling headphones",
+        "price": 129.95,
+        "quantity": 1,
+        "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=80",
+        "category": "electronics"
+      }
+    ],
+    "summary": {
+      "subtotal": 129.95,
+      "shipping": 0,
+      "tax": 9.75,
+      "savings": 48.5,
+      "total": 91.2,
+      "itemCount": 1
+    }
+  },
+  {
+    "id": "SL-20260525-212532202",
+    "createdAt": "2026-05-25T13:25:32.335Z",
+    "status": "processing",
+    "customerName": "Alex Morgan",
+    "phone": "+1 555 0108",
+    "shippingAddress": "118 Student Avenue, Apt 402",
+    "city": "Lakeside",
+    "state": "CA",
+    "zip": "94016",
+    "deliveryOption": "standard",
+    "paymentMethod": "mock-card",
+    "items": [
+      {
+        "productId": 7,
+        "title": "DeskHub USB-C multiport adapter for laptop workstations",
+        "price": 34.99,
+        "quantity": 1,
+        "image": "https://images.unsplash.com/photo-1625842268584-8f3296236761?auto=format&fit=crop&w=700&q=80",
+        "category": "electronics"
+      }
+    ],
+    "summary": {
+      "subtotal": 34.99,
+      "shipping": 0,
+      "tax": 2.62,
+      "savings": 34.99,
+      "total": 2.62,
+      "itemCount": 1
+    }
+  },
+  {
+    "id": "SL-20260525-212650878",
+    "createdAt": "2026-05-25T13:26:50.255Z",
+    "status": "processing",
+    "customerName": "Alex Morgan",
+    "phone": "+1 555 0108",
+    "shippingAddress": "118 Student Avenue, Apt 402",
+    "city": "Lakeside",
+    "state": "CA",
+    "zip": "94016",
+    "deliveryOption": "standard",
+    "paymentMethod": "mock-card",
+    "items": [
+      {
+        "productId": 7,
+        "title": "DeskHub USB-C multiport adapter for laptop workstations",
+        "price": 34.99,
+        "quantity": 1,
+        "image": "https://images.unsplash.com/photo-1625842268584-8f3296236761?auto=format&fit=crop&w=700&q=80",
+        "category": "electronics"
+      }
+    ],
+    "summary": {
+      "subtotal": 34.99,
+      "shipping": 0,
+      "tax": 2.62,
+      "savings": 34.99,
+      "total": 2.62,
+      "itemCount": 1
+    }
+  }
+]
