@@ -1,6 +1,8 @@
 (function () {
   "use strict";
 
+  var apiClient = window.ShopLiteApi || {};
+
   function formatPrice(value) {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -101,6 +103,9 @@
     var receiverName = getValue('[data-field="receiver-name"]');
     var shippingAddress = getValue('[data-field="shipping-address"]');
     var phone = getValue('[data-field="phone"]');
+    var city = getValue('[name="shippingCity"]');
+    var state = getValue('[name="shippingState"]');
+    var zip = getValue('[name="shippingZip"]');
     var deliveryOption = getSelected("deliveryOption");
     var paymentMethod = getSelected("paymentMethod");
     var missing = [];
@@ -108,6 +113,9 @@
     setInvalid('[data-field="receiver-name"]', !receiverName);
     setInvalid('[data-field="shipping-address"]', !shippingAddress);
     setInvalid('[data-field="phone"]', !phone);
+    setInvalid('[name="shippingCity"]', !city);
+    setInvalid('[name="shippingState"]', !state);
+    setInvalid('[name="shippingZip"]', !zip);
 
     if (!receiverName) {
       missing.push("receiver name");
@@ -118,6 +126,15 @@
     if (!phone) {
       missing.push("phone");
     }
+    if (!city) {
+      missing.push("city");
+    }
+    if (!state) {
+      missing.push("state");
+    }
+    if (!zip) {
+      missing.push("ZIP code");
+    }
     if (!deliveryOption) {
       missing.push("delivery option");
     }
@@ -126,6 +143,58 @@
     }
 
     return missing;
+  }
+
+  function buildOrderPayload() {
+    var deliveryOption = getSelected("deliveryOption");
+    var paymentMethod = getSelected("paymentMethod");
+
+    return {
+      customerName: getValue('[data-field="receiver-name"]'),
+      phone: getValue('[data-field="phone"]'),
+      shippingAddress: getValue('[data-field="shipping-address"]'),
+      city: getValue('[name="shippingCity"]'),
+      state: getValue('[name="shippingState"]'),
+      zip: getValue('[name="shippingZip"]'),
+      deliveryOption: deliveryOption ? deliveryOption.value : "",
+      paymentMethod: paymentMethod ? paymentMethod.value : ""
+    };
+  }
+
+  async function submitOrder(form) {
+    var submitButton = form.querySelector('[data-action="place-order"]');
+
+    if (typeof apiClient.postJson !== "function") {
+      setValidationMessage("Order API is unavailable. Please try again after the server starts.", "danger");
+      showToast("Order API is unavailable.");
+      return;
+    }
+
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = "Placing Order...";
+    }
+
+    try {
+      var response = await apiClient.postJson("/api/orders", buildOrderPayload());
+      var order = response && response.data ? response.data : null;
+
+      if (!order || !order.id) {
+        throw new Error("Order API did not return an order ID.");
+      }
+
+      setValidationMessage("Order created. Opening confirmation page.", "success");
+      window.location.href = "order-success.html?orderId=" + encodeURIComponent(order.id);
+    } catch (error) {
+      var message = error && error.message ? error.message : "Unable to place this order.";
+      setValidationMessage(message, "danger");
+      showToast(message);
+
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = "Place Order";
+      }
+    }
   }
 
   function initCheckoutPage() {
@@ -148,7 +217,7 @@
       });
     });
 
-    document.querySelectorAll('[data-field="receiver-name"], [data-field="shipping-address"], [data-field="phone"]').forEach(function (input) {
+    document.querySelectorAll('[data-field="receiver-name"], [data-field="shipping-address"], [data-field="phone"], [name="shippingCity"], [name="shippingState"], [name="shippingZip"]').forEach(function (input) {
       input.addEventListener("input", function () {
         input.classList.remove("is-invalid");
         clearValidationMessage();
@@ -165,8 +234,7 @@
         return;
       }
 
-      setValidationMessage("Order details validated. Opening confirmation page.", "success");
-      window.location.href = "order-success.html";
+      submitOrder(form);
     });
 
     updateSummary();

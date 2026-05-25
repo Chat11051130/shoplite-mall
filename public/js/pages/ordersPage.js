@@ -1,15 +1,51 @@
 (function () {
   "use strict";
 
+  var apiClient = window.ShopLiteApi || {};
+  var orderCache = {};
+  var staticOrdersMarkup = "";
+
+  function formatPrice(value) {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD"
+    }).format(value);
+  }
+
+  function formatDate(value) {
+    var date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return value || "Today";
+    }
+
+    return date.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric"
+    });
+  }
+
+  function escapeHtml(value) {
+    return String(value || "").replace(/[&<>"']/g, function (character) {
+      return {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[character];
+    });
+  }
+
   function getCartCountElement() {
     return document.getElementById("cartCount") || document.querySelector('[data-role="cart-count"]');
   }
 
-  function updateCartCount(amount) {
+  function setCartCount(itemCount) {
     var cartCount = getCartCountElement();
     var cartButton = document.getElementById("cartButton") || document.querySelector('[data-action="open-cart"]');
-    var currentCount = cartCount ? Number.parseInt(cartCount.textContent || "0", 10) : 0;
-    var nextCount = currentCount + amount;
+    var nextCount = Number.isFinite(itemCount) ? itemCount : 0;
 
     if (cartCount) {
       cartCount.textContent = String(nextCount);
@@ -18,6 +54,13 @@
     if (cartButton) {
       cartButton.setAttribute("aria-label", "Shopping cart with " + nextCount + " items");
     }
+  }
+
+  function updateCartCount(amount) {
+    var cartCount = getCartCountElement();
+    var currentCount = cartCount ? Number.parseInt(cartCount.textContent || "0", 10) : 0;
+
+    setCartCount(currentCount + amount);
   }
 
   function showToast(message) {
@@ -93,6 +136,102 @@
     return status ? status.charAt(0).toUpperCase() + status.slice(1) : "Processing";
   }
 
+  function orderTitle(order) {
+    if (!order.items || order.items.length === 0) {
+      return "ShopLite order";
+    }
+
+    if (order.items.length === 1) {
+      return order.items[0].title;
+    }
+
+    return order.items[0].title + " and " + (order.items.length - 1) + " more item" + (order.items.length === 2 ? "" : "s");
+  }
+
+  function deliveryNote(order) {
+    return order.status === "processing" ? "Order is being prepared for shipment." : "Order status is " + formatStatus(order.status).toLowerCase() + ".";
+  }
+
+  function fullShippingAddress(order) {
+    return [order.shippingAddress, order.city, order.state, order.zip].filter(Boolean).join(", ");
+  }
+
+  function orderCardTemplate(order) {
+    var status = order.status || "processing";
+    var title = orderTitle(order);
+    var total = order.summary ? order.summary.total : 0;
+    var itemCount = order.summary ? order.summary.itemCount : (order.items || []).length;
+    var images = (order.items || []).slice(0, 3).map(function (item) {
+      return '<img class="order-thumb" src="' + escapeHtml(item.image || "assets/images/placeholder-product.svg") + '" alt="' + escapeHtml(item.title) + '">';
+    }).join("");
+
+    return [
+      '<section class="surface-card order-card" data-order-id="' + escapeHtml(order.id) + '" data-order-status="' + escapeHtml(status) + '" data-order-item-count="' + itemCount + '" data-order-date="' + escapeHtml(formatDate(order.createdAt)) + '" data-order-title="' + escapeHtml(title) + '" data-order-total="' + escapeHtml(formatPrice(total)) + '" data-delivery-note="' + escapeHtml(deliveryNote(order)) + '" data-payment-status="Mock payment recorded" data-shipping-address="' + escapeHtml(fullShippingAddress(order)) + '">',
+      '  <div class="order-card-header">',
+      "    <div>",
+      "      <strong>Order " + escapeHtml(order.id) + "</strong>",
+      '      <p class="muted-note mb-0">Placed ' + escapeHtml(formatDate(order.createdAt)) + "</p>",
+      "    </div>",
+      '    <div class="text-end">',
+      '      <span class="status-badge status-' + escapeHtml(status) + '" data-role="order-status">' + escapeHtml(formatStatus(status)) + "</span>",
+      '      <div class="current-price fs-5 mt-2" data-role="order-total">' + formatPrice(total) + "</div>",
+      "    </div>",
+      "  </div>",
+      '  <div class="d-flex flex-wrap gap-3 align-items-center">',
+      images,
+      '    <div class="flex-grow-1">',
+      "      <strong>" + escapeHtml(title) + "</strong>",
+      '      <p class="muted-note mb-0">' + itemCount + " item" + (itemCount === 1 ? "" : "s") + ". " + escapeHtml(deliveryNote(order)) + "</p>",
+      "    </div>",
+      '    <div class="order-card-actions">',
+      '      <button class="btn btn-outline-accent" type="button" data-action="view-order-detail">View Details</button>',
+      '      <button class="btn btn-accent" type="button" data-action="reorder">Reorder</button>',
+      "    </div>",
+      "  </div>",
+      "</section>"
+    ].join("");
+  }
+
+  function renderOrders(orders) {
+    var ordersList = document.querySelector('[data-component="orders-list"]');
+    if (!ordersList) {
+      return;
+    }
+
+    orderCache = {};
+    orders.forEach(function (order) {
+      orderCache[order.id] = order;
+    });
+
+    ordersList.dataset.dataSource = "api";
+    ordersList.innerHTML = orders.map(orderCardTemplate).join("");
+    applyOrderFilters();
+  }
+
+  async function loadOrders() {
+    var ordersList = document.querySelector('[data-component="orders-list"]');
+
+    if (typeof apiClient.getJson !== "function") {
+      return;
+    }
+
+    try {
+      var response = await apiClient.getJson("/api/orders");
+      var orders = response && Array.isArray(response.data) ? response.data : [];
+      renderOrders(orders);
+    } catch (error) {
+      if (ordersList && staticOrdersMarkup) {
+        ordersList.dataset.dataSource = "fallback";
+        ordersList.innerHTML = staticOrdersMarkup;
+      }
+      if (window.console && typeof window.console.warn === "function") {
+        window.console.warn("ShopLite orders API unavailable. Using static order fallback.", error);
+      }
+      showToast("Orders API unavailable. Showing local order preview.");
+      applyOrderFilters();
+    }
+  }
+
   function setDetailText(role, value) {
     var element = document.querySelector('[data-role="' + role + '"]');
     if (element) {
@@ -100,7 +239,32 @@
     }
   }
 
+  function getOrderDetailFromApiOrder(order) {
+    var total = order.summary ? formatPrice(order.summary.total) : "$0.00";
+    var itemCount = order.summary ? order.summary.itemCount : (order.items || []).length;
+    var title = orderTitle(order);
+
+    return {
+      id: order.id,
+      status: order.status || "processing",
+      statusLabel: formatStatus(order.status || "processing"),
+      date: formatDate(order.createdAt),
+      title: title,
+      total: total,
+      itemCount: itemCount,
+      deliveryNote: deliveryNote(order),
+      paymentStatus: "Mock payment recorded",
+      shippingAddress: fullShippingAddress(order)
+    };
+  }
+
   function getOrderCardDetail(card) {
+    var apiOrder = orderCache[card.dataset.orderId || ""];
+
+    if (apiOrder) {
+      return getOrderDetailFromApiOrder(apiOrder);
+    }
+
     var titleElement = card.querySelector(".flex-grow-1 strong");
     var totalElement = card.querySelector('[data-role="order-total"]');
     var noteElement = card.querySelector(".flex-grow-1 .muted-note");
@@ -116,8 +280,8 @@
       title: card.dataset.orderTitle || (titleElement ? titleElement.textContent.trim() : "ShopLite order items"),
       total: card.dataset.orderTotal || (totalElement ? totalElement.textContent.trim() : "$0.00"),
       itemCount: Number.isNaN(itemCount) ? 1 : itemCount,
-      deliveryNote: card.dataset.deliveryNote || (noteElement ? noteElement.textContent.trim() : "Delivery information is ready for this prototype order."),
-      paymentStatus: card.dataset.paymentStatus || "Prototype payment status confirmed.",
+      deliveryNote: card.dataset.deliveryNote || (noteElement ? noteElement.textContent.trim() : "Delivery information is ready for this order."),
+      paymentStatus: card.dataset.paymentStatus || "Mock payment status confirmed.",
       shippingAddress: card.dataset.shippingAddress || "Campus District saved address placeholder."
     };
   }
@@ -166,11 +330,35 @@
     }
   }
 
+  async function reorderFromApiOrder(order) {
+    if (!order || !Array.isArray(order.items) || typeof apiClient.postJson !== "function") {
+      return false;
+    }
+
+    var latestCart = null;
+
+    for (var index = 0; index < order.items.length; index += 1) {
+      latestCart = await apiClient.postJson("/api/cart/items", {
+        productId: order.items[index].productId,
+        quantity: order.items[index].quantity || 1
+      });
+    }
+
+    if (latestCart && latestCart.summary) {
+      setCartCount(Number(latestCart.summary.itemCount));
+    }
+
+    return true;
+  }
+
   function initOrdersPage() {
     var ordersList = document.querySelector('[data-component="orders-list"]');
     if (!ordersList) {
       return;
     }
+
+    staticOrdersMarkup = ordersList.innerHTML;
+    loadOrders();
 
     document.addEventListener("click", function (event) {
       var filterButton = event.target.closest('[data-action="filter-orders"]');
@@ -200,9 +388,21 @@
 
       if (reorderButton) {
         var reorderCard = reorderButton.closest("[data-order-id]");
+        var order = reorderCard ? orderCache[reorderCard.dataset.orderId] : null;
         var itemCount = reorderCard ? Number.parseInt(reorderCard.dataset.orderItemCount || "1", 10) : 1;
-        updateCartCount(Number.isNaN(itemCount) ? 1 : itemCount);
-        showToast("Items from order " + (reorderCard ? reorderCard.dataset.orderId : "") + " were added to your cart preview.");
+
+        reorderFromApiOrder(order).then(function (apiUpdated) {
+          if (!apiUpdated) {
+            updateCartCount(Number.isNaN(itemCount) ? 1 : itemCount);
+          }
+          showToast("Items from order " + (reorderCard ? reorderCard.dataset.orderId : "") + " were added to your cart.");
+        }).catch(function (error) {
+          if (window.console && typeof window.console.warn === "function") {
+            window.console.warn("ShopLite reorder API unavailable. Using local cart count fallback.", error);
+          }
+          updateCartCount(Number.isNaN(itemCount) ? 1 : itemCount);
+          showToast("Items from order " + (reorderCard ? reorderCard.dataset.orderId : "") + " were added to your cart preview.");
+        });
         return;
       }
 

@@ -3,6 +3,7 @@ const cors = require("cors");
 const path = require("path");
 const { port, publicPath } = require("./config/serverConfig");
 const cartRoutes = require("./routes/cartRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 const productRoutes = require("./routes/productRoutes");
 const notFoundHandler = require("./middleware/notFoundHandler");
 const errorHandler = require("./middleware/errorHandler");
@@ -19,6 +20,7 @@ app.get("/", function (req, res) {
 
 app.use(express.static(publicPath));
 app.use("/api/cart", cartRoutes);
+app.use("/api/orders", orderRoutes);
 app.use("/api/products", productRoutes);
 
 app.use(notFoundHandler);
