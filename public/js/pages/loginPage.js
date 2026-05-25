@@ -1,6 +1,8 @@
 (function () {
   "use strict";
 
+  var apiClient = window.ShopLiteApi || {};
+
   function getField(selector) {
     return document.querySelector(selector);
   }
@@ -37,13 +39,41 @@
     }
   }
 
+  function clearPasswordField() {
+    var passwordField = getField('[data-field="login-password"]');
+
+    if (passwordField) {
+      passwordField.value = "";
+    }
+  }
+
+  function getRedirectTarget() {
+    var params = new URLSearchParams(window.location.search);
+    var target = params.get("returnTo") || "index.html";
+
+    if (/^https?:\/\//i.test(target) || target.indexOf("//") === 0) {
+      return "index.html";
+    }
+
+    return target;
+  }
+
+  function setSubmitting(form, submitting) {
+    var submitButton = form.querySelector('[type="submit"]');
+
+    if (submitButton) {
+      submitButton.disabled = submitting;
+      submitButton.textContent = submitting ? "Signing In..." : "Sign In";
+    }
+  }
+
   function initLoginPage() {
     var form = document.querySelector('[data-component="login-form"]');
     if (!form) {
       return;
     }
 
-    form.addEventListener("submit", function (event) {
+    form.addEventListener("submit", async function (event) {
       event.preventDefault();
 
       var username = getValue('[data-field="login-username"]');
@@ -65,7 +95,35 @@
         return;
       }
 
-      setMessage("Prototype login successful. No real authentication was performed.", "success");
+      if (typeof apiClient.postJson !== "function") {
+        clearPasswordField();
+        setMessage("Login service is unavailable. Please try again after the server starts.", "danger");
+        return;
+      }
+
+      setSubmitting(form, true);
+
+      try {
+        await apiClient.postJson("/api/auth/login", {
+          email: username,
+          password: password
+        });
+        clearPasswordField();
+        setMessage("Login successful. Redirecting to ShopLite.", "success");
+
+        if (window.ShopLiteAuth && typeof window.ShopLiteAuth.syncSession === "function") {
+          window.ShopLiteAuth.syncSession();
+        }
+
+        window.setTimeout(function () {
+          window.location.assign(getRedirectTarget());
+        }, 600);
+      } catch (error) {
+        clearPasswordField();
+        setMessage(error.message || "Login failed. Please check your email and password.", "danger");
+      } finally {
+        setSubmitting(form, false);
+      }
     });
 
     form.querySelectorAll("input, select").forEach(function (field) {

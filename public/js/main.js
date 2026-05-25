@@ -25,6 +25,114 @@
     });
   }
 
+  function findAccountLink() {
+    var accountLink = document.querySelector('[data-role="account-link"]');
+
+    if (accountLink) {
+      return accountLink;
+    }
+
+    accountLink = document.querySelector('.header-actions .header-action[href="login.html"]');
+
+    if (accountLink) {
+      accountLink.dataset.role = "account-link";
+      accountLink.dataset.defaultHref = accountLink.getAttribute("href") || "login.html";
+      accountLink.dataset.defaultSmall = accountLink.querySelector("small") ? accountLink.querySelector("small").textContent : "Hello, sign in";
+      accountLink.dataset.defaultStrong = accountLink.querySelector("strong") ? accountLink.querySelector("strong").textContent : "Account & Lists";
+    }
+
+    return accountLink;
+  }
+
+  function setAccountLinkText(accountLink, smallText, strongText) {
+    var small = accountLink ? accountLink.querySelector("small") : null;
+    var strong = accountLink ? accountLink.querySelector("strong") : null;
+
+    if (small) {
+      small.textContent = smallText;
+    }
+
+    if (strong) {
+      strong.textContent = strongText;
+    }
+  }
+
+  function removeLogoutLink() {
+    var logoutLink = document.querySelector('[data-role="logout-link"]');
+
+    if (logoutLink) {
+      logoutLink.remove();
+    }
+  }
+
+  function ensureLogoutLink(accountLink) {
+    var headerActions = accountLink ? accountLink.closest(".header-actions") : null;
+
+    if (!headerActions || document.querySelector('[data-role="logout-link"]')) {
+      return;
+    }
+
+    var logoutLink = document.createElement("a");
+    logoutLink.className = "header-action";
+    logoutLink.href = "login.html";
+    logoutLink.dataset.action = "logout";
+    logoutLink.dataset.role = "logout-link";
+    logoutLink.innerHTML = "<small>Account</small><strong>Logout</strong>";
+    headerActions.insertBefore(logoutLink, accountLink.nextSibling);
+  }
+
+  function setSignedInHeader(user) {
+    var accountLink = findAccountLink();
+    var email = user && user.email ? user.email : "";
+
+    if (!accountLink || !email) {
+      return;
+    }
+
+    accountLink.setAttribute("href", "orders.html");
+    accountLink.setAttribute("aria-label", "Signed in as " + email);
+    setAccountLinkText(accountLink, "Hello,", email);
+    ensureLogoutLink(accountLink);
+  }
+
+  function setSignedOutHeader() {
+    var accountLink = findAccountLink();
+
+    if (accountLink) {
+      accountLink.setAttribute("href", accountLink.dataset.defaultHref || "login.html");
+      accountLink.setAttribute("aria-label", "Sign in to ShopLite");
+      setAccountLinkText(accountLink, accountLink.dataset.defaultSmall || "Hello, sign in", accountLink.dataset.defaultStrong || "Account & Lists");
+    }
+
+    removeLogoutLink();
+  }
+
+  async function syncAuthSession() {
+    var accountLink = findAccountLink();
+    var apiClient = window.ShopLiteApi || {};
+
+    if (!accountLink || typeof apiClient.getJson !== "function") {
+      return null;
+    }
+
+    try {
+      var response = await apiClient.getJson("/api/auth/me");
+      var user = response && response.data ? response.data : null;
+
+      if (user) {
+        setSignedInHeader(user);
+        return user;
+      }
+    } catch (error) {
+      if (error && error.status !== 401 && window.console && typeof window.console.warn === "function") {
+        window.console.warn("ShopLite session sync unavailable. Keeping signed-out header fallback.", error);
+      }
+    }
+
+    setSignedOutHeader();
+    return null;
+  }
+
   async function syncGlobalCartCount() {
     var cartCountElements = getCartCountElements();
     var apiClient = window.ShopLiteApi || {};
@@ -58,6 +166,7 @@
 
     initializeGlobalNavigation(page);
     syncGlobalCartCount();
+    syncAuthSession();
 
     if (typeof initializer === "function") {
       initializer();
@@ -86,10 +195,16 @@
   function initializeGlobalNavigation(page) {
     document.addEventListener("click", function (event) {
       var cartEntry = event.target.closest('[data-action="open-cart"]');
+      var logoutEntry = event.target.closest('[data-action="logout"]');
 
       if (cartEntry) {
         event.preventDefault();
         window.location.assign("cart.html");
+      }
+
+      if (logoutEntry) {
+        event.preventDefault();
+        logoutCurrentUser();
       }
     });
 
@@ -106,9 +221,35 @@
     }, true);
   }
 
+  async function logoutCurrentUser() {
+    var apiClient = window.ShopLiteApi || {};
+
+    if (typeof apiClient.postJson !== "function") {
+      setSignedOutHeader();
+      return;
+    }
+
+    try {
+      await apiClient.postJson("/api/auth/logout", {});
+    } catch (error) {
+      if (window.console && typeof window.console.warn === "function") {
+        window.console.warn("ShopLite logout request failed. Updating local header state only.", error);
+      }
+    }
+
+    setSignedOutHeader();
+  }
+
   window.ShopLiteCart = {
     setCount: setGlobalCartCount,
     syncCount: syncGlobalCartCount
+  };
+
+  window.ShopLiteAuth = {
+    logout: logoutCurrentUser,
+    setSignedInHeader: setSignedInHeader,
+    setSignedOutHeader: setSignedOutHeader,
+    syncSession: syncAuthSession
   };
 
   if (document.readyState === "loading") {

@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "id": "user-20260525145101723-1402",
+    "email": "sseng@demo.com",
+    "passwordHash": "$2b$10$yujwNV3pvYLmxJc0kh41keGU6FkLQRBUK2dkzOZ0saro5hO3jyE5a",
+    "role": "customer",
+    "createdAt": "2026-05-25T14:51:01.798Z"
+  },
+  {
+    "id": "user-20260525145235029-4008",
+    "email": "admin@administrator.com",
+    "passwordHash": "$2b$10$Gxote.iYfAoUSXSM0yeqj.qhy5tjPS3zhJJwMBjd17Kkjopp1R0WC",
+    "role": "customer",
+    "createdAt": "2026-05-25T14:52:35.092Z"
+  }
+]

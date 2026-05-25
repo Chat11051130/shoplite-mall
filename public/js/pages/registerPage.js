@@ -1,6 +1,8 @@
 (function () {
   "use strict";
 
+  var apiClient = window.ShopLiteApi || {};
+
   function getField(selector) {
     return document.querySelector(selector);
   }
@@ -37,13 +39,43 @@
     }
   }
 
+  function clearPasswordFields() {
+    var passwordField = getField('[data-field="register-password"]');
+    var confirmPasswordField = getField('[data-field="register-confirm-password"]');
+
+    if (passwordField) {
+      passwordField.value = "";
+    }
+
+    if (confirmPasswordField) {
+      confirmPasswordField.value = "";
+    }
+  }
+
+  function normalizeRole(role) {
+    if (role === "admin-request") {
+      return "customer";
+    }
+
+    return role || "customer";
+  }
+
+  function setSubmitting(form, submitting) {
+    var submitButton = form.querySelector('[type="submit"]');
+
+    if (submitButton) {
+      submitButton.disabled = submitting;
+      submitButton.textContent = submitting ? "Creating Account..." : "Create Account";
+    }
+  }
+
   function initRegisterPage() {
     var form = document.querySelector('[data-component="register-form"]');
     if (!form) {
       return;
     }
 
-    form.addEventListener("submit", function (event) {
+    form.addEventListener("submit", async function (event) {
       event.preventDefault();
 
       var username = getValue('[data-field="register-username"]');
@@ -82,7 +114,36 @@
         return;
       }
 
-      setMessage("Prototype account created successfully. No real account was stored.", "success");
+      if (typeof apiClient.postJson !== "function") {
+        clearPasswordFields();
+        setMessage("Registration service is unavailable. Please try again after the server starts.", "danger");
+        return;
+      }
+
+      setSubmitting(form, true);
+
+      try {
+        await apiClient.postJson("/api/auth/register", {
+          email: username,
+          password: password,
+          role: normalizeRole(role)
+        });
+        clearPasswordFields();
+        setMessage("Account created successfully. Redirecting to ShopLite.", "success");
+
+        if (window.ShopLiteAuth && typeof window.ShopLiteAuth.syncSession === "function") {
+          window.ShopLiteAuth.syncSession();
+        }
+
+        window.setTimeout(function () {
+          window.location.assign("index.html");
+        }, 600);
+      } catch (error) {
+        clearPasswordFields();
+        setMessage(error.message || "Registration failed. Please check your account details.", "danger");
+      } finally {
+        setSubmitting(form, false);
+      }
     });
 
     form.querySelectorAll("input, select").forEach(function (field) {

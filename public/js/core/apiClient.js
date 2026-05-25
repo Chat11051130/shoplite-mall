@@ -21,6 +21,7 @@
   async function requestJson(url, options) {
     var response = await fetch(url, {
       method: options && options.method ? options.method : "GET",
+      credentials: "same-origin",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
