@@ -3,6 +3,7 @@ const cors = require("cors");
 const session = require("express-session");
 const path = require("path");
 const { port, publicPath } = require("./config/serverConfig");
+const adminDashboardRoutes = require("./routes/adminDashboardRoutes");
 const authRoutes = require("./routes/authRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes");
@@ -45,6 +46,7 @@ app.get([
 app.use(express.static(publicPath));
 app.use("/api/auth", authRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/admin/dashboard", adminDashboardRoutes);
 app.use("/api/admin/orders", orderRoutes.adminRouter);
 app.use("/api/orders", orderRoutes);
 app.use("/api/products", productRoutes);
