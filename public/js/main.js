@@ -51,20 +51,42 @@
     return Boolean(error && error.status === 401);
   }
 
+  function getHeaderActions(accountLink) {
+    return accountLink ? accountLink.closest(".header-actions") || accountLink.parentElement : document.querySelector(".header-actions");
+  }
+
+  function storeAccountDefaults(accountLink) {
+    if (!accountLink || accountLink.dataset.defaultsStored === "true") {
+      return;
+    }
+
+    accountLink.dataset.defaultsStored = "true";
+    accountLink.dataset.defaultHref = accountLink.getAttribute("href") || "login.html";
+    accountLink.dataset.defaultSmall = accountLink.querySelector("small") ? accountLink.querySelector("small").textContent : "Hello, sign in";
+    accountLink.dataset.defaultStrong = accountLink.querySelector("strong") ? accountLink.querySelector("strong").textContent : "Account & Lists";
+  }
+
   function findAccountLink() {
     var accountLink = document.querySelector('[data-role="account-link"]');
 
     if (accountLink) {
+      storeAccountDefaults(accountLink);
       return accountLink;
     }
 
-    accountLink = document.querySelector('.header-actions .header-action[href="login.html"]');
+    accountLink = document.querySelector('.header-actions .header-action[href="login.html"], .site-header .header-action[href="login.html"]');
+
+    if (!accountLink) {
+      accountLink = document.querySelector('.header-actions .header-action[href="orders.html"]:not([data-role="admin-link"]):not([data-role="logout-link"]), .site-header .header-action[href="orders.html"]:not([data-role="admin-link"]):not([data-role="logout-link"])');
+    }
+
+    if (!accountLink) {
+      accountLink = document.querySelector(".header-actions .header-action:not([data-role=\"admin-link\"]):not([data-role=\"logout-link\"]), .site-header .header-action:not([data-role=\"admin-link\"]):not([data-role=\"logout-link\"])");
+    }
 
     if (accountLink) {
       accountLink.dataset.role = "account-link";
-      accountLink.dataset.defaultHref = accountLink.getAttribute("href") || "login.html";
-      accountLink.dataset.defaultSmall = accountLink.querySelector("small") ? accountLink.querySelector("small").textContent : "Hello, sign in";
-      accountLink.dataset.defaultStrong = accountLink.querySelector("strong") ? accountLink.querySelector("strong").textContent : "Account & Lists";
+      storeAccountDefaults(accountLink);
     }
 
     return accountLink;
@@ -91,8 +113,36 @@
     }
   }
 
+  function removeAdminLinks() {
+    document.querySelectorAll('[data-role="admin-link"]').forEach(function (adminLink) {
+      adminLink.remove();
+    });
+  }
+
+  function ensureAdminLink(accountLink) {
+    var headerActions = getHeaderActions(accountLink);
+    var existingAdminLink = document.querySelector('[data-role="admin-link"]');
+
+    if (!headerActions || existingAdminLink) {
+      return;
+    }
+
+    var adminLink = document.createElement("a");
+    adminLink.className = "header-action";
+    adminLink.href = "admin-dashboard.html";
+    adminLink.dataset.role = "admin-link";
+    adminLink.innerHTML = "<small>Admin</small><strong>Dashboard</strong>";
+
+    if (accountLink && accountLink.nextSibling) {
+      headerActions.insertBefore(adminLink, accountLink.nextSibling);
+    } else {
+      headerActions.insertBefore(adminLink, headerActions.firstChild);
+    }
+  }
+
   function ensureLogoutLink(accountLink) {
-    var headerActions = accountLink ? accountLink.closest(".header-actions") : null;
+    var headerActions = getHeaderActions(accountLink);
+    var referenceLink = document.querySelector('[data-role="admin-link"]') || accountLink;
 
     if (!headerActions || document.querySelector('[data-role="logout-link"]')) {
       return;
@@ -104,12 +154,125 @@
     logoutLink.dataset.action = "logout";
     logoutLink.dataset.role = "logout-link";
     logoutLink.innerHTML = "<small>Account</small><strong>Logout</strong>";
-    headerActions.insertBefore(logoutLink, accountLink.nextSibling);
+    if (referenceLink && referenceLink.nextSibling) {
+      headerActions.insertBefore(logoutLink, referenceLink.nextSibling);
+    } else {
+      headerActions.appendChild(logoutLink);
+    }
+  }
+
+  function findDeliveryElements() {
+    var label = document.querySelector('[data-role="delivery-label"]');
+    var subtitle = document.querySelector('[data-role="delivery-subtitle"]');
+    var deliveryChip;
+    var small;
+    var strong;
+
+    if (label && subtitle) {
+      return {
+        label: label,
+        subtitle: subtitle
+      };
+    }
+
+    document.querySelectorAll(".location-chip").forEach(function (chip) {
+      if (deliveryChip) {
+        return;
+      }
+
+      small = chip.querySelector("small");
+      strong = chip.querySelector("strong");
+
+      if (small && strong && small.textContent.trim().toLowerCase() === "deliver to") {
+        deliveryChip = chip;
+        small.dataset.role = "delivery-label";
+        strong.dataset.role = "delivery-subtitle";
+        small.dataset.defaultText = small.textContent;
+        strong.dataset.defaultText = strong.textContent;
+      }
+    });
+
+    if (!deliveryChip) {
+      return null;
+    }
+
+    return {
+      label: deliveryChip.querySelector('[data-role="delivery-label"]'),
+      subtitle: deliveryChip.querySelector('[data-role="delivery-subtitle"]')
+    };
+  }
+
+  function setDeliveryText(labelText, subtitleText) {
+    var deliveryElements = findDeliveryElements();
+
+    if (!deliveryElements) {
+      return;
+    }
+
+    deliveryElements.label.textContent = labelText;
+    deliveryElements.subtitle.textContent = subtitleText;
+  }
+
+  function setSignedOutDelivery() {
+    setDeliveryText("Deliver to", "Campus District");
+  }
+
+  function setAdminDelivery() {
+    setDeliveryText("Admin", "Dashboard access");
+  }
+
+  function setCustomerDelivery(subtitle) {
+    setDeliveryText("Deliver to", subtitle || "Your location");
+  }
+
+  function orderDeliverySubtitle(order) {
+    var city = order && typeof order.city === "string" ? order.city.trim() : "";
+    var zip = order && typeof order.zip === "string" ? order.zip.trim() : "";
+
+    if (city && zip) {
+      return city + " " + zip;
+    }
+
+    if (city) {
+      return city;
+    }
+
+    if (zip) {
+      return zip;
+    }
+
+    return "";
+  }
+
+  async function syncCustomerDeliveryLocation() {
+    var apiClient = window.ShopLiteApi || {};
+
+    setCustomerDelivery("Your location");
+
+    if (typeof apiClient.getJson !== "function" || !findDeliveryElements()) {
+      return;
+    }
+
+    try {
+      var response = await apiClient.getJson("/api/orders");
+      var orders = response && Array.isArray(response.data) ? response.data : [];
+      var orderWithAddress = orders.find(function (order) {
+        return Boolean(orderDeliverySubtitle(order));
+      });
+      var subtitle = orderDeliverySubtitle(orderWithAddress);
+
+      if (subtitle) {
+        setCustomerDelivery(subtitle);
+      }
+    } catch (error) {
+      setCustomerDelivery("Your location");
+    }
   }
 
   function setSignedInHeader(user) {
     var accountLink = findAccountLink();
     var email = user && user.email ? user.email : "";
+    var role = user && user.role ? String(user.role).toLowerCase() : "customer";
 
     if (!accountLink || !email) {
       return;
@@ -118,6 +281,15 @@
     accountLink.setAttribute("href", "orders.html");
     accountLink.setAttribute("aria-label", "Signed in as " + email);
     setAccountLinkText(accountLink, "Hello,", email);
+    removeAdminLinks();
+
+    if (role === "admin") {
+      ensureAdminLink(accountLink);
+      setAdminDelivery();
+    } else {
+      syncCustomerDeliveryLocation();
+    }
+
     ensureLogoutLink(accountLink);
   }
 
@@ -130,7 +302,9 @@
       setAccountLinkText(accountLink, accountLink.dataset.defaultSmall || "Hello, sign in", accountLink.dataset.defaultStrong || "Account & Lists");
     }
 
+    removeAdminLinks();
     removeLogoutLink();
+    setSignedOutDelivery();
   }
 
   async function syncAuthSession() {
