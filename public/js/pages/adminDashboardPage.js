@@ -45,6 +45,39 @@
     return "status-" + String(status || "processing").toLowerCase();
   }
 
+  function safeImageSource(value) {
+    var source = typeof value === "string" ? value.trim() : "";
+    var normalizedSource = source.toLowerCase();
+
+    if (!source || normalizedSource === "undefined" || normalizedSource === "null" || normalizedSource === "[object object]") {
+      return "";
+    }
+
+    return source;
+  }
+
+  function safeAltText(value, fallback) {
+    var alt = typeof value === "string" ? value.trim() : "";
+    return alt || fallback;
+  }
+
+  function renderCategoryImage(row, category) {
+    var image = safeImageSource(row && row.image);
+    var alt = safeAltText(row && row.alt, category + " category");
+    var initial = category.charAt(0).toUpperCase() || "C";
+
+    if (image) {
+      return '<img class="table-thumb" src="' + escapeHtml(image) + '" alt="' + escapeHtml(alt) + '">';
+    }
+
+    return [
+      '<span class="table-thumb d-inline-flex align-items-center justify-content-center fw-bold text-secondary" aria-hidden="true">',
+      escapeHtml(initial),
+      "</span>",
+      '<span class="visually-hidden">' + escapeHtml(alt) + "</span>"
+    ].join("");
+  }
+
   function showToast(message) {
     var toast = document.getElementById("adminDashboardToast");
     if (!toast) {
@@ -222,7 +255,7 @@
         "<tr>",
         "  <td>",
         '    <div class="d-flex gap-3 align-items-center">',
-        '      <img class="table-thumb" src="assets/images/products/placeholder-product.jpg" alt="' + escapeHtml(category) + ' category">',
+        "      " + renderCategoryImage(row, category),
         "      <strong>" + escapeHtml(category) + " category</strong>",
         "    </div>",
         "  </td>",

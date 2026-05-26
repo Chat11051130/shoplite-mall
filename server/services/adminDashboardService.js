@@ -32,6 +32,32 @@ function itemCount(order) {
   }, 0);
 }
 
+function categoryLabel(category) {
+  return String(category || "").split("-").map(function (part) {
+    return part.charAt(0).toUpperCase() + part.slice(1);
+  }).join(" ");
+}
+
+function validImagePath(value) {
+  const image = typeof value === "string" ? value.trim() : "";
+
+  if (!image) {
+    return "";
+  }
+
+  const normalizedImage = image.toLowerCase();
+  if (normalizedImage === "undefined" || normalizedImage === "null" || normalizedImage === "[object object]") {
+    return "";
+  }
+
+  return image;
+}
+
+function categoryAlt(category, product) {
+  const alt = product && typeof product.alt === "string" ? product.alt.trim() : "";
+  return alt || categoryLabel(category) + " category";
+}
+
 function sortNewestFirst(orders) {
   return orders.slice().sort(function (a, b) {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -83,6 +109,16 @@ async function getCategorySales() {
     lookup[String(product.id)] = product.category;
     return lookup;
   }, {});
+  const representativeProducts = products.reduce(function (lookup, product) {
+    const category = String(product.category || "").toLowerCase();
+    if (categories.indexOf(category) !== -1 && !lookup[category] && validImagePath(product.image)) {
+      lookup[category] = product;
+    }
+    return lookup;
+  }, {});
+  const fallbackProduct = products.find(function (product) {
+    return validImagePath(product.image);
+  }) || null;
   const categorySales = categories.reduce(function (lookup, category) {
     lookup[category] = {
       category,
@@ -111,10 +147,13 @@ async function getCategorySales() {
 
   return {
     data: categories.map(function (category) {
+      const representativeProduct = representativeProducts[category] || fallbackProduct || {};
       return {
         category,
         itemsSold: categorySales[category].itemsSold,
-        revenue: roundMoney(categorySales[category].revenue)
+        revenue: roundMoney(categorySales[category].revenue),
+        image: validImagePath(representativeProduct.image),
+        alt: categoryAlt(category, representativeProduct)
       };
     })
   };

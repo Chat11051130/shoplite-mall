@@ -190,3 +190,36 @@ Smoke tests created temporary users and a temporary customer order for regressio
 - JSON files remain the persistence layer.
 - No production session store is configured.
 - Export report remains a mock/prototype action.
+
+## Category Sales Image Fix
+
+Root cause:
+
+- `GET /api/admin/dashboard/category-sales` returned category, item count, and revenue only.
+- `public/js/pages/adminDashboardPage.js` rendered an image in each category sales summary row, so rows could fall back to an invalid or missing image source.
+
+Files changed:
+
+- `server/services/adminDashboardService.js`
+- `public/js/pages/adminDashboardPage.js`
+- `docs/backend/admin-dashboard-api-phase-6d.md`
+
+Representative image selection:
+
+- The category sales endpoint now includes `image` and `alt` for every allowed category.
+- Each category uses the first product image found in `server/data/products.json` for that category.
+- If a category has no product image, the service falls back to the first valid catalog image.
+- No new image files or external image sources were added.
+
+Frontend fallback behavior:
+
+- The dashboard renderer only creates an `<img>` when `image` is a non-empty string.
+- It rejects `undefined`, `null`, empty strings, and `[object Object]` as image sources.
+- If no valid image exists, the table keeps the same layout and renders a compact text placeholder instead of a broken image icon.
+
+Smoke check result:
+
+- Admin category sales API returned six category objects with `category`, `itemsSold`, `revenue`, `image`, and `alt`.
+- Category image values were not `undefined`, `null`, empty, or `[object Object]`.
+- `admin-dashboard.html` rendered the Category sales summary with no broken image icons.
+- Refresh, category chart, order status chart, recent orders, `admin-products.html`, and `admin-orders.html` continued to work.
