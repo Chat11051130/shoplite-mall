@@ -51,11 +51,11 @@
     var params = new URLSearchParams(window.location.search);
     var target = params.get("returnTo") || "index.html";
 
-    if (/^https?:\/\//i.test(target) || target.indexOf("//") === 0) {
+    if (/^https?:\/\//i.test(target) || target.indexOf("//") === 0 || /^[a-z][a-z0-9+.-]*:/i.test(target)) {
       return "index.html";
     }
 
-    return target;
+    return target.replace(/^\//, "");
   }
 
   function setSubmitting(form, submitting) {

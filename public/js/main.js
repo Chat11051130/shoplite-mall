@@ -32,7 +32,7 @@
   function safeReturnToPath(returnTo) {
     var target = returnTo || currentReturnToPath();
 
-    if (!target || /^https?:\/\//i.test(target) || target.indexOf("//") === 0) {
+    if (!target || /^https?:\/\//i.test(target) || target.indexOf("//") === 0 || /^[a-z][a-z0-9+.-]*:/i.test(target)) {
       return "index.html";
     }
 

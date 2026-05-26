@@ -9,6 +9,7 @@ const orderRoutes = require("./routes/orderRoutes");
 const productRoutes = require("./routes/productRoutes");
 const notFoundHandler = require("./middleware/notFoundHandler");
 const errorHandler = require("./middleware/errorHandler");
+const requireRole = require("./middleware/requireRole");
 
 const app = express();
 
@@ -30,6 +31,15 @@ app.use(session({
 
 app.get("/", function (req, res) {
   res.sendFile(path.join(publicPath, "index.html"));
+});
+
+app.get([
+  "/admin-products.html",
+  "/admin-product-form.html",
+  "/admin-orders.html",
+  "/admin-dashboard.html"
+], requireRole("admin"), function (req, res) {
+  res.sendFile(path.join(publicPath, path.basename(req.path)));
 });
 
 app.use(express.static(publicPath));
