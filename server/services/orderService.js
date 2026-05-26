@@ -3,6 +3,7 @@ const orderRepository = require("../repositories/orderRepository");
 
 const taxRate = 0.075;
 const maxSavings = 48.5;
+const allowedAdminStatuses = ["processing", "shipped", "delivered", "cancelled"];
 
 function createHttpError(message, statusCode) {
   const error = new Error(message);
@@ -49,6 +50,24 @@ function createOrderId(createdAt) {
 
 function normalizeStatus(status) {
   return typeof status === "string" && status.trim() ? status.trim().toLowerCase() : "processing";
+}
+
+function normalizeAdminFilter(value) {
+  return typeof value === "string" ? value.trim().toLowerCase() : "";
+}
+
+function validateAdminStatus(status) {
+  if (typeof status !== "string" || !status.trim()) {
+    throw createHttpError("Status is required.", 400);
+  }
+
+  const normalizedStatus = normalizeStatus(status);
+
+  if (allowedAdminStatuses.indexOf(normalizedStatus) === -1) {
+    throw createHttpError("Status must be one of: " + allowedAdminStatuses.join(", ") + ".", 400);
+  }
+
+  return normalizedStatus;
 }
 
 function validateCheckoutPayload(payload) {
@@ -107,6 +126,42 @@ function sortNewestFirst(orders) {
   });
 }
 
+function orderSearchText(order) {
+  return [
+    order.id,
+    order.customerName,
+    order.email,
+    order.customerEmail,
+    order.status,
+    (order.items || []).map(function (item) {
+      return item.title;
+    }).join(" ")
+  ].filter(Boolean).join(" ").toLowerCase();
+}
+
+function orderDateValue(order) {
+  if (!order.createdAt) {
+    return "";
+  }
+
+  return String(order.createdAt).slice(0, 10);
+}
+
+function filterAdminOrders(orders, query) {
+  const status = normalizeAdminFilter(query && query.status);
+  const searchQuery = normalizeAdminFilter(query && query.query);
+  const date = typeof (query && query.date) === "string" ? query.date.trim() : "";
+
+  return orders.filter(function (order) {
+    const orderStatus = normalizeStatus(order.status);
+    const statusMatches = !status || status === "all" || orderStatus === status;
+    const queryMatches = !searchQuery || orderSearchText(order).indexOf(searchQuery) !== -1;
+    const dateMatches = !date || orderDateValue(order) === date;
+
+    return statusMatches && queryMatches && dateMatches;
+  });
+}
+
 async function getOrders(userId) {
   return {
     data: sortNewestFirst(await orderRepository.getOrdersByUserId(requireUserId(userId)))
@@ -152,9 +207,38 @@ async function createOrder(userId, payload) {
   };
 }
 
+async function getAdminOrders(query) {
+  const orders = sortNewestFirst(filterAdminOrders(await orderRepository.getAllOrders(), query || {}));
+
+  return {
+    data: orders,
+    meta: {
+      count: orders.length
+    }
+  };
+}
+
+async function getAdminOrderById(orderId) {
+  return orderRepository.getOrderById(orderId);
+}
+
+async function updateAdminOrderStatus(orderId, payload) {
+  const status = validateAdminStatus(payload && payload.status);
+  const order = await orderRepository.updateOrderStatus(orderId, status);
+
+  if (!order) {
+    return null;
+  }
+
+  return order;
+}
+
 module.exports = {
   createOrder,
+  getAdminOrderById,
+  getAdminOrders,
   getOrderById,
   getOrders,
-  normalizeStatus
+  normalizeStatus,
+  updateAdminOrderStatus
 };

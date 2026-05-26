@@ -27,6 +27,14 @@ async function getOrdersByUserId(userId) {
   });
 }
 
+async function getAllOrders() {
+  return findAll();
+}
+
+async function getOrderById(orderId) {
+  return findById(orderId);
+}
+
 async function getOrderByIdForUser(orderId, userId) {
   const orders = await findAll();
   return orders.find(function (order) {
@@ -45,12 +53,34 @@ async function createOrderForUser(orderInput) {
   return create(orderInput);
 }
 
+async function updateOrderStatus(orderId, status) {
+  const orders = await findAll();
+  const index = orders.findIndex(function (order) {
+    return order.id === orderId;
+  });
+
+  if (index === -1) {
+    return null;
+  }
+
+  orders[index] = Object.assign({}, orders[index], {
+    status,
+    updatedAt: new Date().toISOString()
+  });
+
+  await saveAll(orders);
+  return orders[index];
+}
+
 module.exports = {
   create,
   createOrderForUser,
   findAll,
   findById,
+  getAllOrders,
+  getOrderById,
   getOrderByIdForUser,
   getOrdersByUserId,
-  saveAll
+  saveAll,
+  updateOrderStatus
 };

@@ -45,6 +45,7 @@ app.get([
 app.use(express.static(publicPath));
 app.use("/api/auth", authRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/admin/orders", orderRoutes.adminRouter);
 app.use("/api/orders", orderRoutes);
 app.use("/api/products", productRoutes);
 
