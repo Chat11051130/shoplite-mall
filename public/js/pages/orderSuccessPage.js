@@ -243,7 +243,15 @@
       }
 
       renderOrder(order);
+      if (window.ShopLiteCart && typeof window.ShopLiteCart.syncCount === "function") {
+        window.ShopLiteCart.syncCount();
+      }
     } catch (error) {
+      if (isAuthError(error)) {
+        redirectToLogin();
+        return;
+      }
+
       renderMissingOrderState(error && error.message ? error.message : "This order could not be loaded.");
     }
   }

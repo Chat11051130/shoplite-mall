@@ -2,7 +2,7 @@ const orderService = require("../services/orderService");
 
 async function getOrders(req, res, next) {
   try {
-    return res.json(await orderService.getOrders());
+    return res.json(await orderService.getOrders(req.session.userId));
   } catch (error) {
     return next(error);
   }
@@ -10,7 +10,7 @@ async function getOrders(req, res, next) {
 
 async function getOrderById(req, res, next) {
   try {
-    const order = await orderService.getOrderById(req.params.id);
+    const order = await orderService.getOrderById(req.session.userId, req.params.id);
 
     if (!order) {
       return res.status(404).json({
@@ -31,7 +31,7 @@ async function getOrderById(req, res, next) {
 
 async function createOrder(req, res, next) {
   try {
-    return res.status(201).json(await orderService.createOrder(req.body));
+    return res.status(201).json(await orderService.createOrder(req.session.userId, req.body));
   } catch (error) {
     return next(error);
   }

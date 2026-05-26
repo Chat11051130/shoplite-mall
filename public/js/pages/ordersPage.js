@@ -74,11 +74,11 @@
 
   function redirectToLogin() {
     if (window.ShopLiteCart && typeof window.ShopLiteCart.redirectToLogin === "function") {
-      window.ShopLiteCart.redirectToLogin();
+      window.ShopLiteCart.redirectToLogin("orders.html");
       return;
     }
 
-    window.location.assign("login.html?returnTo=" + encodeURIComponent(window.location.pathname.replace(/^\//, "") + window.location.search));
+    window.location.assign("login.html?returnTo=orders.html");
   }
 
   function showToast(message) {
@@ -226,6 +226,32 @@
     applyOrderFilters();
   }
 
+  function showSignedOutOrdersMessage() {
+    var ordersList = document.querySelector('[data-component="orders-list"]');
+    var emptyState = document.getElementById("ordersEmptyState");
+    var loginUrl = window.ShopLiteCart && typeof window.ShopLiteCart.buildLoginUrl === "function" ? window.ShopLiteCart.buildLoginUrl("orders.html") : "login.html?returnTo=orders.html";
+
+    orderCache = {};
+
+    if (emptyState) {
+      emptyState.classList.add("d-none");
+    }
+
+    if (!ordersList) {
+      return;
+    }
+
+    ordersList.dataset.dataSource = "signed-out";
+    ordersList.innerHTML = [
+      '<section class="empty-state surface-card p-4 text-center" aria-live="polite">',
+      '  <i class="bi bi-person-lock fs-1 text-secondary" aria-hidden="true"></i>',
+      "  <strong>Sign in to view your orders.</strong>",
+      "  <span>Your ShopLite order history is saved to your account session.</span>",
+      '  <a class="btn btn-accent mt-3" href="' + escapeHtml(loginUrl) + '">Sign In to View Orders</a>',
+      "</section>"
+    ].join("");
+  }
+
   async function loadOrders() {
     var ordersList = document.querySelector('[data-component="orders-list"]');
 
@@ -238,6 +264,11 @@
       var orders = response && Array.isArray(response.data) ? response.data : [];
       renderOrders(orders);
     } catch (error) {
+      if (isAuthError(error)) {
+        showSignedOutOrdersMessage();
+        return;
+      }
+
       if (ordersList && staticOrdersMarkup) {
         ordersList.dataset.dataSource = "fallback";
         ordersList.innerHTML = staticOrdersMarkup;
@@ -447,6 +478,8 @@
     if (orderSearchInput) {
       orderSearchInput.addEventListener("input", applyOrderFilters);
     }
+
+    document.addEventListener("shoplite:logout", showSignedOutOrdersMessage);
 
     applyOrderFilters();
   }

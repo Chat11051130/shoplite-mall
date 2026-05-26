@@ -14,6 +14,14 @@ function roundMoney(value) {
   return Math.round((Number(value) + Number.EPSILON) * 100) / 100;
 }
 
+function requireUserId(userId) {
+  if (!userId) {
+    throw createHttpError("Authentication required.", 401);
+  }
+
+  return userId;
+}
+
 function getRequiredString(payload, fieldName, label) {
   const value = payload && typeof payload[fieldName] === "string" ? payload[fieldName].trim() : "";
 
@@ -99,19 +107,20 @@ function sortNewestFirst(orders) {
   });
 }
 
-async function getOrders() {
+async function getOrders(userId) {
   return {
-    data: sortNewestFirst(await orderRepository.findAll())
+    data: sortNewestFirst(await orderRepository.getOrdersByUserId(requireUserId(userId)))
   };
 }
 
-async function getOrderById(orderId) {
-  return orderRepository.findById(orderId);
+async function getOrderById(userId, orderId) {
+  return orderRepository.getOrderByIdForUser(orderId, requireUserId(userId));
 }
 
-async function createOrder(payload) {
+async function createOrder(userId, payload) {
+  const normalizedUserId = requireUserId(userId);
   const checkout = validateCheckoutPayload(payload);
-  const cart = await cartService.getCart();
+  const cart = await cartService.getCart(normalizedUserId);
 
   if (!cart.items || cart.items.length === 0) {
     throw createHttpError("Cannot create an order from an empty cart.", 400);
@@ -120,6 +129,7 @@ async function createOrder(payload) {
   const createdAt = new Date().toISOString();
   const order = {
     id: createOrderId(createdAt),
+    userId: normalizedUserId,
     createdAt,
     status: "processing",
     customerName: checkout.customerName,
@@ -134,8 +144,8 @@ async function createOrder(payload) {
     summary: buildOrderSummary(cart.items, checkout.deliveryOption)
   };
 
-  await orderRepository.create(order);
-  await cartService.clearCart();
+  await orderRepository.createOrderForUser(order);
+  await cartService.clearCart(normalizedUserId);
 
   return {
     data: order

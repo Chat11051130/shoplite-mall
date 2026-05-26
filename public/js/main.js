@@ -271,6 +271,7 @@
 
     setSignedOutHeader();
     setGlobalCartCount(0);
+    document.dispatchEvent(new CustomEvent("shoplite:logout"));
   }
 
   window.ShopLiteCart = {

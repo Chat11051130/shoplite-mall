@@ -45,6 +45,19 @@
     messageElement.textContent = "";
   }
 
+  function isAuthError(error) {
+    return window.ShopLiteCart && typeof window.ShopLiteCart.isAuthError === "function" ? window.ShopLiteCart.isAuthError(error) : Boolean(error && error.status === 401);
+  }
+
+  function redirectToLogin() {
+    if (window.ShopLiteCart && typeof window.ShopLiteCart.redirectToLogin === "function") {
+      window.ShopLiteCart.redirectToLogin("checkout.html");
+      return;
+    }
+
+    window.location.assign("login.html?returnTo=checkout.html");
+  }
+
   function showToast(message) {
     var toast = document.getElementById("checkoutToast");
     if (!toast) {
@@ -186,6 +199,11 @@
       setValidationMessage("Order created. Opening confirmation page.", "success");
       window.location.href = "order-success.html?orderId=" + encodeURIComponent(order.id);
     } catch (error) {
+      if (isAuthError(error)) {
+        redirectToLogin();
+        return;
+      }
+
       var message = error && error.message ? error.message : "Unable to place this order.";
       setValidationMessage(message, "danger");
       showToast(message);

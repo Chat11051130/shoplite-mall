@@ -20,6 +20,20 @@ async function findById(orderId) {
   }) || null;
 }
 
+async function getOrdersByUserId(userId) {
+  const orders = await findAll();
+  return orders.filter(function (order) {
+    return order.userId === userId;
+  });
+}
+
+async function getOrderByIdForUser(orderId, userId) {
+  const orders = await findAll();
+  return orders.find(function (order) {
+    return order.id === orderId && order.userId === userId;
+  }) || null;
+}
+
 async function create(order) {
   const orders = await findAll();
   orders.push(order);
@@ -27,9 +41,16 @@ async function create(order) {
   return order;
 }
 
+async function createOrderForUser(orderInput) {
+  return create(orderInput);
+}
+
 module.exports = {
   create,
+  createOrderForUser,
   findAll,
   findById,
+  getOrderByIdForUser,
+  getOrdersByUserId,
   saveAll
 };
