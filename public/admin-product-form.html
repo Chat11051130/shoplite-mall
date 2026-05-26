@@ -59,6 +59,14 @@
               <input class="form-control" id="productPrice" name="productPrice" data-field="product-price" type="number" min="0" step="0.01" placeholder="99.99" required>
             </div>
             <div class="col-md-4">
+              <label class="form-label" for="productOldPrice">Old price</label>
+              <input class="form-control" id="productOldPrice" name="productOldPrice" data-field="product-old-price" type="number" min="0" step="0.01" placeholder="129.99">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="productDiscount">Discount label</label>
+              <input class="form-control" id="productDiscount" name="productDiscount" data-field="product-discount" type="text" placeholder="20% off">
+            </div>
+            <div class="col-md-4">
               <label class="form-label" for="productStock">Stock</label>
               <input class="form-control" id="productStock" name="productStock" data-field="product-stock" type="number" min="0" step="1" placeholder="50" required>
             </div>
@@ -71,9 +79,21 @@
                 <option value="low-stock">Low stock</option>
               </select>
             </div>
+            <div class="col-md-4">
+              <label class="form-label" for="productBadge">Badge</label>
+              <input class="form-control" id="productBadge" name="productBadge" data-field="product-badge" type="text" placeholder="Best seller">
+            </div>
             <div class="col-12">
               <label class="form-label" for="productImageUrl">Product image URL</label>
-              <input class="form-control" id="productImageUrl" name="productImageUrl" data-field="product-image-url" type="url" placeholder="https://example.com/product.jpg">
+              <input class="form-control" id="productImageUrl" name="productImageUrl" data-field="product-image-url" type="url" placeholder="https://example.com/product.jpg" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="productImageAlt">Image alt text</label>
+              <input class="form-control" id="productImageAlt" name="productImageAlt" data-field="product-alt" type="text" placeholder="Describe the product image" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="productShipping">Shipping note</label>
+              <input class="form-control" id="productShipping" name="productShipping" data-field="product-shipping" type="text" placeholder="Free delivery with ShopLite Express">
             </div>
             <div class="col-12">
               <label class="form-label" for="productDescription">Product description</label>
@@ -88,7 +108,7 @@
             </div>
             <div class="col-12 d-flex flex-wrap gap-2 justify-content-end">
               <a class="btn btn-outline-secondary" href="admin-products.html">Cancel</a>
-              <button class="btn btn-accent" type="submit" data-action="save-product">Save Mock Product</button>
+              <button class="btn btn-accent" type="submit" data-action="save-product">Save Product</button>
             </div>
           </form>
         </section>
@@ -96,6 +116,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/core/apiClient.js"></script>
     <script src="js/pages/adminProductFormPage.js"></script>
     <script src="js/main.js"></script>
   </body>

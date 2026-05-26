@@ -1,7 +1,8 @@
 const userRepository = require("../repositories/userRepository");
 
 function wantsJson(req) {
-  return req.path.indexOf("/api/") === 0 || req.xhr || req.get("accept") === "application/json" || (req.get("accept") || "").indexOf("application/json") !== -1;
+  const originalUrl = req.originalUrl || "";
+  return originalUrl.indexOf("/api/") === 0 || req.path.indexOf("/api/") === 0 || req.xhr || req.get("accept") === "application/json" || (req.get("accept") || "").indexOf("application/json") !== -1;
 }
 
 function safeReturnTo(req) {
