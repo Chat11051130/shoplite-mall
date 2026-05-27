@@ -49,7 +49,7 @@
   {
     "id": "SL-20260525-212416550",
     "createdAt": "2026-05-25T13:24:16.321Z",
-    "status": "cancelled",
+    "status": "shipped",
     "customerName": "Alex Morgan",
     "phone": "+1 555 0108",
     "shippingAddress": "118 Student Avenue, Apt 402",
@@ -76,12 +76,12 @@
       "total": 91.2,
       "itemCount": 1
     },
-    "updatedAt": "2026-05-26T13:01:17.515Z"
+    "updatedAt": "2026-05-27T13:24:15.478Z"
   },
   {
     "id": "SL-20260525-212532202",
     "createdAt": "2026-05-25T13:25:32.335Z",
-    "status": "shipped",
+    "status": "cancelled",
     "customerName": "Alex Morgan",
     "phone": "+1 555 0108",
     "shippingAddress": "118 Student Avenue, Apt 402",
@@ -108,7 +108,7 @@
       "total": 2.62,
       "itemCount": 1
     },
-    "updatedAt": "2026-05-26T13:01:15.667Z"
+    "updatedAt": "2026-05-27T13:24:17.299Z"
   },
   {
     "id": "SL-20260525-212650878",
