@@ -2,12 +2,25 @@
   "use strict";
 
   var apiClient = window.ShopLiteApi || {};
+  var taxRate = 0.075;
 
   function formatPrice(value) {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD"
     }).format(value);
+  }
+
+  function escapeHtml(value) {
+    return String(value || "").replace(/[&<>"']/g, function (character) {
+      return {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[character];
+    });
   }
 
   function getValue(selector) {
@@ -17,6 +30,18 @@
 
   function getSelected(name) {
     return document.querySelector('input[name="' + name + '"]:checked');
+  }
+
+  function setSummaryNumber(selector, value, prefix) {
+    var element = document.querySelector(selector);
+    var amount = Number.isFinite(value) ? value : 0;
+
+    if (!element) {
+      return;
+    }
+
+    element.dataset.value = String(amount);
+    element.textContent = (prefix || "") + formatPrice(amount);
   }
 
   function getSummaryNumber(selector, fallback) {
@@ -80,6 +105,78 @@
       window.bootstrap.Toast.getOrCreateInstance(toast, { autohide: false }).show();
       toast.classList.add("show");
       toast.style.display = "block";
+    }
+  }
+
+  function checkoutItemTemplate(item) {
+    var product = item.product || {};
+    var title = escapeHtml(product.title || "ShopLite product");
+    var image = escapeHtml(product.image || "assets/images/placeholder-product.svg");
+    var alt = escapeHtml(product.alt || title);
+    var quantity = Number(item.quantity) || 1;
+    var unitPrice = Number(item.unitPrice) || Number(product.price) || 0;
+    var lineTotal = Number(item.lineTotal) || unitPrice * quantity;
+
+    return [
+      '<div class="d-flex gap-3 mb-3" data-role="checkout-cart-item">',
+      '  <img class="order-thumb" src="' + image + '" alt="' + alt + '">',
+      '  <div><strong>' + title + '</strong><p class="muted-note mb-0">Qty ' + quantity + "</p></div>",
+      '  <strong class="ms-auto">' + formatPrice(lineTotal) + "</strong>",
+      "</div>"
+    ].join("");
+  }
+
+  function renderCheckoutItems(cart) {
+    var summaryCard = document.querySelector('[data-component="checkout-summary"]');
+    var heading = summaryCard ? summaryCard.querySelector("h2") : null;
+    var divider = summaryCard ? summaryCard.querySelector("hr") : null;
+    var items = cart && Array.isArray(cart.items) ? cart.items : [];
+    var currentNode = heading ? heading.nextElementSibling : null;
+    var html;
+
+    if (!summaryCard || !heading || !divider) {
+      return;
+    }
+
+    while (currentNode && currentNode !== divider) {
+      var nextNode = currentNode.nextElementSibling;
+      currentNode.remove();
+      currentNode = nextNode;
+    }
+
+    html = items.length > 0 ? items.map(checkoutItemTemplate).join("") : '<div class="muted-note mb-3" data-role="checkout-cart-item">Your cart is empty.</div>';
+    divider.insertAdjacentHTML("beforebegin", html);
+  }
+
+  function renderCheckoutSummary(cart) {
+    var summary = cart && cart.summary ? cart.summary : {};
+    var subtotal = Number(summary.subtotal) || 0;
+    var tax = Math.round((subtotal * taxRate + Number.EPSILON) * 100) / 100;
+    var savings = Number(summary.savings) || 0;
+
+    renderCheckoutItems(cart);
+    setSummaryNumber('[data-role="checkout-subtotal"]', subtotal);
+    setSummaryNumber('[data-role="checkout-tax"]', tax);
+    setSummaryNumber('[data-role="checkout-savings"]', savings, "-");
+    updateSummary();
+  }
+
+  async function loadCheckoutCart() {
+    if (typeof apiClient.getJson !== "function") {
+      return;
+    }
+
+    try {
+      renderCheckoutSummary(await apiClient.getJson("/api/cart"));
+    } catch (error) {
+      if (isAuthError(error)) {
+        renderCheckoutSummary({ items: [], summary: { subtotal: 0, savings: 0 } });
+        return;
+      }
+
+      if (window.console && typeof window.console.warn === "function") {
+        window.console.warn("ShopLite checkout cart summary unavailable. Keeping static summary fallback.", error);
+      }
     }
   }
 
@@ -256,6 +353,7 @@
     });
 
     updateSummary();
+    loadCheckoutCart();
   }
 
   window.ShopLitePages = window.ShopLitePages || {};
