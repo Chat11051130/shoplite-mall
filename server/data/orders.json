@@ -141,5 +141,38 @@
       "itemCount": 1
     },
     "updatedAt": "2026-05-26T13:01:12.230Z"
+  },
+  {
+    "id": "SL-20260527-224942290",
+    "userId": "user-20260525145101723-1402",
+    "createdAt": "2026-05-27T14:49:42.198Z",
+    "status": "shipped",
+    "customerName": "Alex Morgan",
+    "phone": "+1 555 0108",
+    "shippingAddress": "118 Student Avenue, Apt 402",
+    "city": "Lakeside",
+    "state": "CA",
+    "zip": "94016",
+    "deliveryOption": "standard",
+    "paymentMethod": "mock-card",
+    "items": [
+      {
+        "productId": 41,
+        "title": "HydroTrail insulated stainless water bottle",
+        "price": 24.99,
+        "quantity": 1,
+        "image": "https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=700&q=80",
+        "category": "sports"
+      }
+    ],
+    "summary": {
+      "subtotal": 24.99,
+      "shipping": 0,
+      "tax": 1.87,
+      "savings": 24.99,
+      "total": 1.87,
+      "itemCount": 1
+    },
+    "updatedAt": "2026-05-27T14:50:36.638Z"
   }
 ]
