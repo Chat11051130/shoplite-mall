@@ -120,12 +120,6 @@ function normalizeDetails(value) {
   return {};
 }
 
-function nextProductId(products) {
-  return products.reduce(function (highestId, product) {
-    return Math.max(highestId, Number(product.id) || 0);
-  }, 0) + 1;
-}
-
 function validateAllowedFields(payload) {
   Object.keys(payload || {}).forEach(function (fieldName) {
     if (!allowedProductFields.includes(fieldName)) {
@@ -320,13 +314,8 @@ async function getProductById(productId) {
 }
 
 async function createProduct(payload) {
-  const products = await productRepository.findAll();
   const productInput = buildProductInput(payload || {}, { create: true });
-  const product = Object.assign({
-    id: nextProductId(products)
-  }, productInput);
-
-  return productRepository.createProduct(product);
+  return productRepository.createProduct(productInput);
 }
 
 async function updateProduct(productId, payload) {

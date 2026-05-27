@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS products (
   stock INT NOT NULL DEFAULT 0,
   badge VARCHAR(64) NULL,
   tag VARCHAR(64) NULL,
+  tags_json JSON NULL,
   short_description TEXT NULL,
   details_json JSON NULL,
   highlights_json JSON NULL,

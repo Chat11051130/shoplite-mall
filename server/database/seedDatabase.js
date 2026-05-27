@@ -115,8 +115,8 @@ async function seedProducts(connection, products) {
     await connection.execute(
       [
         "INSERT INTO products",
-        "(id, category, title, rating, reviews, price, old_price, discount, shipping, image, alt, stock, badge, tag, short_description, details_json, highlights_json, created_at, updated_at)",
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        "(id, category, title, rating, reviews, price, old_price, discount, shipping, image, alt, stock, badge, tag, tags_json, short_description, details_json, highlights_json, created_at, updated_at)",
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
       ].join(" "),
       [
         Number(product.id),
@@ -133,6 +133,7 @@ async function seedProducts(connection, products) {
         integerOrZero(product.stock),
         optionalString(product.badge),
         optionalString(tag),
+        jsonValue(Array.isArray(product.tags) ? product.tags : []),
         optionalString(product.shortDescription),
         jsonValue(product.details),
         jsonValue(product.highlights),
