@@ -6,12 +6,17 @@
   "main": "server/app.js",
   "scripts": {
     "start": "node server/app.js",
-    "dev": "node server/app.js"
+    "dev": "node server/app.js",
+    "db:init": "node server/database/initDatabase.js",
+    "db:seed": "node server/database/seedDatabase.js",
+    "db:reset": "node server/database/resetDatabase.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
     "express": "^4.19.2",
-    "express-session": "^1.19.0"
+    "express-session": "^1.19.0",
+    "mysql2": "^3.22.4"
   }
 }
