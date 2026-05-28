@@ -86,14 +86,19 @@ function validateCheckoutPayload(payload) {
 function buildOrderItems(cartItems) {
   return cartItems.map(function (item) {
     const product = item.product || {};
+    const quantity = Number(item.quantity) || 1;
+    const unitPrice = roundMoney(item.unitPrice || product.price || 0);
 
     return {
       productId: Number(item.productId),
       title: product.title || "ShopLite product",
-      price: roundMoney(item.unitPrice || product.price || 0),
-      quantity: Number(item.quantity) || 1,
+      price: unitPrice,
+      unitPrice,
+      quantity,
       image: product.image || "",
-      category: product.category || "general"
+      alt: product.alt || product.title || "ShopLite product",
+      category: product.category || "general",
+      lineTotal: roundMoney(unitPrice * quantity)
     };
   });
 }
